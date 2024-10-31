@@ -1,0 +1,1428 @@
+/* CSS reset */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body, h1, h2, h3, h4, p, figure, blockquote, dl, dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
+ul[role='list'],
+ol[role='list'] {
+  list-style: none;
+}
+
+/* Set core root defaults */
+html:focus-within {
+  scroll-behavior: smooth;
+}
+
+/* Set core body defaults */
+body {
+  min-height: 100vh;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Make images easier to work with */
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
+
+/* Inherit fonts for inputs and buttons */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Remove all animations, transitions and smooth scroll for people that prefer not to see them */
+@media (prefers-reduced-motion: reduce) {
+  html:focus-within {
+   scroll-behavior: auto;
+  }
+  
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ----------------------------------------- MY STUFF --------------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* -------------------------------------- GENERAL STYLING ----------------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+
+@font-face
+{
+    font-family: 'Roboto';
+    src: url('/fonts/roboto/Roboto-Regular.ttf');
+}
+
+:root {
+  --bg-color-dark: black;
+  --bg-color-bright: white;
+  --text-color-dark: black;
+  --text-color-bright: white;
+  --color-highlight: rgb(247,247,247);
+  --color-orange: rgb(241,90,37);
+  --color-orange-semitrans: rgba(241, 91, 37, 0.5);
+  --color-accent-blue: rgb(92,97,178);
+
+  --font-size-default: 16px;
+  --font-size-medium: 20px; 
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', sans-serif;
+}
+
+.card-image-small {
+  width: 120px;
+}
+
+.card-image-medium {
+  width: 250px;
+}
+
+.card-image-large {
+  width: 500px;
+}
+
+.fake-link {
+  text-decoration-line: underline;
+  cursor: pointer;
+  color: var(--color-orange);
+}
+
+.blurred-img {
+  background-image: url("/images/Lazy-Load-MTG.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.blurred-img img {
+  opacity: 0;
+  transition: opacity 250ms ease-in-out;
+}
+
+.blurred-img.loaded img {
+  opacity: 1;
+}
+
+/* .blurred-img::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: pulse 2.5s infinite;
+  background-color: white;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.blurred-img.loaded::before {
+  animation: none;
+  content: none;
+} */
+
+/* --------------------- Inline Symbols apperearing in text ------------------*/
+
+.inline-symbol {
+  display: inline-block;
+  margin: 1px 1px -1px 1px;
+  overflow: hidden;
+  text-indent: -9999px;
+
+  background-size: 100%;
+  width: 18px;
+  height: 18px;
+}
+
+.bomb {
+  background-image: url("/images/bomb.png");
+}
+
+.bones {
+  background-image: url("/images/bones.png");
+}
+
+.bury {
+  background-image: url("/images/bury.png");
+}
+
+.coil {
+  background-image: url("/images/coil.png");
+}
+
+.dice {
+  width: 26px;
+  height: 26px;
+  background-image: url("/images/dice.png");
+}
+
+.energy {
+  background-image: url("/images/energy.png");
+}
+
+.haste {
+  width: 26px;
+  height: 26px;
+  background-image: url("/images/haste.png");
+}
+
+.heart {
+  background-image: url("/images/heart.png");
+}
+
+.money {
+  background-image: url("/images/money.png");
+}
+
+.star {
+  background-image: url("/images/star.png");
+}
+
+.treefolk {
+  background-image: url("/images/treefolk.png");
+}
+
+.unblockable {
+  background-image: url("/images/unblockable.png");
+}
+
+
+/* ---------------------------- HEADER -------------------------------------- */
+
+header {
+  background-color: var(--bg-color-bright);
+  text-align: center;
+  width: 100%;
+  z-index: 999;
+  /* display navbar as columns */
+  display: grid;
+  grid-template-columns: 25% 60% 15%;
+  padding: 1rem;
+}
+
+.header-logo {
+  font-size: 20px;
+  grid-column: 1;
+  margin-left: 3rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.header-logo a,
+.header-nav a {
+  color: var(--text-color-dark);
+  text-decoration: none;
+}
+
+.nav-toggle {
+  display: none;
+}
+
+.nav-toggle-label {
+  /* turn off hamburger */
+  display: none;
+}
+
+.header-nav {
+  grid-column: 2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-left: 3rem;
+}
+
+.header-nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  gap: 3rem;
+  font-size: 20px;
+}
+
+.header-nav li {
+  /* margin-left: 2em; */
+  margin-top: 0;
+}
+
+.header-nav a {
+  opacity: 1;
+  position: relative;
+}
+
+
+/*  floating logos */
+
+#rotation-rumble-logo {
+  position: absolute;
+  left: 82vw;
+  width: 200px;
+}
+
+#back-to-website {
+  position: absolute;
+  left: 5vw;
+  top: -12px;
+  width: 120px;
+}
+
+/* hamburger menu stuff */
+
+
+@media screen and (max-width: 500px) {
+  header {
+    grid-template-columns: 20% 60% 20%;
+    background-color: var(--color-orange);
+    position: fixed;
+  }
+
+  .header-logo {
+    grid-column: 2;
+  }
+
+  .nav-toggle-label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin-left: 1em;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-toggle-label span,
+  .nav-toggle-label span::before,
+  .nav-toggle-label span::after {
+    /*  hamburger nav bar icon */
+    display: block;
+    background-color: var(--text-color-dark);
+    height: 3px;
+    width: 2em;
+    border-radius: 2px;
+    position: relative;
+  }
+  
+  .nav-toggle-label span::before,
+  .nav-toggle-label span::after {
+    content: '';
+    position: absolute;
+  }
+  
+  .nav-toggle-label span::before {
+    bottom: 8px;
+  }
+  
+  .nav-toggle-label span::after {
+    top: 8px;
+  }
+  
+  .header-nav {
+    all: unset;
+    background-color: var(--color-orange);
+    position: absolute;
+    text-align: left;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    /* nav bar is squished completely on the y axis by default */
+    transform: scale(1, 0);
+    transform-origin: top;
+    transition: transform 400ms ease-in-out;
+  }
+  
+  .header-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .header-nav li {
+    margin-bottom: 1em;
+    margin-left: 1em;
+  }
+
+  .header-nav a {
+    opacity: 0;
+    /* fade-out animation when hamburger is clicked while the navbar is out */
+    transition: opacity 150ms ease-in-out;
+  }
+
+  /* .header-nav a:hover {
+    color: var(--text-white-hover);
+  } */
+  
+  .nav-toggle:checked ~ nav {
+    display: block;
+    /* return nav bar to its original Y scale */
+    transform: scale(1, 1);
+  }
+  
+  .nav-toggle:checked ~ nav a {
+    opacity: 1;
+    /* fade-in animation when hamburger is clicked */
+    transition: opacity 250ms ease-in-out 250ms;
+  }
+}
+
+
+/* ------------------------ MAIN -------------------------------------------- */
+
+main {
+  background-image: url("/images/background.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 100vw 100vh;
+
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  flex-shrink: 0;
+
+  /* position: absolute;
+  top: 62px; */
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.grid-container {
+  width: 80%;
+  background-color: var(--bg-color-bright);
+  display: grid;
+}
+
+.grid-item {
+  padding: 2rem;
+}
+
+h1 {
+  font-size: 80px;
+  font-weight: normal;
+}
+
+.span-bold {
+  font-weight: bold;
+}
+
+.ui-bar-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: .25rem;
+  gap: .5rem;
+}
+
+
+/* ------------------- FOOTER ----------------------------------------------- */
+
+footer {
+  background-color: var(--bg-color-dark);
+  /* margin-top: auto; */
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.footer-nav {
+  display: flex;
+  justify-content: left;
+}
+
+.footer-nav ul {
+  color: var(--text-color-bright);
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  list-style-type: none;
+  margin: 0.5rem;
+  font-size: 20px;
+}
+
+.footer-nav ul li {
+  text-align: center;
+}
+
+
+/* --------------- GENERAL MOBILE VIEW -------------------------------------- */
+
+@media screen and (max-width: 500px) {
+  /* remove background when on mobile */
+  main {
+    background: none;
+    /* TODO: lazy fix; 
+    when the header is fixed, the main content should start at its bottom */
+    margin-top: 62px;
+  }
+
+  .grid-container {
+    width: 100%;
+  }
+
+  .grid-item {
+    padding: 0.5rem;
+  }
+
+  h1 {
+    font-size: 36px;
+  }
+
+  /* hide side images */
+  #rotation-rumble-logo {
+    display: none;
+  }
+
+  #back-to-website {
+    display: none;
+  }
+
+  footer {
+    margin: 0;
+    width: 100%;
+  }
+
+  .footer-nav ul {
+    gap: 0.5rem;
+    font-size: 16px;
+    width: 100%;
+    padding: 0;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* -------------------------------------------- PAGE SPECIFIC STYLING ----------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ------------------------------------------------- INDEX PAGE ----------------------------------------------------- */
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.info-paragraph {
+  font-size: 20px;
+}
+
+.form-search {
+  display: flex;
+  gap: 2px;
+}
+
+#search {
+  /* search bar */
+  min-width: 80%;
+  min-height: 2.5rem;
+  background: var(--color-highlight);
+  border-width: 0em;
+  padding: 0;
+}
+
+#button-search {
+  background-color: var(--color-orange);
+  border-width: 0em;
+  height: 2.5rem;
+  width: 2.5rem;
+  padding: 4px;
+}
+
+.landing-page-grid {
+  grid-template-columns: 50% 50%;
+}
+
+#hero-image {
+  grid-column: 2;
+  grid-row: 1 / span 3;
+}
+
+/* --------------- INDEX PAGE MOBILE VIEW ----------------------------------- */
+
+@media screen and (max-width: 500px) {
+  .landing-page-grid {
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 40% 20% 40%;
+    /* background-color: pink;   */
+  }
+
+  #hero-image {
+    grid-column: 2;
+    grid-row: 1 / span 1;
+  }
+
+  #landing-searchbar {
+    grid-column: 1 / span 2;
+    grid-row: 2
+  }
+
+  #landing-paragraph {
+    grid-column: 1 / span 2;
+    grid-row: 3
+  }
+
+  #landing-search-call {
+    align-self: end;
+  }
+
+  .info-paragraph {
+    font-size: var(--font-size-default);
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ----------------------------- ADVANCED SEARCH ---------------------------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.advanced-search {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.advanced-search-item {
+  border-bottom: 1px solid var(--color-orange);
+  padding-bottom: 1rem;
+}
+
+.advanced-search-item label {
+  margin-right: 1rem;
+}
+
+.color-select, .dice-select, .token-select {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.token-select div {
+  display: flex;
+  flex-direction: row;
+}
+
+.advanced-search-token {
+  width: 2rem;
+  margin-left: .5rem;
+}
+
+#cardname, 
+#effectOrStep,
+#type {
+  min-width: 300px;
+}
+
+@media screen and (max-width: 500px) {
+  #cardname, 
+  #effectOrStep,
+  #type {
+    min-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ---------------------------------------------- SINGLE CARD PAGE ---------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.singlecard-grid {
+  grid-template-columns: 50% 50%;
+}
+
+#singlecard-image {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+}
+
+.add-to-deck-container {
+  border-radius: 10px 10px 0 0;
+  background-color: var(--color-orange-semitrans);
+  padding: 1rem;
+  position: fixed;
+  min-width: 200px;
+  height: 140px;
+  top: calc(100dvh - 140px);
+  right: 12dvw;
+
+  display: flex;
+  justify-content: center;
+}
+
+.add-to-deck-container input {
+  align-self: start; 
+}
+
+/* ----------- cardinfo.ejs --------------------------------------------------*/
+.card-title {
+  font-size: 80px;
+}
+
+.card-title-container {
+  margin-bottom: -1rem;
+}
+
+.flavor-text {
+  font-style: italic;
+  font-size: 26px;
+}
+
+.flavor-text-container {
+  margin-bottom: 1rem;
+}
+
+.card-type-text {
+  font-size: 24px;
+  color: rgb(92,97,178);
+}
+
+.card-stats-table {
+  border-collapse: collapse;
+  font-size: 24px;
+  margin-bottom: 1rem;
+  position: relative;
+  left: -0.5rem;
+}
+
+.card-stats-table td {
+  border: 2px solid var(--color-accent-blue);
+  padding-left: 0.5rem;
+  padding-right: 2rem;
+}
+
+/* remove unwanted table borders */
+.card-stats-table tr:first-child td,
+.card-stats-table tr:last-child td {
+  border-top: 0;
+  border-bottom: 0;
+}
+
+.card-stats-table tr td:first-child {
+  border-left: 0;
+}
+
+.card-stats-table tr td:last-child {
+  border-right: 0;
+}
+
+.card-stats-effects {
+  font-size: 20px;
+  padding-bottom: 1.5rem;
+}
+
+.card-effect {
+  font-size: 24px;
+}
+
+.effect-name {
+  font-style: italic;
+}
+
+.inline-image {
+  display: inline-block;
+  max-width: 18px;
+}
+/* ---------------------------------------------------------------------------*/
+
+/* ------------------------ SINGLE CARD MOBILE VIEW ------------------------- */
+
+@media screen and (max-width: 500px) {
+  .singlecard-grid {
+    grid-template-columns: 100%;
+  }
+
+  .singlecard-grid #singlecard-image {
+    justify-self: center;
+  }
+
+  .card-title {
+    font-size: 64px;
+  }
+
+  .card-text {
+    padding: 1rem;
+  }
+
+  .add-to-deck-container {
+    /* TODO: temporally disabled */
+    display: none;  
+  }
+}
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ---------------------------------------------- CARD GALLERY -------------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.card-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 0.5rem;
+  justify-content: center;
+}
+
+.gallery-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: left;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+  padding-left: 3rem;
+  padding-right: 160px;
+  grid-column: 1 / span 2; 
+}
+
+.header-selector {
+  margin: auto 0;
+}
+
+.card-gallery-table {
+  border-collapse: collapse;
+}
+
+.card-gallery-table > tbody > tr:nth-child(even) {
+  background-color: var(--color-highlight);
+}
+
+.card-gallery-table th, td {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border: 1px solid darkgray;
+  border-left: 0;
+  border-right: 0;
+}
+
+.card-gallery-table th {
+  color: var(--color-accent-blue);
+}
+
+.card-gallery-table a {
+  text-decoration: none;
+  color: black;
+}
+
+.sortby {
+  color: var(--color-accent-blue);
+  cursor: pointer;
+}
+
+.sortable-table-col-head,
+.card-gallery-header {
+  cursor: pointer;
+}
+
+.card-image-gallery {
+  width: 250px;
+}
+
+.card-gallery-text-only {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.card-gallery-text-only a{
+  text-decoration: none;
+  color: black;
+}
+
+/* Kartentext-items in der Gallery*/
+.cardinfo-small-gallery {
+  flex-grow: 1;
+  flex-basis: 30%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-accent-blue);
+  padding: 0.5rem;
+}
+
+.card-name-small {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.card-text-small div {
+  border-bottom: 1px solid var(--color-accent-blue);
+}
+
+.card-gallery-divider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--font-size-medium);
+  margin-top: 1rem;
+  box-shadow: 0 8px 6px rgba(50, 50, 50, .3);
+
+  /* TODO: just a hack, remove default padding from grid items? */
+  width: calc(100% + 4rem);
+  position: relative;
+  left: -2rem;
+}
+
+.notFound-image-container {
+  display: flex;
+  justify-content: center;
+}
+
+.notFound-image {
+  /* TODO: das Bild soll exakt den restlichen verfügbaren Platz ausfüllen,
+  ohne eine Scrollbar zu triggern */
+  height: 60dvh;  
+}
+
+
+
+/* ------------------------ CARD GALLERY MOBILE VIEW ------------------------ */
+
+@media screen and (max-width: 500px) {
+  .card-gallery {
+    /* TODO only table aligns left */
+    justify-content: left;
+    overflow: scroll;
+  }
+
+  .card-image-gallery {
+    width: 40dvw;
+  }
+
+  .cardinfo-small {
+    flex-basis: 100%;
+  }
+
+  .gallery-header {
+    gap: .25rem;
+    padding: 1rem;
+    align-items: left;
+    flex-direction: column;
+  }
+
+  .gallery-header label {
+    margin-left: .5rem;
+  }
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* -------------------------------------- DECK BUILDER LANDING PAGE --------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+
+.deckbuilder-cta {
+  display: flex;
+  justify-content: top;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+}
+
+#deck-selector {
+  width: 40vw;
+  max-width: 400px;
+}
+
+.select-deck-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.button-container-h {
+  margin-top: .5rem;
+  display: flex;
+  flex-direction: row;
+  gap: .5rem;
+}
+
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ---------------------------------------------- DECK EDITOR --------------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+#deck-builder {
+  grid-template-columns: 45% 55%;
+}
+
+#deck-builder-hidden {
+  display: none;
+}
+
+.deck-container {
+  margin: 10px;
+  padding: 10px;
+  min-height: 70vh;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+}
+
+.deck-container-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.25rem;
+  margin: 0 1rem;;
+}
+
+
+.standard-button {
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.25rem;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.standard-button:hover {
+  border: 1px solid var(--color-orange);
+  box-shadow: 2px 2px 2px var(--color-orange-semitrans);
+} 
+
+.standard-button:active {
+  transform: translateY(2px);
+  box-shadow: none;
+}
+
+
+.leader-container {
+  margin: 10px;
+  padding: 10px;
+  min-height: 420px;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+}
+
+.drag-zone {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.remove-x,
+.card-info,
+.add-deck {
+  cursor: pointer;
+}
+
+.deck-title-container {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: .5rem;
+}
+
+/* expanding DIV with toggle button */
+/* TODO: removed! */
+.toggle-control {
+  display: none;
+}
+
+.toggle-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggle-button {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0.25rem;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes expand-div {
+  from {
+    height: 0;
+    padding: 0;
+  }
+  to {
+    height: fit-content;
+    padding: 1rem;
+  }
+}
+
+@keyframes shrink-div {
+  from {
+    height: fit-content;
+    padding: 1rem;
+  }
+  to {
+    height: 0;
+    padding: 0;
+  }
+}
+
+@keyframes expand-text {
+  from {
+    font-size: 0px;
+  }
+  to {
+    font-size: var(--font-size-default);
+  }
+}
+
+@keyframes shrink-text {
+  from {
+    font-size: var(--font-size-default);
+  }
+  to {
+    font-size: 0px;
+  }
+}
+
+#deck-stats {
+  margin: 10px;
+  padding: 1rem;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+  display: flex;
+  gap: 4rem;
+}
+
+#deck-validity-check {
+  color: red;
+}
+
+
+.expanding-element {
+  max-width: 45vw;
+  margin: 10px;
+  border: 1px solid var(--color-orange);
+  border-radius: 10px;
+  overflow: hidden;
+
+  /* retract the div */
+  animation-name: shrink-div;
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.toggle-control:checked + .expanding-element {
+  /* expand the div */
+  animation-name: expand-div;
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.expanding-element p {
+  /* retract the text */
+  animation-name: shrink-text;
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+.toggle-control:checked + .expanding-element > p {
+  /* expand the text */
+  animation-name: expand-text;
+  animation-duration: 400ms;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+
+/* Tooltips */
+.card-tooltip {
+  display: flex;
+  position: absolute;
+  z-index: 999;
+  /* TODO: position the tooltip always inside the screen */
+
+  background-color: var(--bg-color-bright);
+  border: 1px solid var(--color-accent-blue);
+
+  transform: scale(0);
+  transition: transform ease-out 150ms;
+
+  max-width: 40vw;
+  padding: 1rem;
+}
+
+.card-info:hover + .card-tooltip {
+  transform: scale(1);
+}
+
+.card-image-tooltip {
+  width: 250px;
+  height: 250px;
+}
+
+/* -------------- cardinfo in Tooltip ----------------------------------------*/
+
+.cardinfo-small .inline-image {
+  max-width: 14px;
+}
+
+.cardinfo-small .card-title {
+  font-size: 36px;
+}
+
+.cardinfo-small .card-title-container {
+  margin-bottom: -0.75rem;
+}
+
+.cardinfo-small .flavor-text {
+  font-style: italic;
+  font-size: 18px;
+}
+
+.cardinfo-small .flavor-text-container {
+  margin-bottom: 0;
+}
+
+.cardinfo-small .card-type-text {
+  font-size: 18px;
+  color: rgb(92,97,178);
+}
+
+.cardinfo-small .card-stats-table {
+  border-collapse: collapse;
+  font-size: 18px;
+  margin-bottom: 0.5rem;
+  left: 0;
+}
+
+.cardinfo-small .card-stats-table td {
+  padding-left: 0.25rem;
+  padding-right: 0.5rem;
+}
+
+.cardinfo-small .card-stats-effects {
+  font-size: 16px;
+  padding-bottom: 0.25rem;
+}
+
+.cardinfo-small .card-effect {
+  font-size: 18px;
+}
+
+/* ------------------------ DECK BUILDER MOBILE VIEW ------------------------ */
+
+@media screen and (max-width: 500px) {
+  #deck-builder {
+    display: none;
+  }
+
+  #deck-builder-hidden {
+    display: flex;
+  }
+
+  #deck-builder-hidden p {
+    font-size: 28px;
+    font-weight: bold;
+    padding: 1rem;
+  }
+}
+
+
+
+/* ------------------------------------------------------------------------------------------------------------------ */
+/* ---------------------------------------------- VISUAL DECKSTATS ----------------------------------------------------*/
+/* ------------------------------------------------------------------------------------------------------------------ */
+
+.visual-deckstats-body {
+  width: 80%;
+  background-color: var(--bg-color-bright);
+}
+
+
+.deckstats-header {
+  text-align: right;  /* TODO: temporary fix  */
+  padding: 0.5rem;
+  padding-right: 12%;
+}
+
+.deckstats-footer {
+  padding: 1rem;
+  text-align: right;
+  grid-column: 1 / span 3;
+}
+
+/* Tabs */
+.tab {
+  overflow: hidden;
+  background-color: var(--color-highlight);
+  padding-left: 60px;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  animation: fadeEffect 1s;
+}
+
+.tablinks {
+  border: 1px solid black;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  width: 10rem;
+  text-align: left;
+}
+
+.active {
+  background-color: var(--bg-color-bright);
+}
+
+
+@keyframes fadeEffect {
+  from {opacity: 0;}
+  to {opacity: 1;}
+}
+
+#stats-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+}
+
+.stats-element {
+  padding: 0.5rem;
+}
+
+
+section {
+  background-color: var(--color-highlight);
+  padding: 0.25rem;
+}
+
+section > ul {
+  margin-block: 0;
+  list-style: none;
+  padding-left: 1rem;
+}
+
+.visual-tab-card-container {
+  padding: 0 2rem 2rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.visual-tab-leader-container {
+  padding: 0 2rem 0 2rem;
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+}
+
+#decklist-leader-container {
+  position: relative;
+}
+
+.leader-ribbon-image {
+  position: absolute;
+  top: 0;
+  width: 250px;
+}
+
+
+.decklist {
+  display: grid;
+  grid-template-columns: 75% auto;
+}
+
+#decklist-header {
+  grid-column: 1 / span 2;
+  display: flex;
+  gap: .25rem;
+}
+
+#decklist-body {
+  column-gap: 1rem;
+  padding: 0.5rem 1rem;
+  column-count: 4;
+}
+
+.decklistString-container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: .25rem;
+  margin: 1rem;
+  gap: .5rem;
+}
+
+/* #decklistString {
+  
+} */
+
+.copyClipboard-container {
+  position: relative;
+  display: inline-block;
+}
+
+.copyClipboard-container .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  /* bottom: 150%; */
+  top: 0%;
+  left: 50%;
+  margin-left: 50px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.copyClipboard-container .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 40%;
+  left: 0%;
+  margin-left: -9px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent #555 transparent transparent;
+}
+
+.copyClipboard-container:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
