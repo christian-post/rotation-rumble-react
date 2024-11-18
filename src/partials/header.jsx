@@ -5,7 +5,7 @@ export default function Header() {
       <nav className="header-nav">
         <ul>
           <li className="header-item">
-            <a href="/advanced/">Search</a>
+            <a href="/advanced-search/">Search</a>
           </li>
           <li className="header-item">
             <a href="#">Card Gallery</a>

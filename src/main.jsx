@@ -7,8 +7,8 @@ import {
 import './index.css'
 
 import Root from "./routes/root";
-import Index from './routes/index';
-import AdvancedSearch from './routes/advanced-search';
+import Index from './routes/index_new';
+import AdvancedSearch, { action as advancedSearchAction } from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 
 
@@ -26,8 +26,9 @@ const router = createBrowserRouter([
               element: <Index />
             },
             {
-              path: "advanced",
+              path: "advanced-search",
               element: <AdvancedSearch />,
+              action: advancedSearchAction
             }
           ]
         }
