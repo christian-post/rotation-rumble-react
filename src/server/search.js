@@ -1,5 +1,6 @@
 import { capitalize, escapeRegex, sanitize } from "./utils.js";
 import dotenv from "dotenv";
+import { inspect } from "util";
 
 dotenv.config();
 
@@ -163,20 +164,18 @@ export function processSearch(req) {
   // dmg und def any value
   // TODO: don't change the contents of req; make a new variable for each
 
-  if (req.dmg === 'any' || req.dmg === undefined) {
-    req.dmg = /(?:)/i;
-    req.dmg_compare_method = '$regex';
-  }
-  if (req.def === 'any' || req.def === undefined) {
-    req.def = /(?:)/i;
-    req.def_compare_method = '$regex';
+  if (req.dmg === "any" || req.dmg === undefined) {
+    req.dmg = null; // Exclude from query
+    req.dmg_compare_method = null;
+  } else if (req.dmg_compare_method === "$not") {
+    req.dmg = RegExp(req.dmg, "i"); // Use RegExp for $not
   }
 
-  if (req.dmg_compare_method === '$not') {
-    req.dmg = RegExp(req.dmg, 'i');
-  }
-  if (req.def_compare_method === '$not') {
-    req.def = RegExp(req.def, 'i');
+  if (req.def === "any" || req.def === undefined) {
+    req.def = null; // Exclude from query
+    req.def_compare_method = null;
+  } else if (req.def_compare_method === "$not") {
+    req.def = RegExp(req.def, "i"); // Use RegExp for $not
   }
 
 
@@ -187,14 +186,17 @@ export function processSearch(req) {
 
 
   // Types
-  let typeSearch = sanitize(req.type, '');
-  let types = typeSearch.split('\ ');
+  let typeSearch = sanitize(req.type, "").trim(); 
+  let types = typeSearch.split(/\s+/);
+
+  // If there are multiple types, create a regex with "or" conditions
   if (types.length > 1) {
-    req.type = RegExp(types.join('|'), 'i');
+    req.type = new RegExp(types.map(escapeRegex).join("|"), "i"); // Escape each type
+  } else if (typeSearch) {
+    req.type = new RegExp(escapeRegex(typeSearch), "i"); // Single type
   } else {
-    req.type = RegExp(escapeRegex(typeSearch));
+    req.type = null; // No valid type provided
   }
-  console.log(`type: "${req.type}"`)
 
 
   // Effects or Steps
@@ -210,7 +212,6 @@ export function processSearch(req) {
   } else {
     effectSearch = effectsSearchStr;
   }
-  console.log(`effects: "${effectSearch}"`)
 
 
   // Set
@@ -228,45 +229,35 @@ export function processSearch(req) {
   }
   sets = RegExp(setSearchStr, 'i');
 
+
   // Regex and query formatting
   const search = {
-    name: RegExp(escapeRegex(req.name), 'i'),
-    cardtype: RegExp(escapeRegex(req.cardtype), 'i'),
-    color: colors || /(?:)/i,
-
-    dmg: { [req.dmg_compare_method]:  req.dmg },
-    def: { [req.def_compare_method]:  req.def },
-    
-    dice: req.dice || /(?:)/i,
-    set: sets,
-
+    name: req.name ? new RegExp(escapeRegex(req.name), "i") : undefined,
+    cardtype: req.cardtype ? new RegExp(escapeRegex(req.cardtype), "i") : undefined,
+    color: colors && colors.length > 0 ? colors : undefined,
+    dmg: req.dmg && req.dmg_compare_method 
+      ? { [req.dmg_compare_method]: req.dmg }
+      : undefined,
+    def: req.def && req.def_compare_method 
+      ? { [req.def_compare_method]: req.def }
+      : undefined,
+    dice: req.dice ? req.dice : undefined,
+    set: sets && sets.length > 0 ? sets : undefined,
     $and: [
-      { 
-        $or: [
-            { type1: req.type },
-            { type2: req.type }
-        ]
-      },
-      {
-        $or: [
-          { effect1: tokens },
-          { effect2: tokens },
-          { effect3: tokens },
-          { effect4: tokens },
-          { step1: tokens },
-          { step2: tokens },
-          { step3: tokens },
-          { step4: tokens }
-        ]
-      }
-    ]
-  }; 
-
-  if (effectSearch) {
-    search['$text'] = { $search: effectSearch };
-  }
-
-  console.log("Search:\n", search);
+      req.type ? { $or: [{ type1: req.type }, { type2: req.type }] } : undefined
+    ].filter(Boolean), // Remove undefined entries from the $and array
+    ...(effectSearch ? { $text: { $search: effectSearch } } : {})
+  };
+  
+  // Remove undefined fields from the `search` object
+  Object.keys(search).forEach((key) => {
+    if (search[key] === undefined || (Array.isArray(search[key]) && search[key].length === 0)) {
+      delete search[key];
+    }
+  });
+  
+  console.log("\nDatabase Query:")
+  console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
 
   return { search, searchExplain };
 }
@@ -290,7 +281,7 @@ export async function sendAdvancedSearch(
     if (effectSearch) {
       correction = spellCheck(effectSearch, "effects");
       correctionType = "effectOrStep";
-    } else if (search.name && search.name.trim() !== "") {
+    } else if (typeof search.name === "string" && search.name.trim() !== "") {
       correction = spellCheck(utils.sanitize(search.name), "names");
       correctionType = "name";
     }

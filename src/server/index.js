@@ -41,12 +41,12 @@ app.post("/api/search", async (req, res) => {
     const formData = req.body;
 
     // Process the search inputs
-    const { formattedSearch, searchExplain } = processSearch(formData);
+    const { search, searchExplain } = processSearch(formData);
 
     // Perform the advanced search
     const results = await sendAdvancedSearch(
       db,
-      formattedSearch, 
+      search, 
       formData.effects, 
       searchExplain
     );

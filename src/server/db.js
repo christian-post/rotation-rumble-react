@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 
 let dbConnection;
 
-export function connectToDb(callback) {
+export async function connectToDb(callback) {
   const url = `mongodb+srv://${process.env.DBUSER}:${process.env.PASSWORD}@cluster0.59u2j.mongodb.net/test`;
     MongoClient.connect(url)
       .then(client => {
