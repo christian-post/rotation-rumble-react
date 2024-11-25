@@ -1,4 +1,5 @@
-import { Form} from "react-router-dom";
+import { Form } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 
 export async function action({ request }) {
@@ -268,6 +269,7 @@ function EffectsField() {
 
 
 function SetsField() {
+  // TODO get names from database
   const sets = ["Core Set", "Evil Science", "Twisted Tides"];
   return (
     <div className="advanced-search-item">
@@ -281,12 +283,55 @@ function SetsField() {
 }
 
 
+function DecksField() {
+  // TODO get names from database
+  const sets = ["Bolts & Bones", "Evil Science", "Twisted Tides"];
+  return (
+    <div className="advanced-search-item">
+      <label htmlFor="set" className="span-bold">Deck(s)</label>
+      <select id="set" name="set" multiple>
+        <option value="">All</option>
+        {sets.map(set => <option key={set} value={set}>{set}</option>)}
+      </select>
+    </div>
+  );
+}
+
+
 export default function AdvancedSearch() {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch search results");
+      return;
+    }
+
+    const resultData = await response.json();
+
+    // Navigate to results page with the fetched data
+    navigate("/results", { state: { results: resultData } });
+  };
+
   return (
     <main>
       <div className="grid-container" style={{ gridTemplateColumns: "100%" }}>
         <div className="grid-item">
-          <Form action="/advanced-search/" className="advanced-search" method="post">
+          {/* Intercept the form submission with onSubmit */}
+          <form onSubmit={handleSubmit} className="advanced-search">
             <CardnameField />
             <CardtypeField />
             <CardColorsField />
@@ -294,11 +339,10 @@ export default function AdvancedSearch() {
             <DamageField />
             <DefenseField />
             <DiceField />
-            <TokenField />
             <EffectsField />
-            <SetsField />
-            <input type="submit" value="Search with these values."/>
-          </Form>
+            <DecksField />
+            <input type="submit" value="Search with these values." />
+          </form>
         </div>
       </div>
     </main>

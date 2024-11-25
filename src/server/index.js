@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { connectToDb, getDb } from "./db.js";
+import { processSearch, sendAdvancedSearch } from "./search.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -22,20 +23,43 @@ connectToDb((err) => {
     db = getDb();
 
     // Start the server
-    const PORT = process.env.PORT || 3001;
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
+    const BACKEND_PORT = process.env.BACKEND_PORT || 3000;
+    app.listen(BACKEND_PORT, () => {
+        console.log(`Server running on port ${BACKEND_PORT}`);
     });
 });
 
-// Example route
-app.post("/api/submit", (req, res) => {
-    const { name, email } = req.body;
 
-    db.collection("users")
-        .insertOne({ name, email })
-        .then(() => res.status(200).json({ message: "Form submitted successfully!" }))
-        .catch((err) => res.status(500).json({ error: "Database error", details: err }));
+app.get("/api/test", async (req, res) => {
+  res.json({ message: "Backend is working!" });
 });
+
+
+app.post("/api/search", async (req, res) => {
+  try {
+    console.log("Request received:", req.body);
+    const formData = req.body;
+
+    // Process the search inputs
+    const { formattedSearch, searchExplain } = processSearch(formData);
+
+    // Perform the advanced search
+    const results = await sendAdvancedSearch(
+      db,
+      formattedSearch, 
+      formData.effects, 
+      searchExplain
+    );
+
+    console.log(results.explanation)
+
+    // Send the results back to the client
+    res.json(results);
+  } catch (error) {
+    console.error("Error processing search:", error);
+    res.status(500).json({ error: "An error occurred during the search." });
+  }
+});
+
 
 export default app;
