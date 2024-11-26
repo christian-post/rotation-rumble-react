@@ -18,10 +18,13 @@ export default function Results() {
               {results.cards && results.cards.length > 0 ? (
                 results.cards.map((card, index) => (
                   <li key={index}>
-                    {/* Display card information (customize as needed) */}
                     <h2>{card.name}</h2>
-                    <p>Type: {card.type}</p>
-                    <p>Description: {card.description}</p>
+                    <p>Set(s): {card.set}</p>
+                    <p>Color(s): {card.color}</p>
+                    {card.effect1 && <p>Effect 1: {card.effect1}</p>}
+                    {card.effect2 && <p>Effect 2: {card.effect2}</p>}
+                    {card.effect3 && <p>Effect 3: {card.effect3}</p>}
+                    {card.effect4 && <p>Effect 4: {card.effect4}</p>}
                   </li>
                 ))
               ) : (
