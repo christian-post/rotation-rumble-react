@@ -1,5 +1,7 @@
-import { Form } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+
+import Selection from "../components/selection";
 
 
 export async function action({ request }) {
@@ -23,7 +25,7 @@ function CardnameField() {
         id="cardname"
         name="name"
         type="text"
-        placeholder='Any words in the name, e.g., "Elf"'
+        placeholder="Whole or partial name"
       />
     </div>
   )
@@ -49,38 +51,71 @@ function CardtypeField() {
 }
 
 
-function ColorCheckboxes() {
+// function ColorCheckboxes({ onColorsChange }) {
+//   const colors = [
+//     { id: 1, value: "red", label: "Red" },
+//     { id: 2, value: "green", label: "Green" },
+//     { id: 3, value: "blue", label: "Blue" },
+//     { id: 4, value: "black", label: "Black" }
+//   ];
+
+//   const [selectedColors, setSelectedColors] = useState([]);
+
+//   const handleCheckboxChange = (event) => {
+//     const { value, checked } = event.target;
+
+//     if (checked) {
+//       // Add color to the selected list
+//       setSelectedColors((prev) => [...prev, value]);
+//     } else {
+//       // Remove color from the selected list
+//       setSelectedColors((prev) => prev.filter((color) => color !== value));
+//     }
+//     // Notify parent form of the change
+//     onColorsChange && onColorsChange(selectedColors);
+//   };
+
+//   return (
+//     <div className="color-checkboxes">
+//       {colors.map((color) => (
+//         <div key={color.id}>
+//           <input
+//             type="checkbox"
+//             className="checkbox"
+//             name="color"
+//             id={`inlineCheckbox${color.id}`}
+//             value={color.value}
+//             checked={selectedColors.includes(color.value)}
+//             onChange={handleCheckboxChange}
+//           />
+//           <label htmlFor={`inlineCheckbox${color.id}`}>
+//             {color.label}
+//           </label>
+//         </div>
+//       ))}
+//     </div>
+//   );
+// }
+
+function CardColorsField({ handleSelectionChange }) {
   const colors = [
-    {id: 1, value: "red", label: "Red"},
-    {id: 2, value: "green", label: "Green"},
-    {id: 3, value: "blue", label: "Blue"},
-    {id: 4, value: "black", label: "Black"}
+    { id: 2, value: "green", label: "Green" },
+    { id: 3, value: "blue", label: "Blue" },
+    { id: 1, value: "red", label: "Red" },
+    { id: 4, value: "black", label: "Black" }
   ];
 
-  return colors.map(color => 
-    <div key={color.id}>
-      <input
-        type="checkbox"
-        className="checkbox"
-        name="color"
-        id={`inlineCheckbox${color.id}`}
-        value={color.value}
-      />
-      <label htmlFor="inlineCheckbox4">
-        {color.label}
-      </label>
-    </div>
-  );
-}
-
-function CardColorsField() {
   return (
     <div className="advanced-search-item | color-select">
       <label htmlFor="inlineCheckbox1" className="span-bold">
         Colors
       </label>
-
-      <ColorCheckboxes />
+      
+      <Selection 
+        items={colors}
+        name=""
+        onSelectionChange={handleSelectionChange}
+      />
 
       <div>
         <select name="color_compare" id="color-compare">
@@ -270,7 +305,7 @@ function EffectsField() {
 
 function SetsField() {
   // TODO get names from database
-  const sets = ["Core Set", "Evil Science", "Twisted Tides"];
+  const sets = ["Core Set",];
   return (
     <div className="advanced-search-item">
       <label htmlFor="set" className="span-bold">Set(s)</label>
@@ -285,13 +320,22 @@ function SetsField() {
 
 function DecksField() {
   // TODO get names from database
-  const sets = ["Bolts & Bones", "Evil Science", "Twisted Tides"];
+  const decks = [
+    "Bolts & Bones",
+    "Bows & Blades",
+    "Clubs & Critters",
+    "Goblins & Glaciers",
+    "Howls & Horrors",
+    "Sakura & Shuriken",
+    "Tales & Tussle",
+    "Trash & Tiaras", 
+  ];
   return (
     <div className="advanced-search-item">
-      <label htmlFor="set" className="span-bold">Deck(s)</label>
-      <select id="set" name="set" multiple>
-        <option value="">All</option>
-        {sets.map(set => <option key={set} value={set}>{set}</option>)}
+      <label htmlFor="decks" className="span-bold">Deck(s)</label>
+      <select id="decks" name="decks" multiple>
+        <option value="any">Any</option>
+        {decks.map(deck => <option key={deck} value={deck}>{deck}</option>)}
       </select>
     </div>
   );
@@ -301,18 +345,47 @@ function DecksField() {
 export default function AdvancedSearch() {
   const navigate = useNavigate();
 
+  const [formData, setFormData] = useState({
+    colors: [], // Holds selected values for colors
+  });
+
+
+  const handleSelectionChange = (selectedValues) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      colors: selectedValues,
+    }));
+  };
+
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData.entries());
+    let data = new FormData(event.target);
+
+    const dataObj = {};
+    for (const [key, value] of data.entries()) {
+      if (dataObj[key]) {
+        // If the key already exists, convert it to an array or append to the existing array
+        if (Array.isArray(dataObj[key])) {
+          dataObj[key].push(value);
+        } else {
+          dataObj[key] = [dataObj[key], value];
+        }
+      } else {
+        // Otherwise, add the value as is
+        dataObj[key] = value;
+      }
+    }
+
+    dataObj.colors = formData.colors;
 
     const response = await fetch("/api/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(dataObj),
     });
 
     if (!response.ok) {
@@ -334,13 +407,16 @@ export default function AdvancedSearch() {
           <form onSubmit={handleSubmit} className="advanced-search">
             <CardnameField />
             <CardtypeField />
-            <CardColorsField />
+            <CardColorsField 
+              handleSelectionChange={handleSelectionChange}
+              />
             <TypeField />
             <DamageField />
             <DefenseField />
             <DiceField />
             <EffectsField />
             <DecksField />
+            <SetsField />
             <input type="submit" value="Search with these values." />
           </form>
         </div>

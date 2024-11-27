@@ -93,73 +93,75 @@ export function processSearch(req) {
   }
 
   // Suche nach Farben
-  let colors = '';
-  if (req.color) {
-    // color ist entweder ein String oder ein Array
-    if (typeof req.color === 'string') {
-      if (req.color_compare === 'exact' || req.color_compare === 'most') {
-        colors = RegExp(`^${req.color}$`, 'i');
-      } else if (req.color_compare === 'least-one' || req.color_compare === 'include-all') {
-        colors = RegExp(escapeRegex(req.color), 'i');
+  let colors;
+  if (req.colors.length > 0) {
+    if (req.color_compare === "exact") {
+      if (typeof req.colors === "string") {
+        // Single color: Enforce array size and regex match
+        colors = {
+          $size: 1,
+          $elemMatch: { $regex: new RegExp(`^${req.colors}$`, "i") }
+        };
+      } else if (Array.isArray(req.colors)) {
+        // Array of colors: Match exact array
+        colors = { $eq: req.colors };
       }
-    } else {
-      if (req.color_compare === 'exact') {
-        colors = RegExp(`^${req.color.join('/')}$`, 'i');
-      } else if (req.color_compare === 'least-one') {
-        // logical OR
-        colors = RegExp(req.color.join('|'), 'i');
-      } else if (req.color_compare === 'include-all') {
-        // logical AND
-        let searchStr = '';
-        req.color.forEach(color => searchStr += `(?=.*${color})`);
-        colors = RegExp(searchStr, 'i');
-      } else {
-        // "most"
-        let searchStr = '^(';
-
-        let combo = allCombinations(req.color);
-        combo.forEach(comb => {
-          searchStr += comb.join('\/') + '|';
-        });
-
-        searchStr += ')$';
-        colors = RegExp(searchStr, 'i');
+    } else if (req.color_compare === "least-one") {
+      // At least one match (logical OR)
+      if (typeof req.colors === "string") {
+        colors = {
+          $elemMatch: { $regex: new RegExp(`^${req.colors}$`, "i") }
+        };
+      } else if (Array.isArray(req.colors)) {
+        colors = {
+          $elemMatch: { $in: req.colors.map(color => new RegExp(`^${color}$`, "i")) }
+        };
+      }
+    } else if (req.color_compare === "include-all") {
+      // All elements must match (logical AND)
+      if (typeof req.colors === "string") {
+        colors = { $all: [new RegExp(`^${req.colors}$`, "i")] };
+      } else if (Array.isArray(req.color)) {
+        colors = {
+          $all: req.colors.map(color => new RegExp(`^${color}$`, "i"))
+        };
       }
     }
   }
+  
 
-  // Suche nach Token
-  let tokens = '';
-  if (req.token) {
-    // color ist entweder ein String oder ein Array
-    if (typeof req.token === 'string') {
+  // // Suche nach Token
+  // let tokens = '';
+  // if (req.token) {
+  //   // color ist entweder ein String oder ein Array
+  //   if (typeof req.token === 'string') {
 
-      if (req.token_compare === 'exact') {
-        //  TODO: das ergibt noch keinen Sinn
-        tokens = RegExp(req.token, 'i');
-      } else if (
-          req.token_compare === 'least-one' ||
-          req.token_compare === 'include-all'
-        ) {
-        tokens = RegExp(escapeRegex(req.token), 'i');
-      }
+  //     if (req.token_compare === 'exact') {
+  //       //  TODO: das ergibt noch keinen Sinn
+  //       tokens = RegExp(req.token, 'i');
+  //     } else if (
+  //         req.token_compare === 'least-one' ||
+  //         req.token_compare === 'include-all'
+  //       ) {
+  //       tokens = RegExp(escapeRegex(req.token), 'i');
+  //     }
 
-    } else {
-      if (req.token_compare === 'exact') {
-        tokens = RegExp(`^${req.token.join('/')}$`, 'i');
-      } else if (req.token_compare === 'least-one') {
-        // logical OR
-        tokens = RegExp(req.token.join('|'), 'i');
-      } else if (req.token_compare === 'include-all') {
-        // logical AND
-        let searchStr = '';
-        req.token.forEach(token => searchStr += `(?=.*${token})`);
-        tokens = RegExp(searchStr, 'i');
-      }
-    }
-  } else {
-    tokens = /(?:)/i;
-  }
+  //   } else {
+  //     if (req.token_compare === 'exact') {
+  //       tokens = RegExp(`^${req.token.join('/')}$`, 'i');
+  //     } else if (req.token_compare === 'least-one') {
+  //       // logical OR
+  //       tokens = RegExp(req.token.join('|'), 'i');
+  //     } else if (req.token_compare === 'include-all') {
+  //       // logical AND
+  //       let searchStr = '';
+  //       req.token.forEach(token => searchStr += `(?=.*${token})`);
+  //       tokens = RegExp(searchStr, 'i');
+  //     }
+  //   }
+  // } else {
+  //   tokens = /(?:)/i;
+  // }
 
   // dmg und def any value
   // TODO: don't change the contents of req; make a new variable for each
@@ -213,8 +215,18 @@ export function processSearch(req) {
     effectSearch = effectsSearchStr;
   }
 
+  // Decks
+  let decks;
+  if (typeof req.decks === 'string') {
+    decks = (req.decks == "any") ? null : [sanitize(req.decks, " ", ["&"])];
+  } else if (Array.isArray(req.decks)) {
+    decks = (req.decks.includes("any")) ? null : req.decks.map(deck => {
+      sanitize(deck, " ", ["&"])
+    });
+  }
 
-  // Set
+
+  // Sets
   let setSearchStr;
   let sets;
   if (typeof req.set === 'string') {
@@ -231,36 +243,31 @@ export function processSearch(req) {
 
 
   // Regex and query formatting
-  const search = {
-    name: req.name ? new RegExp(escapeRegex(req.name), "i") : undefined,
-    cardtype: req.cardtype ? new RegExp(escapeRegex(req.cardtype), "i") : undefined,
-    color: colors && colors.length > 0 ? colors : undefined,
-    dmg: req.dmg && req.dmg_compare_method 
-      ? { [req.dmg_compare_method]: req.dmg }
-      : undefined,
-    def: req.def && req.def_compare_method 
-      ? { [req.def_compare_method]: req.def }
-      : undefined,
-    dice: req.dice ? req.dice : undefined,
-    set: sets && sets.length > 0 ? sets : undefined,
-    $and: [
-      req.type ? { $or: [{ type1: req.type }, { type2: req.type }] } : undefined
-    ].filter(Boolean), // Remove undefined entries from the $and array
-    ...(effectSearch ? { $text: { $search: effectSearch } } : {})
-  };
-  
-  // Remove undefined fields from the `search` object
-  Object.keys(search).forEach((key) => {
-    if (search[key] === undefined || (Array.isArray(search[key]) && search[key].length === 0)) {
-      delete search[key];
-    }
-  });
-  
-  console.log("\nDatabase Query:")
-  console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
+  const search = {};
 
-  return { search, searchExplain };
-}
+  if (req.name) search.name = new RegExp(escapeRegex(req.name), "i");
+  if (req.cardtype) search.cardtype = new RegExp(escapeRegex(req.cardtype), "i");
+  if (colors) search.color = colors;
+  if (req.dmg && req.dmg_compare_method) search.dmg = { [req.dmg_compare_method]: req.dmg };
+  if (req.def && req.def_compare_method) search.def = { [req.def_compare_method]: req.def };
+  if (req.dice) search.dice = req.dice;
+  if (sets && sets.length > 0) search.set = sets;
+
+  if (decks) search.deck = { $eq: decks };
+
+  // Add $and conditions if present
+  if (req.type) {
+    search.$and = [{ $or: [{ type1: req.type }, { type2: req.type }] }];
+  }
+
+  // Add $text if effectSearch is present
+  if (effectSearch) search.$text = { $search: effectSearch };
+    
+    console.log("\nDatabase Query:")
+    console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
+
+    return { search, searchExplain };
+  }
 
 
 export async function sendAdvancedSearch(

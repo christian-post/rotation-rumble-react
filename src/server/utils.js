@@ -1,7 +1,12 @@
 
-export function sanitize(text, replacement=' ') {
-  if (text === undefined) return '';
-  return text.replace(/[\W_]+/g, replacement);
+export function sanitize(text, replacement = " ", exceptions = []) {
+  if (text === undefined) return "";
+  // Build a regex that excludes the characters in the exceptions list
+  const exceptionsRegex = exceptions.length
+    ? `[^\\w${exceptions.map((char) => `\\${char}`).join("")}]`
+    : "\\W_";
+  const regex = new RegExp(exceptionsRegex, "g");
+  return text.replace(regex, replacement);
 }
 
 
