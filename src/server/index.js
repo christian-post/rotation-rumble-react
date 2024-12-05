@@ -1,7 +1,12 @@
 import express from "express";
 import cors from "cors";
 import { connectToDb, getDb } from "./db.js";
-import { processSearch, sendAdvancedSearch } from "./search.js";
+import { 
+  processSearch, 
+  sendAdvancedSearch, 
+  testSearch, 
+  getDecklists 
+} from "./search.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -30,8 +35,16 @@ connectToDb((err) => {
 });
 
 
-app.get("/api/test", async (req, res) => {
-  res.json({ message: "Backend is working!" });
+app.post("/api/test", async (req, res) => {
+  const decklists = await getDecklists(db)
+
+  const searchResults = await testSearch(db);
+
+  res.json({ 
+    message: `${req.body.message} The backend is working!`,
+    searchResults: searchResults,
+    decklists: decklists 
+  });
 });
 
 
@@ -50,8 +63,6 @@ app.post("/api/search", async (req, res) => {
       formData.effects, 
       searchExplain
     );
-
-    console.log(results.explanation)
 
     // Send the results back to the client
     res.json(results);

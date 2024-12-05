@@ -5,11 +5,51 @@ import { inspect } from "util";
 dotenv.config();
 
 
+export async function testSearch(db) {
+  const search = {
+    dmg: 1
+  };
+
+  const found = await db.collection(process.env.COLLECTION)
+    .find(search).toArray();
+
+  return found;
+}
+
+
+
+export async function getDecklists(db) {
+  // queries the database for all cards and groups them by deck
+  const allCards = await db.collection(process.env.COLLECTION)
+    .find({ name: /(?:)/i }).toArray();
+
+  if (!allCards) {
+    console.log("no results")
+    return null;
+  }
+
+  const decklists = {};
+
+  // Iterate over each card and populate the decklists object
+  allCards.forEach((card) => {
+    card.deck.forEach((d) => {
+      if (!decklists[d]) {
+        decklists[d] = [];
+      }
+      decklists[d].push(card);
+    });
+  });
+
+  return decklists;
+}
+
+
+
 export function processSearch(req) {
   // Suche lesbar machen
   let searchExplain = [];
   let attrs = [
-    'name', 'cardtype', 'color', 'dmg', 'def', 'dice', 'token', 'type', 
+    'name', 'cardtype', 'colors', 'dmg', 'def', 'dice', 'token', 'type', 
     'effectOrStep', 'set'
   ];
 
@@ -42,8 +82,9 @@ export function processSearch(req) {
   for (let i = 0; i < attrs.length; i++) {
     if (req[attrs[i]]) {
       switch(attrs[i]) {
-        case 'color':
-          let colorStr = req[attrs[i]].toString().replaceAll(',', ', ');
+        case 'colors':
+          // capitalize and concatenate the color names
+          let colorStr = Object.values(req[attrs[i]]).map(capitalize).join(", ");
           searchExplain.push(`the Color ${aliases[req.color_compare]}: ${colorStr}`);
           break;
         case 'dice':
@@ -128,40 +169,6 @@ export function processSearch(req) {
       }
     }
   }
-  
-
-  // // Suche nach Token
-  // let tokens = '';
-  // if (req.token) {
-  //   // color ist entweder ein String oder ein Array
-  //   if (typeof req.token === 'string') {
-
-  //     if (req.token_compare === 'exact') {
-  //       //  TODO: das ergibt noch keinen Sinn
-  //       tokens = RegExp(req.token, 'i');
-  //     } else if (
-  //         req.token_compare === 'least-one' ||
-  //         req.token_compare === 'include-all'
-  //       ) {
-  //       tokens = RegExp(escapeRegex(req.token), 'i');
-  //     }
-
-  //   } else {
-  //     if (req.token_compare === 'exact') {
-  //       tokens = RegExp(`^${req.token.join('/')}$`, 'i');
-  //     } else if (req.token_compare === 'least-one') {
-  //       // logical OR
-  //       tokens = RegExp(req.token.join('|'), 'i');
-  //     } else if (req.token_compare === 'include-all') {
-  //       // logical AND
-  //       let searchStr = '';
-  //       req.token.forEach(token => searchStr += `(?=.*${token})`);
-  //       tokens = RegExp(searchStr, 'i');
-  //     }
-  //   }
-  // } else {
-  //   tokens = /(?:)/i;
-  // }
 
   // dmg und def any value
   // TODO: don't change the contents of req; make a new variable for each

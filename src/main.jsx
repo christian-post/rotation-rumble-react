@@ -8,9 +8,10 @@ import './index.css'
 
 import Root from "./routes/root";
 import Index from './routes/index_new';
-import AdvancedSearch, { action as advancedSearchAction } from './routes/advanced-search';
+import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
+import Test from './routes/test';
 
 
 const router = createBrowserRouter([
@@ -28,12 +29,15 @@ const router = createBrowserRouter([
             },
             {
               path: "advanced-search",
-              element: <AdvancedSearch />,
-              action: advancedSearchAction  // TODO
+              element: <AdvancedSearch />
             },
             {
               path: "results",
               element: <Results />
+            },
+            {
+              path: "test",
+              element: <Test />
             }
           ]
         }

@@ -156,13 +156,10 @@ select {
 
 .inline-symbol {
   display: inline-block;
-  margin: 1px 1px -1px 1px;
-  overflow: hidden;
-  text-indent: -9999px;
-
-  background-size: 100%;
-  width: 18px;
-  height: 18px;
+  height: 1em;
+  width: auto; 
+  vertical-align: middle; 
+  margin: 0 .1em; 
 }
 
 .bomb {

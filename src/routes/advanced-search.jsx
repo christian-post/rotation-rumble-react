@@ -4,18 +4,6 @@ import React, { useState } from "react";
 import Selection from "../components/selection";
 
 
-export async function action({ request }) {
-  const formData = await request.formData();
-  // const name = formData.get("name");
-  // const email = formData.get("email");
-
-  // // Handle form data (e.g., save to a database)
-  console.log(formData);
-
-  // Redirect or return a response
-  return null;
-}
-
 
 function CardnameField() {
   return (
@@ -50,52 +38,6 @@ function CardtypeField() {
   )
 }
 
-
-// function ColorCheckboxes({ onColorsChange }) {
-//   const colors = [
-//     { id: 1, value: "red", label: "Red" },
-//     { id: 2, value: "green", label: "Green" },
-//     { id: 3, value: "blue", label: "Blue" },
-//     { id: 4, value: "black", label: "Black" }
-//   ];
-
-//   const [selectedColors, setSelectedColors] = useState([]);
-
-//   const handleCheckboxChange = (event) => {
-//     const { value, checked } = event.target;
-
-//     if (checked) {
-//       // Add color to the selected list
-//       setSelectedColors((prev) => [...prev, value]);
-//     } else {
-//       // Remove color from the selected list
-//       setSelectedColors((prev) => prev.filter((color) => color !== value));
-//     }
-//     // Notify parent form of the change
-//     onColorsChange && onColorsChange(selectedColors);
-//   };
-
-//   return (
-//     <div className="color-checkboxes">
-//       {colors.map((color) => (
-//         <div key={color.id}>
-//           <input
-//             type="checkbox"
-//             className="checkbox"
-//             name="color"
-//             id={`inlineCheckbox${color.id}`}
-//             value={color.value}
-//             checked={selectedColors.includes(color.value)}
-//             onChange={handleCheckboxChange}
-//           />
-//           <label htmlFor={`inlineCheckbox${color.id}`}>
-//             {color.label}
-//           </label>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// }
 
 function CardColorsField({ handleSelectionChange }) {
   const colors = [
@@ -345,12 +287,12 @@ function DecksField() {
 export default function AdvancedSearch() {
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    colors: [], // Holds selected values for colors
+  const [colorFormData, setFormData] = useState({
+    colors: []
   });
 
 
-  const handleSelectionChange = (selectedValues) => {
+  const handleColorSelection = (selectedValues) => {
     setFormData((prevData) => ({
       ...prevData,
       colors: selectedValues,
@@ -378,7 +320,7 @@ export default function AdvancedSearch() {
       }
     }
 
-    dataObj.colors = formData.colors;
+    dataObj.colors = colorFormData.colors;
 
     const response = await fetch("/api/search", {
       method: "POST",
@@ -408,7 +350,7 @@ export default function AdvancedSearch() {
             <CardnameField />
             <CardtypeField />
             <CardColorsField 
-              handleSelectionChange={handleSelectionChange}
+              handleSelectionChange={handleColorSelection}
               />
             <TypeField />
             <DamageField />

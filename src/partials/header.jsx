@@ -13,6 +13,9 @@ export default function Header() {
           <li className="header-item">
             <a href="#">Deck Builder</a>
           </li>
+          <li className="header-item">
+            <a href="/test/">Test</a>
+          </li>
         </ul>
       </nav>
 
