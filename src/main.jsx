@@ -11,6 +11,7 @@ import Index from './routes/index_new';
 import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
+import SingleCard from './routes/singlecard';
 import Test from './routes/test';
 
 
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
               path: "results",
               element: <Results />
+            },
+            {
+              path: "singlecard",
+              element: <SingleCard />
             },
             {
               path: "test",

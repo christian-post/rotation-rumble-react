@@ -72,6 +72,7 @@ function CardColorsField({ handleSelectionChange }) {
   );
 }
 
+
 function TypeField() {
   return (
     <div className="advanced-search-item">
@@ -80,6 +81,7 @@ function TypeField() {
     </div>
   );
 }
+
 
 function DamageField() {
   const operators = [
@@ -176,46 +178,6 @@ function DiceField() {
       </div>
     </div>
   );
-}
-
-
-function TokenField() {
-  const tokens = [
-    { id: 5, value: "{bn}", imgSrc: "/images/bones.png", alt: "Bones" },
-    { id: 6, value: "{c}", imgSrc: "/images/coil.png", alt: "Coil" },
-    { id: 7, value: "{t}", imgSrc: "/images/treefolk.png", alt: "Treefolk" },
-    { id: 8, value: "{bb}", imgSrc: "/images/bomb.png", alt: "Bomb" },
-  ];
-  
-  return (
-    <div className="advanced-search-item | token-select">
-      <label htmlFor="token-checkboxes" className="span-bold">Token?</label>
-      <div id="token-checkboxes">
-        {tokens.map(({ id, value, imgSrc, alt }) => (
-          <div key={id}>
-            <input
-              type="checkbox"
-              className="checkbox"
-              name="token"
-              id={`inlineCheckbox${id}`}
-              value={value}
-            />
-            <label htmlFor={`inlineCheckbox${id}`}>
-              <img className="advanced-search-token" src={imgSrc} alt={alt} />
-            </label>
-          </div>
-        ))}
-      </div>
-
-      <div>
-        <select name="token_compare" id="token_compare">
-          <option value="exact">Exactly these tokens</option>
-          <option value="least-one">At least one of these tokens</option>
-          <option value="include-all">Including all of these tokens</option>
-        </select>
-      </div>
-    </div>
-  )
 }
 
 

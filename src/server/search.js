@@ -78,15 +78,20 @@ export function processSearch(req) {
     '{u}': 'unblockable'
   };
 
+  console.log("req", req)
+
   // Info Text for search results
   for (let i = 0; i < attrs.length; i++) {
     if (req[attrs[i]]) {
       switch(attrs[i]) {
         case 'colors':
-          // capitalize and concatenate the color names
-          let colorStr = Object.values(req[attrs[i]]).map(capitalize).join(", ");
-          searchExplain.push(`the Color ${aliases[req.color_compare]}: ${colorStr}`);
+          if (req.colors.length) {
+            // capitalize and concatenate the color names
+            let colorStr = Object.values(req[attrs[i]]).map(capitalize).join(", ");
+            searchExplain.push(`the Color ${aliases[req.color_compare]}: ${colorStr}`);
+          }
           break;
+
         case 'dice':
           if (req['dice'] === 'Yes') {
             searchExplain.push('the card requires die rolls');
@@ -94,33 +99,25 @@ export function processSearch(req) {
             searchExplain.push('the card doesn\'t require die rolls');
           }
           break;
+
         case 'dmg':
           if (req.dmg === 'any') break;
           searchExplain.push(
             `DMG is ${aliases[req.dmg_compare_method]} ${req[attrs[i]]}`
             );
           break;
+
         case 'def':
           if (req.def === 'any') break;
           searchExplain.push(
             `DEF is ${aliases[req.def_compare_method]} ${req[attrs[i]]}`
             );
           break;
-        case 'token':
-          let tokenText;
-          if (typeof req.token === 'object') {
-            // TODO: logical OR, AND unterscheiden
-            tokenText = req.token.map(x => aliases[x]).join(', ');
-          } else {
-            tokenText = aliases[req.token];
-          }
-          searchExplain.push(
-            `the card interacts with ${tokenText} tokens`
-          );
-          break;
+
         case 'effectOrStep':
           searchExplain.push(`the Effects or Steps contain "${req[attrs[i]]}"`);
           break;
+
         case 'set':
           if (typeof req.set === 'object') {
             searchExplain.push(`the Set is "${req.set.join('" or "')}"`);
