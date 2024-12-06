@@ -35,6 +35,26 @@ connectToDb((err) => {
 });
 
 
+app.get("/api/card/:cardId", async (req, res) => {
+  const { cardId } = req.params; // Extract cardId from the route
+
+  try {
+    const results = await db.collection(process.env.COLLECTION)
+      .find({ id: cardId }) // Match based on cardId
+      .toArray();
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: "Card not found" });
+    }
+
+    res.json(results[0]);
+  } catch (error) {
+    console.error("Error fetching card:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+
 app.post("/api/test", async (req, res) => {
   const decklists = await getDecklists(db)
 

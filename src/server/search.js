@@ -17,7 +17,6 @@ export async function testSearch(db) {
 }
 
 
-
 export async function getDecklists(db) {
   // queries the database for all cards and groups them by deck
   const allCards = await db.collection(process.env.COLLECTION)

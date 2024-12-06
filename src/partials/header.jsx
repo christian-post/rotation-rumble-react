@@ -1,20 +1,25 @@
+import { Link } from "react-router-dom";
+
+
 export default function Header() {
   return (
     <header>
-      <span className="header-logo"><a href="/">Rotation Rumble</a></span>
+      <span className="header-logo">
+        <Link to={"/"}>Rotation Rumble</Link>
+      </span>
       <nav className="header-nav">
         <ul>
           <li className="header-item">
-            <a href="/advanced-search/">Search</a>
+            <Link to={"advanced-search"}>Search</Link>
           </li>
           <li className="header-item">
-            <a href="#">Card Gallery</a>
+            <Link to={"gallery"}>Card Gallery</Link>
           </li>
           <li className="header-item">
-            <a href="#">Deck Builder</a>
+            <Link to={"deckbuilder"}>Deck Builder</Link>
           </li>
           <li className="header-item">
-            <a href="/test/">Test</a>
+            <Link to={"test"}>Search</Link>
           </li>
         </ul>
       </nav>
