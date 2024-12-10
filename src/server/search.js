@@ -270,7 +270,18 @@ export function processSearch(req) {
     console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
 
     return { search, searchExplain };
-  }
+}
+
+
+export async function sendSimpleSearch(db, search) {
+  const found = await db.collection(process.env.COLLECTION)
+    .find(search)
+    .toArray();
+
+  return {
+    cards: found
+  };
+}
 
 
 export async function sendAdvancedSearch(

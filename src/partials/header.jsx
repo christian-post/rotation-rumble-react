@@ -19,7 +19,7 @@ export default function Header() {
             <Link to={"deckbuilder"}>Deck Builder</Link>
           </li>
           <li className="header-item">
-            <Link to={"test"}>Search</Link>
+            <Link to={"test"}>Test</Link>
           </li>
         </ul>
       </nav>

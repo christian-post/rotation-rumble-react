@@ -1,7 +1,31 @@
 import { Form } from "react-router-dom";
+import { escapeRegex } from "../server/utils";
 
 
 export default function Index() {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const data = Object.fromEntries(formData)
+
+    const response = await fetch("/api/simple-search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch search results");
+      return;
+    }
+
+    const resultData = await response.json();
+    console.log("search result", resultData)
+  };
+
   return (
     <main>
       <div className="grid-container landing-page-grid">
@@ -17,11 +41,11 @@ export default function Index() {
         </div>
 
         <div className="grid-item" id="landing-searchbar">
-          <Form className="form-search" action="#" method="post">
+          <form className="form-search" onSubmit={handleSubmit}>
             <input 
               id="search" 
               type="text" 
-              name="search_field" 
+              name="name" 
             />
             <input 
               id="button-search" 
@@ -29,7 +53,7 @@ export default function Index() {
               src="/images/n_01-loupe@2x.png" 
               alt="🔍"
             />
-          </Form>
+          </form>
         </div>
 
         <div className="grid-item" id="landing-paragraph">

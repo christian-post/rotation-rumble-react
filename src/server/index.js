@@ -3,10 +3,12 @@ import cors from "cors";
 import { connectToDb, getDb } from "./db.js";
 import { 
   processSearch, 
-  sendAdvancedSearch, 
+  sendAdvancedSearch,
+  sendSimpleSearch,
   testSearch, 
   getDecklists 
 } from "./search.js";
+import { testModify } from "./woocommerce.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -56,7 +58,7 @@ app.get("/api/card/:cardId", async (req, res) => {
 
 
 app.post("/api/test", async (req, res) => {
-  const decklists = await getDecklists(db)
+  const decklists = await getDecklists(db);
 
   const searchResults = await testSearch(db);
 
@@ -65,7 +67,32 @@ app.post("/api/test", async (req, res) => {
     searchResults: searchResults,
     decklists: decklists 
   });
+
+  // res.json(decklists);
 });
+
+
+app.post("/api/test-shop", async (req, res) => {
+  const decklists = await getDecklists(db);
+
+  console.log(Object.keys(decklists));
+  const deckname = "Bolts & Bones";
+  const cards = decklists[deckname].map( card => card.name );
+
+  testModify(deckname, cards);
+
+  res.json({ message: "okay" });
+})
+
+
+app.post("/api/simple-search", async (req, res) => {
+  console.log("Request received:", req.body);
+  const formData = req.body;
+  
+  const results = await sendSimpleSearch(db, formData);
+  res.json(results);
+});
+
 
 
 app.post("/api/search", async (req, res) => {

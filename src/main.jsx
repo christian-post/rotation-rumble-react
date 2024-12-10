@@ -7,7 +7,7 @@ import {
 import './index.css'
 
 import Root from "./routes/root";
-import Index from './routes/index_new';
+import Index from './routes/index';
 import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";

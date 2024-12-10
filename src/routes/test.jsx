@@ -18,7 +18,7 @@ const Decklists = ({ decklists }) => {
           <h2>{deck}</h2>
           <ul>
             {cards.map((card) => (
-              <li key={card}>
+              <li key={card.id}>
                 <a href={`/card/${card.id}`}>{card.name}</a>
               </li>
             ))}
@@ -28,6 +28,22 @@ const Decklists = ({ decklists }) => {
     </div>
   );
 };
+
+
+async function testShopApi() {
+  const response = await fetch("/api/test-shop/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ message: "Hello, World"}),  // TODO: just a dummy
+  });
+
+  if (!response.ok) {
+    console.error("Failed to fetch search results");
+    return;
+  }
+}
 
 
 export default function Test() {
@@ -58,6 +74,7 @@ export default function Test() {
     <main>
       <div className="grid-container" style={{ gridTemplateColumns: "100%" }}>
         <div className="grid-item">
+          <button onClick={ testShopApi }>Test Shop API</button>
           <Form onSubmit={ handleSubmit } id="test-form1">
             <button type="submit">Show Decklists</button>
           </Form>
