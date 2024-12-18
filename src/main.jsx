@@ -11,7 +11,7 @@ import Index from './routes/index';
 import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
-import SingleCard, { loader as cardLoader } from './routes/singlecard';
+import { SingleCard, loader as cardLoader } from './routes/singlecard';
 import Test from './routes/test';
 
 

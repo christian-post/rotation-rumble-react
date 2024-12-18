@@ -8,7 +8,7 @@ import {
   testSearch, 
   getDecklists 
 } from "./search.js";
-import { testModify } from "./woocommerce.js";
+import { testOrderDeck } from "./woocommerce.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -76,12 +76,22 @@ app.post("/api/test-shop", async (req, res) => {
   const decklists = await getDecklists(db);
 
   console.log(Object.keys(decklists));
-  const deckname = "Bolts & Bones";
+  const deckname = "Bows & Blades";
   const cards = decklists[deckname].map( card => card.name );
 
-  testModify(deckname, cards);
+  const response = await testOrderDeck(deckname, cards);
 
-  res.json({ message: "okay" });
+  console.log("response from server", response)
+
+  if (response.data && response.data.status) {
+    res.status(response.data.status).json({
+      code: response.code,
+      message: response.message,
+      data: response.data,
+    });
+  } else {
+    res.json(response);
+  }
 })
 
 

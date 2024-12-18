@@ -30,24 +30,27 @@ const Decklists = ({ decklists }) => {
 };
 
 
-async function testShopApi() {
-  const response = await fetch("/api/test-shop/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ message: "Hello, World"}),  // TODO: just a dummy
-  });
-
-  if (!response.ok) {
-    console.error("Failed to fetch search results");
-    return;
+const OrderDisplay = ({ order }) => {
+  // displays the order
+  if (!order) {
+    return (
+      <div>
+        <p>Awaiting your order...</p>
+      </div>
+    );
   }
+
+  return (
+    <div>
+      <a href={order.url}>Put deck into cart</a>
+    </div>
+  );
 }
 
 
 export default function Test() {
   const [decklists, setDecklists] = useState({});
+  const [order, displayOrder] = useState({});
 
   async function handleSubmit(event) {
     //  function for the test button
@@ -70,16 +73,47 @@ export default function Test() {
     setDecklists(responseData.decklists)
   }
 
+
+  async function testDeckOrder() {
+    const response = await fetch("/api/test-shop/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+  
+    const res = await response.json()
+  
+    if (!response.ok) {
+      console.error(response.status, response.statusText);
+      alert(`Error: ${res.message} (${res.code})`);
+      return;
+    }
+  
+    const productId = res.id;
+  
+    const cartUrl = `https://beaverlicious.com/?add-to-cart=${productId}`;
+    // TODO product doesn't show up in cart
+
+    displayOrder({
+      url: cartUrl
+    });
+  
+    // alert(`Deck submitted successfully! Go to https://beaverlicious.com/ to check your order.`);
+  }
+
+
   return (
     <main>
       <div className="grid-container" style={{ gridTemplateColumns: "100%" }}>
         <div className="grid-item">
-          <button onClick={ testShopApi }>Test Shop API</button>
+          <button onClick={ testDeckOrder }>Test Shop API</button>
           <Form onSubmit={ handleSubmit } id="test-form1">
             <button type="submit">Show Decklists</button>
           </Form>
         </div>
         <Decklists decklists={decklists}/>
+        <OrderDisplay order={order}/>
       </div>
     </main>
   );

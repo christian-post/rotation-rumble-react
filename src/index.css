@@ -682,7 +682,7 @@ footer {
 
 /* ----------- cardinfo.ejs --------------------------------------------------*/
 .card-title {
-  font-size: 80px;
+  font-size: 64px;
 }
 
 .card-title-container {
@@ -749,6 +749,23 @@ footer {
   display: inline-block;
   max-width: 18px;
 }
+
+@keyframes pulseOpacity {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+.pulsating-placeholder {
+  animation: pulseOpacity 1.5s infinite ease-in-out;
+}
+
 /* ---------------------------------------------------------------------------*/
 
 /* ------------------------ SINGLE CARD MOBILE VIEW ------------------------- */
