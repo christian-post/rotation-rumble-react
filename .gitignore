@@ -28,5 +28,6 @@ dist-ssr
 /node_modules
 /TODO.txt
 /release_notes.txt
+/public/images/cards/
 
 *.mjs

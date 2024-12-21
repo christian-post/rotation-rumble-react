@@ -104,6 +104,7 @@ export function CardInfo() {
 
 
 export function SingleCard() {
+  // TODO: replace with components/CardImage ?
   const { card, error } = useLoaderData();
 
   const placeholderImage = "/images/Lazy-Load-MTG.jpg";
