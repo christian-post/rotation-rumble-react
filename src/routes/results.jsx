@@ -36,46 +36,9 @@ const correctedSearch = (results) => {
   return;
 }
 
-
-// export default function ResultsNew() {
-//   const location = useLocation();
-//   const { results } = location.state || { results: [] };
-
-//   return (
-//     <main>
-//       <div class="grid-container" style="grid-template-columns: 50% 50%;">
-//         <div class="gallery-header grid-item" id="display-as">
-//           <h2>Search results for [...]</h2>
-//           {results.correction && (
-//             // show search correction if necessary
-//             <h3>
-//               Did you mean <span
-//                 className="fake-link"
-//                 onClick={() => correctedSearch(results)}
-//                 >
-//                 {results.correction}</span>?
-//             </h3>
-//           )}
-//         </div>
-//         <div class="grid-item" style="grid-column: 1 / span 2">
-//           {/* <%- include('../partials/card-gallery-' + locals.query.as); %> */}
-//           {!results.cards.length && 
-//             <div class="notFound-image-container">
-//               <img class="notFound-image" src="/images/rotation-rumble-no-card-found.jpg"/>
-//             </div>
-//           }
-//         </div>
-//       </div>
-//     </main>
-//   )
-// }
-
-
 export default function Results() {
   const location = useLocation();
   const { results } = location.state || { results: [] };
-
-  console.log(results)
 
   return (
     <main>

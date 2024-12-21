@@ -13,7 +13,7 @@ export default function Header() {
             <Link to={"advanced-search"}>Search</Link>
           </li>
           <li className="header-item">
-            <Link to={"gallery"}>Card Gallery</Link>
+            <Link to={"card-gallery"}>Card Gallery</Link>
           </li>
           <li className="header-item">
             <Link to={"deckbuilder"}>Deck Builder</Link>

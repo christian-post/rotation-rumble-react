@@ -13,6 +13,7 @@ import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
 import { SingleCard, loader as cardLoader } from './routes/singlecard';
 import Test from './routes/test';
+import { CardGallery, loader as galleryLoader } from './routes/card-gallery';
 
 
 const router = createBrowserRouter([
@@ -31,6 +32,11 @@ const router = createBrowserRouter([
             {
               path: "advanced-search",
               element: <AdvancedSearch />
+            },
+            {
+              path: "card-gallery",
+              element: <CardGallery />,
+              loader: galleryLoader
             },
             {
               path: "results",

@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import { getSingleCard } from "../server/getcard";
 import { capitalize } from "../server/utils";
 import { replacePlaceholdersWithImages } from "./results";
+import CardImage from "../components/CardImage";
 
 
 export async function loader({ params }) {
@@ -81,18 +82,28 @@ export function CardInfo() {
         <CardBody card={card} />
       </div>
       <div>
-        {card.effect1 && (
-          <p>Effect 1: {replacePlaceholdersWithImages(card.effect1)}</p>
-        )}
-        {card.effect2 && (
-          <p>Effect 2: {replacePlaceholdersWithImages(card.effect2)}</p>
-        )}
-        {card.effect3 && (
-          <p>Effect 3: {replacePlaceholdersWithImages(card.effect3)}</p>
-        )}
-        {card.effect4 && (
-          <p>Effect 4: {replacePlaceholdersWithImages(card.effect4)}</p>
-        )}
+        {Array.from({ length: 4 }, (_, i) => {
+          const key = `effect${i + 1}`;
+          return (
+            card[key] && (
+              <div className="card-stats-effects">
+                <p>
+                  <span class="span-bold | card-effect">
+                    <span class="effect-name">
+                      {`Effect ${i + 1}`}
+                    </span>
+                  </span>
+                </p>
+                <p className="single-card-effect">
+                  {replacePlaceholdersWithImages(card[key])}
+                </p>
+              </div>
+              // <p key={key}>
+              //   Effect {i + 1}: {replacePlaceholdersWithImages(card[key])}
+              // </p>
+            )
+          );
+        })}
       </div>
     </div>
     </>
@@ -104,24 +115,7 @@ export function CardInfo() {
 
 
 export function SingleCard() {
-  // TODO: replace with components/CardImage ?
   const { card, error } = useLoaderData();
-
-  const placeholderImage = "/images/Lazy-Load-MTG.jpg";
-
-  // State to track if the actual image has loaded
-  const [imageLoaded, setImageLoaded] = useState(false);
-
-  // Image load handler
-  const handleImageLoad = () => {
-    setImageLoaded(true);
-  };
-
-  const imageErrorHandler = (event) => {
-    event.target.src = '/images/Image_Not_Found.jpg';
-    setImageLoaded(true);
-  }
-
 
   return (
     <main>
@@ -131,22 +125,7 @@ export function SingleCard() {
             (card != undefined) ? 
             <>
             <div className="grid-item" id="singlecard-image">
-              {!imageLoaded && (
-                  <img
-                    className="card-image-large pulsating-placeholder"
-                    src={placeholderImage}
-                    alt="Loading..."
-                  />
-                  )}
-                  <img
-                    className="card-image-large"
-                    src={card.image_url}
-                    alt={card.name}
-                    loading="lazy"
-                    onLoad={handleImageLoad}
-                    onError={imageErrorHandler}
-                    style={{ opacity: imageLoaded ? 1 : 0, transition: "opacity 0.3s" }}
-                  />
+              <CardImage data={{ card: card, sizing: "large" }}/>
             </div>
             <div className="grid-item">
               <CardInfo card={card}/>

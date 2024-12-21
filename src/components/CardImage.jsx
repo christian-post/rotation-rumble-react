@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 
 
-export default function CardImage( { card }) {
+export default function CardImage( { data }) {
+  const { card, sizing } = data;
+
   const [imageLoaded, setImageLoaded] = useState(false);
     
   const placeholderImage = "/images/Lazy-Load-MTG.jpg";	
@@ -20,14 +22,15 @@ export default function CardImage( { card }) {
     <>
     {!imageLoaded && (
       <img
-        className="card-image-medium pulsating-placeholder"
+        className={`card-image-${sizing} pulsating-placeholder`}
         src={placeholderImage}
         alt="Loading..."
       />
       )}
       <img
-        className="card-image-medium"
-        src={card.image_url}
+        className={`card-image-${sizing}`}
+        // src={card.image_url}
+        src={`/images/cards/${card.id}.jpg`}
         alt={card.name}
         loading="lazy"
         onLoad={handleImageLoad}
