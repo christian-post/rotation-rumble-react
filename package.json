@@ -12,6 +12,9 @@
     "start-server": "nodemon src/server/index.js",
     "start": "concurrently \"npm run dev\" \"npm run start-server\""
   },
+  "engines": {
+    "node": "16.x"
+  },
   "dependencies": {
     "@woocommerce/woocommerce-rest-api": "github:woocommerce/woocommerce-rest-api-js-lib",
     "axios": "^1.6.0",
