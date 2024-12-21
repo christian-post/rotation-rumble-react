@@ -20,6 +20,14 @@ let db;
 app.use(cors());
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' https://rotation-rumble-react.glitch.me;"
+  );
+  next();
+});
+
 
 connectToDb((err) => {
     if (err) {
