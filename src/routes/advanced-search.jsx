@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import React, { useState } from "react";
 
-import Selection from "../components/selection";
+import Selection from "../components/Selection";
 
 
 

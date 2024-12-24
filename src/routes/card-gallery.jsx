@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import Gallery from "../partials/gallery";
+import Gallery from "../partials/Gallery";
 
 
 export async function loader({ params }) {

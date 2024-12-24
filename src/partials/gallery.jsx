@@ -1,4 +1,3 @@
-import { useLoaderData } from "react-router-dom"
 import { Fragment } from "react";
 import CardImage from "../components/CardImage";
 import { capitalize } from "../server/utils";

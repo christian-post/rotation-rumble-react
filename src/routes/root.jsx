@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 
-import Header from '../partials/header';
-import Footer from '../partials/footer';
+import Header from '../partials/Header';
+import Footer from '../partials/Footer';
 
 export default function Root() {
     return (
