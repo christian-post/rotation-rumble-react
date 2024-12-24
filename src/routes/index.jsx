@@ -1,9 +1,10 @@
-import { Form } from "react-router-dom";
-import { escapeRegex } from "../server/utils";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Index() {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
+    // handles the "search for a card name" form
     event.preventDefault();
 
     const formData = new FormData(event.target);
@@ -23,7 +24,8 @@ export default function Index() {
     }
 
     const resultData = await response.json();
-    console.log("search result", resultData)
+    // navigate to the Results route
+    navigate("/results", { state: { results: resultData } });
   };
 
   return (
@@ -36,7 +38,7 @@ export default function Index() {
         <div className="grid-item span-3-v" id="hero-image">
           <img 
             src="/images/BaseBlue_2_-_Ol_Fyndor300.png" 
-            alt="Dieser Zaubertyp"
+            alt="Fyndor, the Blue Magician"
           />
         </div>
 
@@ -58,7 +60,11 @@ export default function Index() {
 
         <div className="grid-item" id="landing-paragraph">
           <p className="info-paragraph">
-            Rotation Rumble is a card game in which you take on the role of a guild coach and hire mercenaries. You command them in weekly Rumble battles for money, cheesecake and glory. Choose wisely which fighters, challenges and items you combine to form the best possible squad of ruthless rumblers!
+            Rotation Rumble is a card game in which you take on the role of 
+            a guild coach and hire mercenaries. You command them in weekly 
+            Rumble battles for money, cheesecake and glory. 
+            Choose wisely which fighters, challenges and items you combine 
+            to form the best possible squad of ruthless rumblers!
           </p>
         </div>
       </div>

@@ -7,6 +7,7 @@ import CardImage from "../components/CardImage";
 
 
 export async function loader({ params }) {
+  // on page load, gets the data for this card ID
   const card = await getSingleCard(params.cardId);
 
   if (card == undefined) {
@@ -22,6 +23,8 @@ export async function loader({ params }) {
 
 function CardBody() {
   const { card, error } = useLoaderData();
+
+  // TODO error handling
 
   switch (card.cardtype) {
     case "Fighter":
@@ -60,6 +63,8 @@ function CardBody() {
 export function CardInfo() {
   const { card, error } = useLoaderData();
 
+  // TODO error handling
+
   return (
     <>
     <div className="card-text">
@@ -86,10 +91,13 @@ export function CardInfo() {
           const key = `effect${i + 1}`;
           return (
             card[key] && (
-              <div className="card-stats-effects">
+              <div 
+                key={key}
+                className="card-stats-effects"
+              >
                 <p>
-                  <span class="span-bold | card-effect">
-                    <span class="effect-name">
+                  <span className="span-bold | card-effect">
+                    <span className="effect-name">
                       {`Effect ${i + 1}`}
                     </span>
                   </span>
@@ -98,9 +106,6 @@ export function CardInfo() {
                   {replacePlaceholdersWithImages(card[key])}
                 </p>
               </div>
-              // <p key={key}>
-              //   Effect {i + 1}: {replacePlaceholdersWithImages(card[key])}
-              // </p>
             )
           );
         })}

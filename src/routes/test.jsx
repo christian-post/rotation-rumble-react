@@ -93,7 +93,6 @@ export default function Test() {
     const productId = res.id;
   
     const cartUrl = `https://beaverlicious.com/?add-to-cart=${productId}`;
-    // TODO product doesn't show up in cart
 
     displayOrder({
       url: cartUrl

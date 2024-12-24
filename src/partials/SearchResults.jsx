@@ -13,36 +13,34 @@ export default function SearchResults({ results }) {
   const cards = results.cards || [];
 
   return (
-    <main>
-      <div className="grid-container" style={{ gridTemplateColumns: "50% 50%" }}>
-        <div className="gallery-header grid-item" id="display-as">
-          <h2>{ header }</h2>
-          { correction ? (
-            <h3>
-              Did you mean <span
-                className="fake-link"
-                // onClick={ ()=> { 
-                //   // TODO: Link to corrected search
-                // } }
-                >
-                { correction }"</span>?
-            </h3>
-          ) : null }
-        </div>
-
-        <div className="grid-item" style= {{ gridColumn: "1 / span 2" }}>
-          { (cards.length === 0) ? (
-            <div className="notFound-image-container">
-              <img 
-                className="notFound-image" 
-                src="/images/rotation-rumble-no-card-found.jpg"
-              />
-            </div>
-          ) : 
-            < Gallery cards={cards} />
-          }
-        </div>
+    <>
+      <div className="gallery-header grid-item" id="display-as">
+        <h2>{ header }</h2>
+        { correction ? (
+          <h3>
+            Did you mean <span
+              className="fake-link"
+              // onClick={ ()=> { 
+              //   // TODO: Link to corrected search
+              // } }
+              >
+              { correction }"</span>?
+          </h3>
+        ) : null }
       </div>
-    </main>
+
+      <div className="grid-item" style= {{ gridColumn: "1 / span 2" }}>
+        { (cards.length === 0) ? (
+          <div className="notFound-image-container">
+            <img 
+              className="notFound-image" 
+              src="/images/rotation-rumble-no-card-found.jpg"
+            />
+          </div>
+        ) : 
+          < Gallery cards={cards} />
+        }
+      </div>
+    </>
   )
 }

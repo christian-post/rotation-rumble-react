@@ -48,42 +48,40 @@ export function processSearch(req) {
   // Suche lesbar machen
   let searchExplain = [];
   let attrs = [
-    'name', 'cardtype', 'colors', 'dmg', 'def', 'dice', 'token', 'type', 
-    'effectOrStep', 'set'
+    "name", "cardtype", "colors", "dmg", "def", "dice", "token", "type", 
+    "effectOrStep", "set"
   ];
 
   let aliases = {
-    '$eq': 'equal to',
-    '$gt': 'greater than',
-    '$lt': 'less than',
-    '$gte': 'greater than or equal to',
-    '$lte': 'less than or equal to',
-    'exact': 'is exactly these colors',
-    'least-one': 'is at least one of these colors',
-    'include-all': 'includes all of these colors',
-    'most': 'is at most these colors',
-    '{t}': 'Treefolk',
-    '{bb}': 'Bomb',
-    '{bn}': 'Bones',
-    '{by}': 'bury',
-    '{c}': 'Coil',
-    '{d}': 'Dice',
-    '{e}': 'Energy',
-    '{hs}': 'Haste',
-    '{ht}': 'Heart',
-    '{m}': 'Money',
-    '{s}': 'Star',
-    '{t}': 'Treefolk',
-    '{u}': 'unblockable'
+    "$eq": "equal to",
+    "$gt": "greater than",
+    "$lt": "less than",
+    "$gte": "greater than or equal to",
+    "$lte": "less than or equal to",
+    "exact": "is exactly these colors",
+    "least-one": "is at least one of these colors",
+    "include-all": "includes all of these colors",
+    "most": "is at most these colors",
+    "{t}": "Treefolk",
+    "{bb}": "Bomb",
+    "{bn}": "Bones",
+    "{by}": "bury",
+    "{c}": "Coil",
+    "{d}": "Dice",
+    "{e}": "Energy",
+    "{hs}": "Haste",
+    "{ht}": "Heart",
+    "{m}": "Money",
+    "{s}": "Star",
+    "{t}": "Treefolk",
+    "{u}": "unblockable"
   };
-
-  console.log("req", req)
 
   // Info Text for search results
   for (let i = 0; i < attrs.length; i++) {
     if (req[attrs[i]]) {
       switch(attrs[i]) {
-        case 'colors':
+        case "colors":
           if (req.colors.length) {
             // capitalize and concatenate the color names
             let colorStr = Object.values(req[attrs[i]]).map(capitalize).join(", ");
@@ -91,37 +89,41 @@ export function processSearch(req) {
           }
           break;
 
-        case 'dice':
-          if (req['dice'] === 'Yes') {
-            searchExplain.push('the card requires die rolls');
-          } else if (req['dice'] === 'No') {
-            searchExplain.push('the card doesn\'t require die rolls');
+        case "dice":
+          if (req["dice"] === "Yes") {
+            searchExplain.push("the card requires die rolls");
+          } else if (req["dice"] === "No") {
+            searchExplain.push("the card doesn\'t require die rolls");
           }
           break;
 
-        case 'dmg':
-          if (req.dmg === 'any') break;
+        case "dmg":
+          if (req.dmg === "any") break;
           searchExplain.push(
             `DMG is ${aliases[req.dmg_compare_method]} ${req[attrs[i]]}`
             );
           break;
 
-        case 'def':
-          if (req.def === 'any') break;
+        case "def":
+          if (req.def === "any") break;
           searchExplain.push(
             `DEF is ${aliases[req.def_compare_method]} ${req[attrs[i]]}`
             );
           break;
 
-        case 'effectOrStep':
+        case "effectOrStep":
           searchExplain.push(`the Effects or Steps contain "${req[attrs[i]]}"`);
           break;
 
-        case 'set':
-          if (typeof req.set === 'object') {
-            searchExplain.push(`the Set is "${req.set.join('" or "')}"`);
+        case "set":
+          if (typeof req.set === "object") {
+            searchExplain.push(`the Set is "${req.set.join("\" or \"")}"`);
             break;
           }
+
+        case "name":
+          searchExplain.push(`the ${capitalize(attrs[i])} includes "${req[attrs[i]]}"`);
+          break;
 
         default:
           searchExplain.push(`the ${capitalize(attrs[i])} is "${req[attrs[i]]}"`);
@@ -185,7 +187,7 @@ export function processSearch(req) {
 
 
   // Würfel
-  if (req.dice === 'Irrelevant') {
+  if (req.dice === "Irrelevant") {
     req.dice = /(?:)/i;
   }
 
@@ -213,14 +215,14 @@ export function processSearch(req) {
     effectSearch = `\"${effectsSearchStr}\"`;
   } else if (req.effectOrStep_matchall) {
     // Match all words
-    effectSearch = `\"${effectsSearchStr.replaceAll(' ', '\" \"')}\"`;
+    effectSearch = `\"${effectsSearchStr.replaceAll(" ", "\" \"")}\"`;
   } else {
     effectSearch = effectsSearchStr;
   }
 
   // Decks
   let decks;
-  if (typeof req.decks === 'string') {
+  if (typeof req.decks === "string") {
     decks = (req.decks == "any") ? null : [sanitize(req.decks, " ", ["&"])];
   } else if (Array.isArray(req.decks)) {
     decks = (req.decks.includes("any")) ? null : req.decks.map(deck => {
@@ -232,17 +234,17 @@ export function processSearch(req) {
   // Sets
   let setSearchStr;
   let sets;
-  if (typeof req.set === 'string') {
+  if (typeof req.set === "string") {
     setSearchStr = req.set;
   } else {
     // Array
     if (req.set === undefined) {
-      setSearchStr = '';
+      setSearchStr = "";
     } else {
-      setSearchStr = `${req.set.join('|')}`;
+      setSearchStr = `${req.set.join("|")}`;
     }
   }
-  sets = RegExp(setSearchStr, 'i');
+  sets = RegExp(setSearchStr, "i");
 
 
   // Regex and query formatting
@@ -278,8 +280,24 @@ export async function sendSimpleSearch(db, search) {
     .find(search)
     .toArray();
 
+  let header;
+
+  if (found.length === 1) {
+    header = `This card matched your search`;
+  } else if (found.length > 1) {
+    header = `These ${found.length} cards matched your search`;
+  } else {
+    header = "No cards matched your search";
+  }
+
+  header += ` where the name includes \"${search.name.source}\".`
+
   return {
-    cards: found
+    explanation: header,
+    cards: found,
+    // correction: correction,
+    // correctionType: correctionType,
+    query: { as: "images" },
   };
 }
 
@@ -287,7 +305,10 @@ export async function sendSimpleSearch(db, search) {
 export async function sendAdvancedSearch(
     db, search, effectSearch, searchExplain
   ) {
-  const found = await db.collection(process.env.COLLECTION).find(search).toArray();
+  const found = await db.collection(process.env.COLLECTION)
+    .find(search)
+    .toArray();
+
   let header;
   let correction = null;
   let correctionType = null;

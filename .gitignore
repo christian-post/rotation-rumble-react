@@ -29,5 +29,6 @@ dist-ssr
 /TODO.txt
 /release_notes.txt
 /public/images/cards/
+*.backup
 
 *.mjs

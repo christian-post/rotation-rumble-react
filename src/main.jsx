@@ -20,10 +20,8 @@ const router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
-      errorElement: <ErrorPage />,
       children: [
         {
-          errorElement: <ErrorPage />,
           children: [
             {
               index: true, 
@@ -34,9 +32,13 @@ const router = createBrowserRouter([
               element: <AdvancedSearch />
             },
             {
-              path: "card-gallery",
+              path: "card-gallery/:groupBy?",
               element: <CardGallery />,
-              loader: galleryLoader
+              loader: ({ params }) => {
+                // sort by cardtype by default
+                const groupBy = params.groupBy || "cardtype"; 
+                return galleryLoader({ params: { groupBy } });
+              }
             },
             {
               path: "results",
@@ -51,11 +53,10 @@ const router = createBrowserRouter([
               path: "test",
               element: <Test />
             },
-            // {
-            //   path: "*",
-            //   element: <ErrorPage />,
-            //   errorElement: <ErrorPage />,
-            // }
+            {
+              path: "*", // Catch-all route for non-existent paths
+              element: <ErrorPage />,
+            }
           ]
         }
       ]

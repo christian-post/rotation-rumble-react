@@ -4,14 +4,16 @@ import Gallery from "../partials/gallery";
 
 
 export async function loader({ params }) {
-  const request = await fetch(`/api/all-cards`, {
+  const groupBy = params.groupBy;
+  
+  const request = await fetch(`/api/all-cards?groupBy=${groupBy}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     }
   });
 
-  const cards = await request.json();
+  const { cards, aggregated } = await request.json();
 
   if (cards == undefined) {
     console.log("cards is undefined")
@@ -20,14 +22,14 @@ export async function loader({ params }) {
     };
   };
 
-  return { cards };
+  return { cards, aggregated };
 }
 
 
 export function CardGallery() {
-  const { cards, error } = useLoaderData();
+  const { cards, aggregated, error } = useLoaderData();
 
-  console.log(cards)
+  // TODO: error handling
 
   return (
     <main>
@@ -36,7 +38,10 @@ export function CardGallery() {
         style={{ gridTemplateColumns: "50% 50%" }}
       >
         <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-          <Gallery cards={cards} />
+          <Gallery 
+            cards={cards}
+            aggregated={aggregated}
+          />
         </div>
       </div>
     </main>

@@ -10,6 +10,7 @@ import {
 } from "./search.js";
 import { testOrderDeck } from "./woocommerce.js";
 import dotenv from "dotenv";
+import { escapeRegex } from "./utils.js";
 
 dotenv.config();
 
@@ -57,11 +58,32 @@ app.get("/api/card/:cardId", async (req, res) => {
 });
 
 
+
 app.get("/api/all-cards", async (req, res) => {
-  // just get everything from the db
+  // get all cards, grouped by a given parameter
+  // default to "deck" if not provided
+  const groupBy = req.query.groupBy || "deck";
+
+  const pipeline = [
+    { $group: { _id: `\$${groupBy}`, count: { $sum: 1 }}},
+    {$sort: { _id: 1 }} 
+  ];
+  const aggCursor = db.collection(process.env.COLLECTION)
+      .aggregate(pipeline);
+
   try {
-    const results = await db.collection(process.env.COLLECTION).find().toArray();
-    res.json(results);
+    const aggregated = await aggCursor.toArray();
+
+    let sort = {};
+    sort[groupBy] = 1;
+    sort["name"] = 1;
+
+    const cards = await db.collection(process.env.COLLECTION)
+      .find()
+      .sort(sort)
+      .toArray();
+
+    res.json({ cards, aggregated });
   } catch (error) {
     console.error("Error fetching cards:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -110,6 +132,8 @@ app.post("/api/test-shop", async (req, res) => {
 app.post("/api/simple-search", async (req, res) => {
   console.log("Request received:", req.body);
   const formData = req.body;
+
+  formData.name = new RegExp(escapeRegex(formData.name), "i");
   
   const results = await sendSimpleSearch(db, formData);
   res.json(results);
