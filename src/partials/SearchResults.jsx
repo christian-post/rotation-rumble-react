@@ -1,4 +1,4 @@
-import Gallery from "./gallery";
+import Gallery from "./Gallery";
 import { useLoaderData } from "react-router-dom";
 
 
