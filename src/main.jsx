@@ -16,6 +16,9 @@ import Test from './routes/test';
 import { CardGallery, loader as galleryLoader } from './routes/card-gallery';
 
 
+const isDevelopment = import.meta.env.MODE === "development"; // For Vite
+
+
 const router = createBrowserRouter([
     {
       path: "/",
@@ -49,10 +52,14 @@ const router = createBrowserRouter([
               element: <SingleCard />,
               loader: cardLoader,
             },
-            {
-              path: "test",
-              element: <Test />
-            },
+            ...(isDevelopment
+              ? [
+                  {
+                    path: "test", // Only include in development
+                    element: <Test />
+                  }
+                ]
+              : []),
             {
               path: "*", // Catch-all route for non-existent paths
               element: <ErrorPage />,
