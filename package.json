@@ -7,11 +7,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start-server": "nodemon src/server/index.js",
-    "start": "concurrently \"npm run dev\" \"npm run start-server\""
-  },
+    "start:frontend": "vite preview",
+    "start:backend": "node src/server/index.js",
+    "start": "npm run build && concurrently \"npm run start:frontend\" \"npm run start:backend\""
+    },
   "dependencies": {
     "@woocommerce/woocommerce-rest-api": "github:woocommerce/woocommerce-rest-api-js-lib",
     "axios": "^1.6.0",
