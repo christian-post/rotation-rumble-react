@@ -21,6 +21,7 @@ dotenv.config();
 // })
 
 export default defineConfig(({ mode }) => {
+  console.log(`Vite mode: ${mode}`); // Log the mode
   const isProduction = mode === "production";
 
   return {
