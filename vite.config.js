@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
       proxy: {
         "/api": {
           target: isProduction
-            ? "web-production-5eca0.up.railway.app" // Replace with production backend URL
+            ? "https://web-production-5eca0.up.railway.app" // Replace with production backend URL
             : `http://localhost:${process.env.BACKEND_PORT || 3000}`, // Local backend
           changeOrigin: true,
         },
