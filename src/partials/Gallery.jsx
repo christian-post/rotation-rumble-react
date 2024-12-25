@@ -1,5 +1,6 @@
 import { Fragment } from "react";
 import CardImage from "../components/CardImage";
+import Tooltip from "../components/Tooltip";
 import { capitalize } from "../server/utils";
 
 
@@ -28,9 +29,12 @@ export default function Gallery({ cards, aggregated }) {
               {cards.slice(i, i + agg.count).map((card) => {
                 i++;
                 return (
-                  <a key={card.id} href={`/card/${card.id}`}>
-                    <CardImage data={{ card: card, sizing: "medium" }} />
-                  </a>
+                  <Tooltip key={card.id} content={card.name}>
+                    <a href={`/card/${card.id}`}>
+                      <CardImage data={{ card: card, sizing: "medium" }} />
+                    </a>
+                  </Tooltip>
+                  
                 );
               })}
             </div>

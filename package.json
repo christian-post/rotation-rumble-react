@@ -5,7 +5,7 @@
   "type": "module",
   "proxy": "http://localhost:3001",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"vite\" \"npm run start:backend\"",
     "build": "vite build",
     "start:frontend": "vite preview",
     "start:backend": "node src/server/index.js",
