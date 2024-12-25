@@ -29,10 +29,10 @@ function CardtypeField() {
 
       <select id="cardtype" name="cardtype">
         <option value="">Any</option>
+        <option value="Captain">Captain</option>
         <option value="Fighter">Fighter</option>
-        <option value="Challenge">Challenge</option>
         <option value="Item">Item</option>
-        <option value="Landscape">Landscape</option>
+        <option value="Flash">Flash</option>
       </select>
     </div>
   )
