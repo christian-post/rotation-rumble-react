@@ -9,6 +9,9 @@ export default function Header() {
       </span>
       <nav className="header-nav">
         <ul>
+          {/* <li className="header-item">
+            <Link to={"/"}>Home</Link>
+          </li> */}
           <li className="header-item">
             <Link to={"advanced-search"}>Search</Link>
           </li>
@@ -24,7 +27,7 @@ export default function Header() {
         </ul>
       </nav>
 
-      <a href="https://rotation-rumble.com/" id="back-to-website">
+      <a href="https://beaverlicious.com/" id="back-to-website">
         <img src="/images/BacktoWebsite@2x.png" alt="" />
       </a>
       <img src="/images/Rotation_Rumble_Deckbuilder.png" alt="" id="rotation-rumble-logo"/>

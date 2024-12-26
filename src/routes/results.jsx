@@ -5,10 +5,10 @@ import SearchResults from "../partials/SearchResults";
 
 
 const placeholderMap = {
-  "{s}": "/images/star.png", 
-  "{g}": "/images/money.png",
-  "{d}": "/images/dice.png",
-  "{b}": "/images/bury.png"
+  "{s}": "/images/symbols/star.png", 
+  "{g}": "/images/symbols/money.png",
+  "{d}": "/images/symbols/dice.png",
+  "{b}": "/images/symbols/bury.png"
 };
 
 

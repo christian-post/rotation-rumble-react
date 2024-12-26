@@ -3,10 +3,18 @@ export default function Footer() {
     <footer>
       <nav className="footer-nav">
         <ul>
-          <li>Back to Website</li>
-          <li>How to Build Decks</li>
-          <li>Contact Us</li>
-          <li>Imprint</li>
+          <a href="https://beaverlicious.com/">
+            <li>Back to Website</li>
+          </a>
+          <a href="https://beaverlicious.com/rules/">
+            <li>How to Build Decks</li>
+          </a>
+          <a href="https://beaverlicious.com/contact-form/">
+            <li>Contact Us</li>
+          </a>
+          <a href="https://beaverlicious.com/imprint/">
+            <li>Imprint</li>
+          </a>
         </ul>
       </nav>
     </footer>

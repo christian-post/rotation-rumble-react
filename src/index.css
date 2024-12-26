@@ -163,55 +163,55 @@ select {
 }
 
 .bomb {
-  background-image: url("/images/bomb.png");
+  background-image: url("/images/symbols/bomb.png");
 }
 
 .bones {
-  background-image: url("/images/bones.png");
+  background-image: url("/images/symbols/bones.png");
 }
 
 .bury {
-  background-image: url("/images/bury.png");
+  background-image: url("/images/symbols/bury.png");
 }
 
 .coil {
-  background-image: url("/images/coil.png");
+  background-image: url("/images/symbols/coil.png");
 }
 
 .dice {
   width: 26px;
   height: 26px;
-  background-image: url("/images/dice.png");
+  background-image: url("/images/symbols/dice.png");
 }
 
 .energy {
-  background-image: url("/images/energy.png");
+  background-image: url("/images/symbols/energy.png");
 }
 
 .haste {
   width: 26px;
   height: 26px;
-  background-image: url("/images/haste.png");
+  background-image: url("/images/symbols/haste.png");
 }
 
 .heart {
-  background-image: url("/images/heart.png");
+  background-image: url("/images/symbols/heart.png");
 }
 
 .money {
-  background-image: url("/images/money.png");
+  background-image: url("/images/symbols/money.png");
 }
 
 .star {
-  background-image: url("/images/star.png");
+  background-image: url("/images/symbols/star.png");
 }
 
 .treefolk {
-  background-image: url("/images/treefolk.png");
+  background-image: url("/images/symbols/treefolk.png");
 }
 
 .unblockable {
-  background-image: url("/images/unblockable.png");
+  background-image: url("/images/symbols/unblockable.png");
 }
 
 
