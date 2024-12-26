@@ -14,6 +14,7 @@ export default function CardImage( { data }) {
   };
 
   const imageErrorHandler = (event) => {
+    console.log(`could not get ${event.target.src}`);
     event.target.src = '/images/Image_Not_Found.jpg';
     setImageLoaded(true);
   }
@@ -30,7 +31,8 @@ export default function CardImage( { data }) {
       <img
         className={`card-image-${sizing}`}
         // src={card.image_url}
-        src={`/images/cards/${card.id}.jpg`}
+        src={`https://beaverlicious.com/images/${card.id}.jpg`}
+        // src={`/images/cards/${card.id}.jpg`}
         alt={card.name}
         loading="lazy"
         onLoad={handleImageLoad}
