@@ -19,6 +19,8 @@ export function escapeRegex(text) {
 
 
 export function capitalize(str) {
+  if (!str) return "";
+  if (typeof str != String) str = String(str);
   // capitalize the first char of a string
   return str.charAt(0).toUpperCase() + str.slice(1);
 }

@@ -11,6 +11,7 @@ import Index from './routes/index';
 import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
+import Deckbuilder from './routes/deckbuilder';
 import { SingleCard, loader as cardLoader } from './routes/singlecard';
 import Test from './routes/test';
 import { CardGallery, loader as galleryLoader } from './routes/card-gallery';
@@ -39,6 +40,7 @@ const router = createBrowserRouter([
               element: <CardGallery />,
               loader: ({ params }) => {
                 // sort by cardtype by default
+                console.log(params)
                 const groupBy = params.groupBy || "cardtype"; 
                 return galleryLoader({ params: { groupBy } });
               }
@@ -51,6 +53,10 @@ const router = createBrowserRouter([
               path: "card/:cardId",
               element: <SingleCard />,
               loader: cardLoader,
+            },
+            {
+              path: "deckbuilder",
+              element: <Deckbuilder />
             },
             ...(isDevelopment
               ? [

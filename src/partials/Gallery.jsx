@@ -11,6 +11,13 @@ export default function Gallery({ cards, aggregated }) {
 
   let i = 0; // Start index for slicing
 
+  const formatAggHeader = function(aggId) {
+    if (!aggId) return "None";
+    return capitalize(aggId);
+  }
+
+  console.log(aggregated[0])
+
   return (
     <div className="card-gallery">
       {aggregated ? (
@@ -21,8 +28,8 @@ export default function Gallery({ cards, aggregated }) {
                 // capitalize Aggregation Field
                 // first check if the type is array or string
                 (typeof agg == Array) ?
-                agg._id.map(capitalize).join(", ") :
-                capitalize(agg._id)
+                agg._id.map(formatAggHeader).join(", ") :
+                formatAggHeader(agg._id)
               }</h1>
             </div>
             <div className="card-gallery">

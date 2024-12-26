@@ -461,7 +461,6 @@ footer {
 }
 
 .footer-nav ul {
-  color: var(--text-color-bright);
   display: flex;
   width: 80%;
   justify-content: space-between;
@@ -472,6 +471,11 @@ footer {
 
 .footer-nav ul li {
   text-align: center;
+}
+
+.footer-nav a {
+  text-decoration: none;
+  color: var(--text-color-bright);
 }
 
 
