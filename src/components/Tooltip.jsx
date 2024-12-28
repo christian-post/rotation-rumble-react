@@ -31,7 +31,7 @@ export default function Tooltip ({ children, content, delay = TOOLTIP_DELAY }) {
         <div
           style={{
             position: "absolute",
-            bottom: "0%", // Position above the target element
+            bottom: "-10%", // Position above the target element
             left: "50%",
             transform: "translateX(-50%)",
             backgroundColor: "black",

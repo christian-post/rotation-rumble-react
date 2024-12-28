@@ -11,10 +11,13 @@ import Index from './routes/index';
 import AdvancedSearch from './routes/advanced-search';
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
+// import Deckbuilder from './routes/deckbuilder';
 import Deckbuilder from './routes/deckbuilder';
-import { SingleCard, loader as cardLoader } from './routes/singlecard';
+import deckbuilderLoader from	'./utils/DeckbuilderLoader';
+import SingleCard from './routes/singlecard';
+import cardLoader from './utils/CardLoader';
 import Test from './routes/test';
-import { CardGallery, loader as galleryLoader } from './routes/card-gallery';
+import CardGallery, { loader as galleryLoader } from './routes/card-gallery';
 
 
 const isDevelopment = import.meta.env.MODE === "development"; // For Vite
@@ -56,7 +59,8 @@ const router = createBrowserRouter([
             },
             {
               path: "deckbuilder",
-              element: <Deckbuilder />
+              element: <Deckbuilder />,
+              loader: deckbuilderLoader
             },
             ...(isDevelopment
               ? [

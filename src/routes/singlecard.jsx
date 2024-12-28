@@ -1,24 +1,8 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import { getSingleCard } from "../server/getcard";
 import { capitalize } from "../server/utils";
 import { replacePlaceholdersWithImages } from "./results";
 import CardImage from "../components/CardImage";
-
-
-export async function loader({ params }) {
-  // on page load, gets the data for this card ID
-  const card = await getSingleCard(params.cardId);
-
-  if (card == undefined) {
-    console.log("card is undefined")
-    return { 
-      error: `Card with ID "${params.cardId}" not found.`
-    };
-  };
-
-  return { card };
-}
 
 
 function CardBody() {
@@ -117,9 +101,7 @@ export function CardInfo() {
 
 
 
-
-
-export function SingleCard() {
+export default function SingleCard() {
   const { card, error } = useLoaderData();
 
   return (

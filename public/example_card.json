@@ -1,0 +1,19 @@
+{
+    "_id": {
+      "$oid": "676d80a1fe83b24400f3885b"
+    },
+    "name": "Evil Genius",
+    "set": "Core Set",
+    "deck": [
+      "Bolts & Bones"
+    ],
+    "cardtype": "Flash",
+    "color": [
+      "blue"
+    ],
+    "dice": "No",
+    "costs": 0,
+    "effect1": "Gain 2 {v}. ",
+    "image_url": "http://rotation-rumble.com/images/evil_genius.jpg",
+    "id": "evil_genius"
+}

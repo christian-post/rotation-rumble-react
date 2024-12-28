@@ -65,7 +65,7 @@ export default function Test() {
     });
 
     if (!response.ok) {
-      console.error("Failed to fetch search results");
+      console.error("Failed to fetch search results.");
       return;
     }
 

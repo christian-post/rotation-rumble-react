@@ -60,9 +60,8 @@ app.get("/api/card/:cardId", async (req, res) => {
 
 
 app.get("/api/all-cards", async (req, res) => {
-  // get all cards, grouped by a given parameter
-  // default to "deck" if not provided
-  const groupBy = req.query.groupBy || "deck";
+  // get all cards, grouped by a given parameter or null
+  const groupBy = req.query.groupBy || null;
 
   const pipeline = [
     { $group: { _id: `\$${groupBy}`, count: { $sum: 1 }}},
@@ -89,6 +88,12 @@ app.get("/api/all-cards", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 }); 
+
+
+app.get("/api/decklists", async (req, res) => {
+  const decklists = await getDecklists(db);
+  res.json({ decklists });
+})
 
 
 app.post("/api/test", async (req, res) => {

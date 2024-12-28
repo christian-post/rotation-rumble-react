@@ -1,5 +1,4 @@
 import Gallery from "./Gallery";
-import { useLoaderData } from "react-router-dom";
 
 
 export default function SearchResults({ results }) {

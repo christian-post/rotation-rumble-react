@@ -22,12 +22,12 @@ export async function loader({ params }) {
     };
   };
 
-  return { cards, aggregated };
+  return { cards, aggregated, groupBy };
 }
 
 
-export function CardGallery() {
-  const { cards, aggregated, error } = useLoaderData();
+export default function CardGallery() {
+  const { cards, aggregated, groupBy, error } = useLoaderData();
 
   // TODO: error handling
 
@@ -41,6 +41,7 @@ export function CardGallery() {
           <Gallery 
             cards={cards}
             aggregated={aggregated}
+            groupBy={groupBy}
           />
         </div>
       </div>
