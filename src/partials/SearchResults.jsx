@@ -37,7 +37,11 @@ export default function SearchResults({ results }) {
             />
           </div>
         ) : 
-          < Gallery cards={cards} />
+          < Gallery 
+            cards={cards}
+            aggregated={[]}
+            groupBy=""  
+          />
         }
       </div>
     </>
