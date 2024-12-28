@@ -68,7 +68,7 @@ function CardsList({ props }) {
           // onkeyup="filterTable()" //TODO see Tutorial for how this should update in real time
         />
       </div>
-      <table className="card-gallery-table" id="card-gallery-table">
+      {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
         <thead>
           <tr>
             <th className="sortable-table-col-head">
@@ -103,14 +103,13 @@ function CardsList({ props }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>) : <div><h2>Loading the cards list...</h2></div>}
     </>
   );
 }
 
 
 function DeckStats({ props }) {
-
   return ( 
     <>
       <div className="toggle-header">
@@ -152,6 +151,7 @@ function DeckStats({ props }) {
 
 
 function DeckList({ props }) {
+  // right side of the Edit Page that shows the deck list
   return (
     <div className="deck-container">
       <table className="card-gallery-table" id="my-deck-table">
@@ -174,18 +174,33 @@ function DeckList({ props }) {
           </tr>
         </thead>
         <tbody>
-          {props.deckList.map((card) => (
-            <tr key={card.name}>
-              <td>{card.name}</td>
-              <td>{card.cardtype}</td>
-              <td>{card.costs}</td>
-              <td>💬</td>
-              <td><button onClick={()=> {
-                // removes the card from the deck list
-                props.setDeckList(props.deckList.filter((c) => c !== card));
-              }}>❌</button></td>
-            </tr>
-          ))}
+          {props.deckList.length > 0 ? (
+            props.deckList.map((card) => (
+              <tr key={card.name}>
+                <td>{card.name}</td>
+                <td>{card.cardtype}</td>
+                <td>{card.costs}</td>
+                <td>💬</td>
+                <td><button onClick={()=> {
+                  // removes the card from the deck list
+                  props.setDeckList(props.deckList.filter((c) => c !== card));
+                }}>❌</button></td>
+              </tr>
+            ))
+          ) : (
+            <>
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  <h3>Your deck is currently empty.</h3>
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="5" style={{ textAlign: "center" }}>
+                  <h3>Start by adding cards from the table on the left.</h3>
+                </td>
+              </tr>
+            </>
+          )}
         </tbody>
       </table>
     </div>
