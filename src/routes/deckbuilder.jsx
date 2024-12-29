@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import StartPage from "../partials/deckbuilder/StartPage";
 import EditPage from "../partials/deckbuilder/EditPage";
-
+import CaptainSelectPage from "../partials/deckbuilder/CaptainSelectPage";
 
 
 export default function Deckbuilder() {
@@ -19,6 +19,9 @@ export default function Deckbuilder() {
   // Mode defines which children are rendered
   const [mode, setMode] = useState("start"); // start, edit
   const [currentEditDeck, setCurrentEditDeck] = useState(null);
+  const [customDecks, setCustomDecks] = useState(data.customDecks);
+  // value that holds the selected captain object
+  const [selectedCaptain, setSelectedCaptain] = useState(null);
 
   const preconDeckNames = Object.keys(data.preconDecklists)
 
@@ -34,8 +37,6 @@ export default function Deckbuilder() {
     "Tales & Tussle": "images/decks/Print-And-Play-Rotation-Rumble-Tales-and-Tussle.webp",
     "Sakura & Shuriken": "images/decks/Print-And-Play-Rotation-Rumble-Sakura-Shuriken.webp"
   }
-
-  const [customDecks, setCustomDecks] = useState(data.customDecks);
   
   return (
     <main>
@@ -45,7 +46,7 @@ export default function Deckbuilder() {
             preconDeckNames, 
             preconDeckImages,
             customDecks,
-            mode, 
+            mode,
             setMode,
             setCurrentEditDeck
           }
@@ -53,9 +54,17 @@ export default function Deckbuilder() {
         edit: <EditPage props={
           { 
             mode, setMode, currentEditDeck, 
-            setCustomDecks 
+            setCustomDecks, selectedCaptain,
+            setSelectedCaptain
           }
         } />,
+        captainSelect: <CaptainSelectPage props={
+          { 
+            mode, setMode, currentEditDeck, 
+            setCustomDecks, selectedCaptain,
+            setSelectedCaptain
+          }
+        } />
       }[mode] || null}
     </main>
   )

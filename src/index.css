@@ -127,6 +127,11 @@ select {
   opacity: 1;
 }
 
+.fixed-top {
+  position: sticky;
+  top: 10px;
+}
+
 /* .blurred-img::before {
   content: "";
   position: absolute;
@@ -1169,6 +1174,21 @@ footer {
 #deck-validity-check {
   color: red;
 }
+
+.color-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
 
 
 .expanding-element {

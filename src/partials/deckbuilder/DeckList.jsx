@@ -1,7 +1,7 @@
 export default function DeckList({ props }) {
   // right side of the Edit Page that shows the deck list
   return (
-    <div className="deck-container">
+    <div className="deck-container fixed-top">
       <table className="card-gallery-table" id="my-deck-table">
         <thead>
           <tr>
@@ -14,7 +14,7 @@ export default function DeckList({ props }) {
               <span>&#x25BC;</span>
             </th>
             <th className="sortable-table-col-head">
-              <span>Costs</span>
+              <span>Colors</span>
               <span>&#x25BC;</span>
             </th>
             <th>Info</th>
@@ -27,7 +27,18 @@ export default function DeckList({ props }) {
               <tr key={card.name}>
                 <td>{card.name}</td>
                 <td>{card.cardtype}</td>
-                <td>{card.costs}</td>
+                <td>
+                  {card.color.map((color) => (
+                    <span
+                      key={color}
+                      className="color-circle"
+                      style={{ backgroundColor: color }}
+                      aria-label={`Color: ${color}`}
+                    >
+                      {color[0]}
+                    </span>
+                  ))}
+                </td>
                 <td>💬</td>
                 <td><button onClick={()=> {
                   // removes the card from the deck list

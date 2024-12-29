@@ -5,18 +5,15 @@ export default function StartPage({ props }) {
   // start page of the deckbuilder
   // shows the available decks and the option to create a new deck
 
-  function changeMode() {
-    props.setMode("edit");
+  function gotoNewDeck() {
+    // show the component where one can select their Captain
+    props.setMode("captainSelect");
   }
 
   function editDeck(deck) {
     props.setCurrentEditDeck(deck);
     props.setMode("edit");
   }
-
-  // useEffect(() => {
-  //   // Reload custom decks from localforage if they changed
-  // }, [props.customDecks]);
 
   return (
     <div className="grid-container">
@@ -25,7 +22,7 @@ export default function StartPage({ props }) {
           <h2>Create a new deck from scratch</h2>
         </div>
         <div className="container-left">
-          <button onClick={changeMode}>➕ New Deck</button>
+          <button onClick={gotoNewDeck}>➕ New Deck</button>
         </div>
       </div>
 
@@ -39,7 +36,7 @@ export default function StartPage({ props }) {
             <div key={deck}>
               <img
                 className="deck-image-small"
-                src={props.customDecks[deck].decklist[0].image_url}
+                src={props.customDecks[deck].captain.image_url}
                 alt={props.customDecks[deck].name}
                 onClick={()=> editDeck(props.customDecks[deck])}
               />

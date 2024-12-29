@@ -22,7 +22,6 @@ export default function CardsList({ props }) {
     }
   }
 
-
   return (
     <>
       <div className="all-cards-title">
@@ -34,7 +33,7 @@ export default function CardsList({ props }) {
           type="text" 
           id="card-filter" 
           name="card-filter" 
-          placeholder="Name, Cardtype, or Costs"
+          placeholder="Name or Cardtype"
           onChange={filterTable}
         />
       </div>
@@ -50,7 +49,7 @@ export default function CardsList({ props }) {
               <span>&#x25BC;</span>
             </th>
             <th className="sortable-table-col-head">
-              <span>Costs</span>
+              <span>Colors</span>
               <span>&#x25BC;</span>
             </th>
             <th>Info</th>
@@ -62,7 +61,18 @@ export default function CardsList({ props }) {
             <tr key={card.name}>
               <td>{card.name}</td>
               <td>{card.cardtype}</td>
-              <td>{card.costs}</td>
+              <td>
+                {card.color.map((color) => (
+                  <span
+                    key={color}
+                    className="color-circle"
+                    style={{ backgroundColor: color }}
+                    aria-label={`Color: ${color}`}
+                  >
+                    {color[0]}
+                  </span>
+                ))}
+              </td>
               <td>💬</td>
               <td>
                 {!props.deckList.includes(card) && <button onClick={()=> {

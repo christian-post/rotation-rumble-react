@@ -12,7 +12,8 @@ export default function EditPage({ props }) {
     fighters: 0,
     items: 0,
     flashes: 0,
-    averageCost: 0
+    averageCost: 0,
+    captain: null
   });
   const [deckList, setDeckList] = useState([]);
   const setCustomDecks = props.setCustomDecks;
@@ -51,12 +52,13 @@ export default function EditPage({ props }) {
       fighters,
       items,
       flashes,
-      averageCost
+      averageCost,
+      captain: props.selectedCaptain.name
     });
   }
   , [deckList]);
 
-
+  // fetch all cards from the server and filter out the non-Captain ones
   useEffect(() => {
     fetch("/api/all-cards")
       .then((res) => res.json())
@@ -90,7 +92,17 @@ export default function EditPage({ props }) {
             onClick={changeDeckName}
           >🖊</button>
         </div>
-        <DeckStats props={{ deckStats, deckList, setCustomDecks, goBack }} />
+        <DeckStats 
+        props={
+            { 
+              deckStats, 
+              deckList, 
+              setCustomDecks,
+              selectedCaptain: props.selectedCaptain,
+              goBack 
+            }
+          }
+        />
         <DeckList props={{ deckList, setDeckList }} />
       </div>
     </div>

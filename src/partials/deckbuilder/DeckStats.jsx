@@ -12,7 +12,8 @@ export default function DeckStats({ props }) {
     const deck = {
       "decklist": props.deckList,
       "id": generateUniqueId(),
-      "name": document.getElementById("deck-title").textContent
+      "name": document.getElementById("deck-title").textContent,
+      "captain": props.selectedCaptain
     };
 
     // saves the deck to the local storage
@@ -58,8 +59,8 @@ export default function DeckStats({ props }) {
         </button>
       </div>
       <div>
-        <div id="deck-stats">
-          <table>
+        <div id="deck-stats"> 
+          <table style={{ height: "100%" }}>
             <tbody>
               <tr>
                 <td>Fighters:</td>
@@ -76,11 +77,20 @@ export default function DeckStats({ props }) {
               <tr>
                 <td>Flashes:</td>
                 <td>{props.deckStats.flashes}</td>
+                <td>Captain:</td>
+                <td>{props.deckStats.captain}</td>
               </tr>
             </tbody>
           </table>
+          <img 
+            className="card-image-medium"
+            src={props.selectedCaptain.image_url} 
+            alt={props.selectedCaptain.name}
+          />
         </div>
-        <div id="deck-validity-check"></div>
+        <div id="deck-validity-check">
+          Checking the validity of the deck...
+        </div>
       </div>
     </>
   )
