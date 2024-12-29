@@ -43,7 +43,6 @@ const router = createBrowserRouter([
               element: <CardGallery />,
               loader: ({ params }) => {
                 // sort by cardtype by default
-                console.log(params)
                 const groupBy = params.groupBy || "cardtype"; 
                 return galleryLoader({ params: { groupBy } });
               }

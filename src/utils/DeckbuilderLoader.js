@@ -1,4 +1,5 @@
 // Loader function for Deckbuilder.jsx
+import localforage from "localforage";
 
 export default async function deckbuilderLoader() {
   try {
@@ -14,6 +15,11 @@ export default async function deckbuilderLoader() {
     }
 
     const data = await request.json();
+
+    // add custom decks from localforage
+    const customDecks = await localforage.getItem("customDecks");
+    data.customDecks = customDecks || {};
+
     return { data };
   } catch (error) {
     console.error("Loader error:", error);

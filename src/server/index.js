@@ -90,8 +90,8 @@ app.get("/api/all-cards", async (req, res) => {
 
 
 app.get("/api/decklists", async (req, res) => {
-  const decklists = await getDecklists(db);
-  res.json({ decklists });
+  const preconDecklists = await getDecklists(db);
+  res.json({ preconDecklists });
 })
 
 

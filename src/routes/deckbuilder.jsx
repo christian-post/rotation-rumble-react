@@ -1,320 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
-import Tooltip from "../components/Tooltip";
+import StartPage from "../partials/deckbuilder/StartPage";
+import EditPage from "../partials/deckbuilder/EditPage";
 
-
-function StartPage({ props }) {
-
-  function changeMode() {
-    props.setMode("edit");
-  }
-
-  return (
-    <div className="grid-container">
-      <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-        <div className="container-left">
-          <h2>Create a new deck from scratch</h2>
-        </div>
-        <div className="container-left">
-          <button onClick={changeMode}>➕ New Deck</button>
-        </div>
-      </div>
-      <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-        <div className="container-between">
-          <h2>Explore and customize the preconstructed decks</h2>
-          <label htmlFor="deckSearch">
-            Filter Decks: 
-            <input
-              id="deckSearch"
-              type="text"
-              placeholder="Deck Name"
-              />
-          </label>
-        </div>
-        <div className="decklist-container">
-          {props.deckNames.map((name) => (
-            props.deckImages[name] && (
-              <div key={name}>
-                <Tooltip content={name}>
-                  <img
-                    className="deck-image-small"
-                    src={props.deckImages[name]}
-                    alt={name}
-                  />
-                </Tooltip>
-              </div>
-            )
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-
-function CardsList({ props }) {
-  // left side of the Edit Page that shows the available cards
-
-  function filterTable(event) {
-    // filters the table based on the input value
-    const {value} = event.currentTarget;
-    
-    const table = document.getElementById("card-gallery-table");
-    const rows = table.getElementsByTagName("tr");
-    for (let i = 1; i < rows.length; i++) {
-      const name = rows[i].getElementsByTagName("td")[0].textContent;
-      const cardtype = rows[i].getElementsByTagName("td")[1].textContent;
-      const costs = rows[i].getElementsByTagName("td")[2].textContent;
-
-      if (name.toLowerCase().includes(value.toLowerCase()) || 
-          cardtype.toLowerCase().includes(value.toLowerCase()) || 
-          costs.toLowerCase().includes(value.toLowerCase())) {
-        rows[i].style.display = "";
-      } else {
-        rows[i].style.display = "none";
-      }
-    }
-  }
-
-
-  return (
-    <>
-      <div className="all-cards-title">
-        <h2>All Cards</h2>
-      </div>
-      <div className="ui-bar-horizontal">
-        <label htmlFor="card-filter">Filter</label>
-        <input 
-          type="text" 
-          id="card-filter" 
-          name="card-filter" 
-          placeholder="Name, Cardtype, or Costs"
-          onChange={filterTable} //TODO see Tutorial for how this should update in real time
-        />
-      </div>
-      {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
-        <thead>
-          <tr>
-            <th className="sortable-table-col-head">
-              <span>Name</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th className="sortable-table-col-head">
-              <span>Card Type</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th className="sortable-table-col-head">
-              <span>Costs</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th>Info</th>
-            <th>Add to Deck</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.allCards.map((card) => (
-            <tr key={card.name}>
-              <td>{card.name}</td>
-              <td>{card.cardtype}</td>
-              <td>{card.costs}</td>
-              <td>💬</td>
-              <td>
-                {!props.deckList.includes(card) && <button onClick={()=> {
-                  // adds the card to the deck list
-                  props.setDeckList([...props.deckList, card]);
-                }}>➕</button>}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>) : <div><h2>Loading the cards list...</h2></div>}
-    </>
-  );
-}
-
-
-function DeckStats({ props }) {
-  return ( 
-    <>
-      <div className="toggle-header">
-        <h2 style={{ textAlign: "left" }}>Deck Stats</h2>
-        <button 
-          className="standard-button" 
-          onClick={props.goBack} // TODO: placeholder, show statistics page instead
-        >💾 Save Changes
-        </button>
-      </div>
-      <div>
-        <div id="deck-stats">
-          <table>
-            <tbody>
-              <tr>
-                <td>Fighters:</td>
-                <td>{props.deckStats.fighters}</td>
-                <td>Total Cards:</td>
-                <td>{props.deckStats.cardsTotal}</td>
-              </tr>
-              <tr>
-                <td>Items:</td>
-                <td>{props.deckStats.items}</td>
-                <td>Average Cost:</td>
-                <td>{props.deckStats.averageCost || 0}</td>
-              </tr>
-              <tr>
-                <td>Flashes:</td>
-                <td>{props.deckStats.flashes}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div id="deck-validity-check"></div>
-      </div>
-    </>
-  )
-}
-
-
-function DeckList({ props }) {
-  // right side of the Edit Page that shows the deck list
-  return (
-    <div className="deck-container">
-      <table className="card-gallery-table" id="my-deck-table">
-        <thead>
-          <tr>
-            <th className="sortable-table-col-head">
-              <span>Name</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th className="sortable-table-col-head">
-              <span>Card Type</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th className="sortable-table-col-head">
-              <span>Costs</span>
-              <span>&#x25BC;</span>
-            </th>
-            <th>Info</th>
-            <th>Remove</th>
-          </tr>
-        </thead>
-        <tbody>
-          {props.deckList.length > 0 ? (
-            props.deckList.map((card) => (
-              <tr key={card.name}>
-                <td>{card.name}</td>
-                <td>{card.cardtype}</td>
-                <td>{card.costs}</td>
-                <td>💬</td>
-                <td><button onClick={()=> {
-                  // removes the card from the deck list
-                  props.setDeckList(props.deckList.filter((c) => c !== card));
-                }}>❌</button></td>
-              </tr>
-            ))
-          ) : (
-            <>
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  <h3>Your deck is currently empty.</h3>
-                </td>
-              </tr>
-              <tr>
-                <td colSpan="5" style={{ textAlign: "center" }}>
-                  <h3>Start by adding cards from the table on the left.</h3>
-                </td>
-              </tr>
-            </>
-          )}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-
-function EditPage({ props }) {
-  const [allCards, setAllCards] = useState([]);
-  const [deckName, setDeckName] = useState("My Deck");
-  const [deckStats, setDeckStats] = useState({
-    cardsTotal: 0,
-    fighters: 0,
-    items: 0,
-    flashes: 0,
-    averageCost: 0
-  });
-  const [deckList, setDeckList] = useState([]);
-
-  useEffect(() => {
-    //calculate deck stats
-    let cardsTotal = 0;
-    let fighters = 0;
-    let items = 0;
-    let flashes = 0;
-    let totalCost = 0;
-
-    deckList.forEach((card) => {
-      cardsTotal++;
-      totalCost += card.costs || 0;
-      if (card.cardtype === "Fighter") {
-        fighters++;
-      } else if (card.cardtype === "Item") {
-        items++;
-      } else if (card.cardtype === "Flash") {
-        flashes++;
-      }
-    });
-    const averageCost = Math.round(totalCost / cardsTotal * 100)  / 100;
-    
-    setDeckStats({
-      cardsTotal,
-      fighters,
-      items,
-      flashes,
-      averageCost
-    });
-  }
-  , [deckList]);
-
-
-  useEffect(() => {
-    fetch("/api/all-cards")
-      .then((res) => res.json())
-      .then((data) => setAllCards(
-        data.cards.filter((card) => card.cardtype !== "Captain")));
-  }, []);
-
-  function goBack() {
-    props.setMode("start");
-  }
-
-  function changeDeckName() {
-    const newName = prompt("Enter a new name for your deck:");
-    if (newName) {
-      setDeckName(newName);
-    }
-  }
-
-  return (
-    <div className="grid-container" id="deck-builder">
-      <div className="grid-item">
-        {/* left side */}
-        <CardsList props={{ allCards, deckList, setDeckList }} />
-      </div>
-      <div className="grid-item">
-        {/* right side */}
-        <div className="deck-title-container">
-          <h2 id="deck-title">{deckName}</h2>
-          <button 
-            className="standard-button" 
-            onClick={changeDeckName}
-          >🖊</button>
-        </div>
-        <DeckStats props={{ deckStats, goBack }} />
-        <DeckList props={{ deckList, setDeckList }} />
-      </div>
-    </div>
-  );
-}
 
 
 export default function Deckbuilder() {
@@ -330,13 +18,13 @@ export default function Deckbuilder() {
 
   // Mode defines which children are rendered
   const [mode, setMode] = useState("start"); // start, edit
+  const [currentEditDeck, setCurrentEditDeck] = useState(null);
 
-
-  const deckNames = Object.keys(data.decklists)
+  const preconDeckNames = Object.keys(data.preconDecklists)
 
   // TODO: put in own file
   // maps the deck names to the corresponding images
-  const deckImages = {
+  const preconDeckImages = {
     "Bolts & Bones": "images/decks/RR-Bolts-Bones-PnP.jpg",
     "Bows & Blades": "images/decks/RR-Bows-Blades-PnP.jpg",
     "Howls & Horrors": "images/decks/RR-Howls-Horors-PnP.jpg",
@@ -346,12 +34,28 @@ export default function Deckbuilder() {
     "Tales & Tussle": "images/decks/Print-And-Play-Rotation-Rumble-Tales-and-Tussle.webp",
     "Sakura & Shuriken": "images/decks/Print-And-Play-Rotation-Rumble-Sakura-Shuriken.webp"
   }
+
+  const [customDecks, setCustomDecks] = useState(data.customDecks);
   
   return (
     <main>
       {{
-        start: <StartPage props={{ deckNames, deckImages, mode, setMode }} />,
-        edit: <EditPage props={{ mode, setMode }} />,
+        start: <StartPage props={
+          { 
+            preconDeckNames, 
+            preconDeckImages,
+            customDecks,
+            mode, 
+            setMode,
+            setCurrentEditDeck
+          }
+        } />,
+        edit: <EditPage props={
+          { 
+            mode, setMode, currentEditDeck, 
+            setCustomDecks 
+          }
+        } />,
       }[mode] || null}
     </main>
   )
