@@ -184,7 +184,7 @@ function DiceField() {
 function EffectsField() {
   return (
     <div className="advanced-search-item">
-      <label htmlFor="effectOrStep" className="span-bold">Effects or Steps</label>
+      <label htmlFor="effectOrStep" className="span-bold">Effects</label>
       <input 
         id="effectOrStep"
         name="effectOrStep"

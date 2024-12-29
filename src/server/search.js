@@ -5,18 +5,6 @@ import { inspect } from "util";
 dotenv.config();
 
 
-export async function testSearch(db) {
-  const search = {
-    dmg: 1
-  };
-
-  const found = await db.collection(process.env.COLLECTION)
-    .find(search).toArray();
-
-  return found;
-}
-
-
 export async function getDecklists(db) {
   // queries the database for all cards and groups them by deck
   const allCards = await db.collection(process.env.COLLECTION)
@@ -112,7 +100,7 @@ export function processSearch(req) {
           break;
 
         case "effectOrStep":
-          searchExplain.push(`the Effects or Steps contain "${req[attrs[i]]}"`);
+          searchExplain.push(`the Effects contain "${req[attrs[i]]}"`);
           break;
 
         case "set":

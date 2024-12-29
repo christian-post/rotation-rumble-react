@@ -33,7 +33,7 @@ function CardBody() {
             <tr>
               <td>
                 Costs <span className="span-bold">{card.costs} </span>
-                <img className="inline-image" src="/images/money.png" alt="M"></img>
+                <img className="inline-image" src="/images/symbols/money.png" alt="M"></img>
               </td>
               <td>Set <span className="span-bold">{card.set}</span></td>
             </tr>
@@ -41,7 +41,7 @@ function CardBody() {
         </table>
       )
   }
-}
+}                    
 
 
 export function CardInfo() {

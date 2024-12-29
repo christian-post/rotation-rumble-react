@@ -5,7 +5,6 @@ import {
   processSearch, 
   sendAdvancedSearch,
   sendSimpleSearch,
-  testSearch, 
   getDecklists 
 } from "./search.js";
 import { testOrderDeck } from "./woocommerce.js";
@@ -99,11 +98,8 @@ app.get("/api/decklists", async (req, res) => {
 app.post("/api/test", async (req, res) => {
   const decklists = await getDecklists(db);
 
-  const searchResults = await testSearch(db);
-
   res.json({ 
     message: `${req.body.message} The backend is working!`,
-    searchResults: searchResults,
     decklists: decklists 
   });
 

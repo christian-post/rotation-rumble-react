@@ -54,6 +54,29 @@ function StartPage({ props }) {
 
 function CardsList({ props }) {
   // left side of the Edit Page that shows the available cards
+
+  function filterTable(event) {
+    // filters the table based on the input value
+    const {value} = event.currentTarget;
+    
+    const table = document.getElementById("card-gallery-table");
+    const rows = table.getElementsByTagName("tr");
+    for (let i = 1; i < rows.length; i++) {
+      const name = rows[i].getElementsByTagName("td")[0].textContent;
+      const cardtype = rows[i].getElementsByTagName("td")[1].textContent;
+      const costs = rows[i].getElementsByTagName("td")[2].textContent;
+
+      if (name.toLowerCase().includes(value.toLowerCase()) || 
+          cardtype.toLowerCase().includes(value.toLowerCase()) || 
+          costs.toLowerCase().includes(value.toLowerCase())) {
+        rows[i].style.display = "";
+      } else {
+        rows[i].style.display = "none";
+      }
+    }
+  }
+
+
   return (
     <>
       <div className="all-cards-title">
@@ -65,7 +88,8 @@ function CardsList({ props }) {
           type="text" 
           id="card-filter" 
           name="card-filter" 
-          // onkeyup="filterTable()" //TODO see Tutorial for how this should update in real time
+          placeholder="Name, Cardtype, or Costs"
+          onChange={filterTable} //TODO see Tutorial for how this should update in real time
         />
       </div>
       {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
