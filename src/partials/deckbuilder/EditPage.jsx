@@ -16,15 +16,15 @@ export default function EditPage({ props }) {
     captain: null
   });
   const [deckList, setDeckList] = useState([]);
-  const setCustomDecks = props.setCustomDecks;
 
   // if the user has selected a specific deck to edit
-  if (props.currentEditDeck) {
-    useEffect(() => {
+  useEffect(() => {
+    if (props.currentEditDeck) {
       setDeckName(props.currentEditDeck.name);
       setDeckList(props.currentEditDeck.decklist);
-    }, [props.currentEditDeck]);
-  }
+    }
+  }, [props.currentEditDeck]);
+  
 
   useEffect(() => {
     //calculate deck stats
@@ -81,7 +81,14 @@ export default function EditPage({ props }) {
     <div className="grid-container" id="deck-builder">
       <div className="grid-item">
         {/* left side */}
-        <CardsList props={{ allCards, deckList, setDeckList }} />
+        <CardsList props={
+          { 
+            allCards, 
+            deckList, 
+            currentEditDeck: props.currentEditDeck, 
+            setDeckList
+          }
+          } />
       </div>
       <div className="grid-item">
         {/* right side */}
@@ -96,10 +103,13 @@ export default function EditPage({ props }) {
         props={
             { 
               deckStats, 
-              deckList, 
-              setCustomDecks,
+              deckList,
+              setCustomDecks: props.setCustomDecks,
               selectedCaptain: props.selectedCaptain,
-              goBack 
+              goBack,
+              setMode: props.setMode,
+              currentEditDeck: props.currentEditDeck,
+              setCurrentEditDeck: props.setCurrentEditDeck
             }
           }
         />

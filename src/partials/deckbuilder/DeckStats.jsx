@@ -9,12 +9,25 @@ export default function DeckStats({ props }) {
       return;
     }
 
-    const deck = {
-      "decklist": props.deckList,
-      "id": generateUniqueId(),
-      "name": document.getElementById("deck-title").textContent,
-      "captain": props.selectedCaptain
-    };
+    // check if the last loaded deck has a UUID
+    // if not, generate a new one
+    let deck;
+
+    if (!props.currentEditDeck) {
+      deck = {
+        "decklist": props.deckList,
+        "id": generateUniqueId(),
+        "name": document.getElementById("deck-title").textContent,
+        "captain": props.selectedCaptain
+      };
+      props.setCurrentEditDeck(deck);
+    } else {
+      // update the existing deck
+      props.currentEditDeck.decklist = props.deckList;
+      props.currentEditDeck.name = document.getElementById("deck-title").textContent;
+      props.currentEditDeck.captain = props.selectedCaptain;
+      deck = props.currentEditDeck;
+    }
 
     // saves the deck to the local storage
     localforage.getItem("customDecks")
@@ -40,6 +53,8 @@ export default function DeckStats({ props }) {
         console.error("Error saving deck:", error);
         alert("Error saving deck. Please try again.");
       });
+
+      console.log("Deck saved:", deck);
   }
 
   return ( 
@@ -51,6 +66,12 @@ export default function DeckStats({ props }) {
           onClick={saveDeck}
         >💾 Save Changes
         </button>
+        {props.deckList.length > 0 && (<div 
+          className="standard-button"
+          onClick={()=> props.setMode("overview")}
+        >
+          📊 Overview
+        </div>)}
         <button 
           className="standard-button"
           onClick={props.goBack}

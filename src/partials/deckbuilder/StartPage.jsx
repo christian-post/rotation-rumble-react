@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Tooltip from "../../components/Tooltip";
+import localforage from "localforage";
 
 export default function StartPage({ props }) {
   // start page of the deckbuilder
@@ -8,11 +9,29 @@ export default function StartPage({ props }) {
   function gotoNewDeck() {
     // show the component where one can select their Captain
     props.setMode("captainSelect");
+    props.setCurrentEditDeck(null);
   }
 
   function editDeck(deck) {
     props.setCurrentEditDeck(deck);
+    props.setSelectedCaptain(deck.captain);
     props.setMode("edit");
+  }
+
+  function deleteAllDecks() {
+    // prompt the user if they want to delete all decks
+    if (window.confirm("Are you sure you want to delete all decks?")) {
+      // delete all decks from local storage
+      localforage.removeItem("customDecks")
+        .then(() => {
+          props.setCustomDecks({});
+        })
+        .catch((error) => {
+          console.error("Error deleting decks:", error);
+          alert("Error deleting decks. Please try again.");
+        }
+      );
+    }
   }
 
   return (
@@ -23,6 +42,7 @@ export default function StartPage({ props }) {
         </div>
         <div className="container-left">
           <button onClick={gotoNewDeck}>➕ New Deck</button>
+          <button onClick={deleteAllDecks}>⚠ Delete All Decks</button>
         </div>
       </div>
 

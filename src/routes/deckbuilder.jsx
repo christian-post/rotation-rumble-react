@@ -3,6 +3,7 @@ import { useLoaderData } from "react-router-dom";
 import StartPage from "../partials/deckbuilder/StartPage";
 import EditPage from "../partials/deckbuilder/EditPage";
 import CaptainSelectPage from "../partials/deckbuilder/CaptainSelectPage";
+import DeckOverview from "../partials/deckbuilder/DeckOverview";
 
 
 export default function Deckbuilder() {
@@ -46,14 +47,17 @@ export default function Deckbuilder() {
             preconDeckNames, 
             preconDeckImages,
             customDecks,
+            setCustomDecks,
             mode,
             setMode,
-            setCurrentEditDeck
+            setCurrentEditDeck,
+            setSelectedCaptain
           }
         } />,
         edit: <EditPage props={
           { 
             mode, setMode, currentEditDeck, 
+            setCurrentEditDeck,
             setCustomDecks, selectedCaptain,
             setSelectedCaptain
           }
@@ -63,6 +67,12 @@ export default function Deckbuilder() {
             mode, setMode, currentEditDeck, 
             setCustomDecks, selectedCaptain,
             setSelectedCaptain
+          }
+        } />,
+        overview: <DeckOverview props={
+          { 
+            mode, setMode, currentEditDeck, 
+            setCustomDecks
           }
         } />
       }[mode] || null}

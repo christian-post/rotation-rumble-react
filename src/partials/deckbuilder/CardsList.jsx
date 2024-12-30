@@ -1,5 +1,13 @@
+import { useEffect } from "react";
+
 export default function CardsList({ props }) {
   // left side of the Edit Page that shows the available cards
+
+  useEffect(() => {
+    if (props.currentEditDeck) {
+      props.setDeckList(props.currentEditDeck.decklist);
+    }
+  }, []);
 
   function filterTable(event) {
     // filters the table based on the input value
@@ -75,10 +83,18 @@ export default function CardsList({ props }) {
               </td>
               <td>💬</td>
               <td>
-                {!props.deckList.includes(card) && <button onClick={()=> {
-                  // adds the card to the deck list
-                  props.setDeckList([...props.deckList, card]);
-                }}>➕</button>}
+                {!props.deckList.some(
+                  (deckCard) => deckCard.name === card.name
+                ) && (
+                  <button
+                    onClick={() => {
+                      // Add the card to the deck list
+                      props.setDeckList([...props.deckList, card]);
+                    }}
+                  >
+                    ➕
+                  </button>
+                )}
               </td>
             </tr>
           ))}

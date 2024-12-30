@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 
 const TOOLTIP_DELAY = 500;
 
-export default function Tooltip ({ children, content, delay = TOOLTIP_DELAY }) {
+export default function Tooltip ({ 
+    children, content, delay = TOOLTIP_DELAY, position 
+  }) {
   const [isVisible, setIsVisible] = useState(false);
   const [timer, setTimer] = useState(null);
 
@@ -20,6 +22,43 @@ export default function Tooltip ({ children, content, delay = TOOLTIP_DELAY }) {
     return () => clearTimeout(timer); // Clean up timer on component unmount
   }, [timer]);
 
+  // Set the position of the tooltip based on the position prop
+  let pBottom, pLeft, pMargin;
+
+  switch (position) {
+    case "top":
+      pBottom = "100%";
+      pLeft = "50%";
+      pMargin = "0px 0px 4px 0px";
+      break;
+    case "right":
+      pBottom = "0%";
+      pLeft = "100%";
+      pMargin = "0px 0px 0px 4px";
+      break;
+    case "bottom":
+      pBottom = "-10%";
+      pLeft = "50%";
+      pMargin = "4px 0px 0px 0px";
+      break;
+    case "left":
+      pBottom = "0%";
+      pLeft = "-100%";
+      pMargin = "0px 4px 0px 0px";
+      break;
+    case "center":
+      pBottom = "50%";
+      pLeft = "50%";
+      pMargin = 0;
+      break;
+    default:
+      // Default to bottom
+      pBottom = "-10%";
+      pLeft = "50%";
+      pMargin = "4px 0px 0px 0px";
+
+  }
+
   return (
     <div
       style={{ display: "inline-block", position: "relative" }}
@@ -31,12 +70,13 @@ export default function Tooltip ({ children, content, delay = TOOLTIP_DELAY }) {
         <div
           style={{
             position: "absolute",
-            bottom: "-10%", // Position above the target element
-            left: "50%",
-            transform: "translateX(-50%)",
+            bottom: pBottom, // Position above the target element
+            left: pLeft,
+            // transform: "translateX(-50%)",
             backgroundColor: "black",
             color: "white",
             padding: "5px",
+            margin: pMargin,
             borderRadius: "4px",
             whiteSpace: "nowrap",
             zIndex: 1000,
