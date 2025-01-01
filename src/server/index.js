@@ -21,6 +21,10 @@ app.use(cors());
 app.use(express.json());
 
 
+// Cache the orders for decks to prevent duplicate orders
+let cachedOrders = {};
+
+
 connectToDb((err) => {
     if (err) {
         console.error("Database connection failed:", err);
@@ -108,24 +112,39 @@ app.post("/api/test", async (req, res) => {
 
 
 app.post("/api/test-shop", async (req, res) => {
-  const decklists = await getDecklists(db);
+  const { deckname, captain, cards } = req.body;
 
-  console.log(Object.keys(decklists));
-  const deckname = "Bows & Blades";
-  const cards = decklists[deckname].map( card => card.name );
+  console.log("cachedOrders:", cachedOrders);
 
-  const response = await testOrderDeck(deckname, cards);
+  if (Object.keys(cachedOrders).includes(deckname)) {
+    console.log("Order already placed for this deck.");
+    return res.json(cachedOrders[deckname]);
+  } else {
+    cachedOrders[deckname] = { id: undefined };
+  }
 
-  console.log("response from server", response)
+  console.log("Request received for deck order:", req.body);
+  const response = await testOrderDeck(deckname, captain, cards);
+  // const response = {
+  //   code: 200,
+  //   message: "Order placed successfully",
+  //   data: {
+  //     status: 200,
+  //     id: "12345",
+  // }};
 
-  if (response.data && response.data.status) {
-    res.status(response.data.status).json({
+  console.log("response from server", response);
+  // console.log("response from server", response.data);
+
+  if (response.data.status !== 200) {
+    res.status(response.status).json({
       code: response.code,
       message: response.message,
       data: response.data,
     });
   } else {
-    res.json(response);
+    res.json(response.data);
+    cachedOrders[deckname] = response.data;
   }
 })
 

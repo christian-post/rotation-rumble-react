@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -10,6 +10,16 @@ import { Pie } from "react-chartjs-2";
 import CustomTooltip from "../../components/Tooltip";
 import CardImage from "../../components/CardImage";
 import { download } from "../../utils/common";
+import colormaps from "../../utils/colormaps";
+
+
+function deckToString(deck) {
+  return JSON.stringify({
+    deckname: deck.name,
+    captain: deck.captain.name,
+    cards: deck.decklist.map((card) => card.name)
+  });
+}
 
 
 function DeckTable({ cards }) {
@@ -58,30 +68,8 @@ function CardView({ cards }) {
 
 
 function Statistics({ deck }) {
-  
-  // TODO put colors in own file
-  const colormap = [
-    'rgb(165, 0, 38)',
-    'rgb(188, 22, 38)',
-    'rgb(214, 47, 38)',
-    'rgb(229, 77, 52)',
-    'rgb(244, 109, 67)',
-    'rgb(248, 142, 82)',
-    'rgb(252, 172, 96)',
-    'rgb(253, 198, 120)',
-    'rgb(254, 224, 144)',
-    'rgb(254, 239, 167)',
-    'rgb(254, 254, 192)',
-    'rgb(239, 249, 218)',
-    'rgb(224, 243, 247)',
-    'rgb(196, 229, 240)',
-    'rgb(169, 216, 232)',
-    'rgb(141, 193, 220)',
-    'rgb(116, 173, 209)',
-    'rgb(92, 144, 194)',
-    'rgb(68, 115, 179)',
-    'rgb(58, 83, 163)',
-  ];
+  // shows the color and cardtype distribution of the deck
+  const colormap = colormaps.rainbow;
 
   const colorCode = {
     red: 'rgb(212, 50, 39)',
@@ -220,11 +208,75 @@ function DeckShare({ deck }) {
 }
 
 
+function DeckOrder({ deckString, deck }) {
+
+  const [order, setOrder] = useState({ productID: undefined});
+  const [urlBroken, setUrlBroken] = useState(false);
+
+  useEffect(() => {
+    orderDeck();
+  }, [deckString]);
+
+  async function orderDeck() {
+    const response = await fetch("/api/test-shop/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: deckString,
+    });
+  
+    const res = await response.json()
+  
+    if (!response.ok) {
+      console.error(response.status, response.statusText);
+      alert(`Error: ${res.data.message} (${res.data.code})`);
+      setUrlBroken(true);
+      return;
+    }
+
+    setOrder({
+      productID: res.id
+    });
+  }
+
+  return (
+    <div>
+      <h2>Deck Order</h2>
+      {
+        deck ? (
+          <div>
+            <p>Deck Name: {deck.name}</p>
+            <p>Deck Captain: {deck.captain?.name}</p>
+            <br/>
+            {
+              (order.productID != undefined)
+              ? (<a 
+                  href={`https://beaverlicious.com/?add-to-cart=${order.productID}`} 
+                  target="_blank">Put deck into cart
+                </a>)
+              : (<p>Generating URL...</p>)
+            }
+            {urlBroken && <p>URL generation failed. Please try again later.</p>}
+          </div>
+        ) : (
+          <p>No deck selected.</p>
+        )
+      }
+    </div>
+  );
+}
+
+
 
 export default function DeckOverview({ props }) {
   // shows the deck list and deck stats
 
   const [activeTab, setActiveTab] = useState(0);
+  const memoizedDeck = useMemo(
+    () => deckToString(props.currentEditDeck), 
+    [props.currentEditDeck]
+  );
 
   const tabs = [
     "🧾 Table View",
@@ -285,7 +337,7 @@ export default function DeckOverview({ props }) {
     ),
     (
       <div className="tabcontent">
-        Coming Soon...
+        <DeckOrder deckString={memoizedDeck} deck={props.currentEditDeck} />
       </div>
     )
   ];

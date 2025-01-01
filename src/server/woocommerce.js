@@ -13,10 +13,10 @@ const api = new WooCommerceRestApi({
 
 
 async function getProductList() {
-  api.get("products")
+  api.get("products", { per_page: 50 })
     .then((response) => {
       response.data.forEach(product => {
-        console.log(`id: ${product.id} name: "${product.name}" sku: ${product.sku}`);
+        console.log(`id: ${product.id} name: "${product.name}" sku: ${product.sku} visibility: ${product.catalog_visibility}`);
       });
     })
     .catch((error) => {
@@ -58,7 +58,6 @@ export async function getProductBySku(sku) {
 
 
 
-
 async function publishProduct(productKey) {
   const data = {
     status: "publish",
@@ -76,30 +75,47 @@ async function publishProduct(productKey) {
 }
 
 
-export async function testOrderDeck(deckname, cards) {
+export async function testOrderDeck(deckname, captain, cards) {
   const data = {
     name: `Custom Deck (${deckname})`,
-    description: "Order a custom deck from the deck builder.",
+    description: `This is a custom deck created by the user.\n` +
+      ` It is captained by ${captain} and contains the following ${cards.length} cards:\n ${cards.join("\n")}`,
     slug: "custom-deck",
     status: "publish",
-    catalog_visibility: "hidden",
+    catalog_visibility: "catalog",
     meta_data: [
       {
         key: "card_list",
         value: cards.join("\n")
+      },
+      {
+        key: "captain",
+        value: captain
       }
     ]
   };
 
   // product key of the original custom deck
-  const originalProductKey = "3523";
+  const originalProductKey = process.env.CUSTOM_DECK_PRODUCT_KEY;
+  if (originalProductKey === undefined) {
+    console.error("CUSTOM_DECK_PRODUCT_KEY is not set in the environment.");
+    return { 
+      status: 500,
+      message: "Server error: CUSTOM_DECK_PRODUCT_KEY is not set." 
+    };
+  }
+
   let response;
 
   try {
     response = await api.post(`products/${originalProductKey}/duplicate`);
   } catch (error) {
     console.log(error.response?.data || "Error occurred");
-    return error.response?.data || { message: "Unknown error" };
+    return error.response || { 
+      code: "unknown",
+      message: "Unknown error",
+      data: error.response?.data || { status: 500 }
+    };
   }
 
   try {
@@ -109,12 +125,32 @@ export async function testOrderDeck(deckname, cards) {
     response = await api.put(`products/${newProductKey}`, data);
   } catch (error) {
     console.log(error.response?.data || "Error occurred");
-    return error.response?.data || { message: "Unknown error" };
+    return error.response || { 
+      code: "unknown",
+      message: "Unknown error",
+      data: error.response?.data || { status: 500 }
+    };
   }
 
-  return response.data;
+  return response;
 }
 
+
+function modifyProduct(productId, data) {
+  api.put(`products/${productId}`, data)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.log(error.response.data);
+    });
+}
+
+
+
+modifyProduct(3679, {
+  catalog_visibility: "visible"
+});
 
 
 // getProductList();
