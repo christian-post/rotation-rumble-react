@@ -58,13 +58,24 @@ export default function EditPage({ props }) {
   }
   , [deckList]);
 
-  // fetch all cards from the server and filter out the non-Captain ones
   useEffect(() => {
     fetch("/api/all-cards")
       .then((res) => res.json())
-      .then((data) => setAllCards(
-        data.cards.filter((card) => card.cardtype !== "Captain")));
-  }, []);
+      .then((data) =>
+        setAllCards(
+          data.cards.filter((card) => {
+            // Filter out captains and check if all card colors match the 
+            // captain's colors
+            return (
+              card.cardtype !== "Captain" &&
+              card.color.every((color) =>
+                props.selectedCaptain.color.includes(color)
+              )
+            );
+          })
+        )
+      );
+  }, [props.selectedCaptain.color]);
 
   function goBack() {
     props.setMode("start");

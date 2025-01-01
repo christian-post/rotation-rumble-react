@@ -19,19 +19,21 @@ export default function StartPage({ props }) {
   }
 
   function deleteAllDecks() {
-    // prompt the user if they want to delete all decks
-    if (window.confirm("Are you sure you want to delete all decks?")) {
-      // delete all decks from local storage
-      localforage.removeItem("customDecks")
-        .then(() => {
-          props.setCustomDecks({});
-        })
-        .catch((error) => {
-          console.error("Error deleting decks:", error);
-          alert("Error deleting decks. Please try again.");
+    window.confirm("Are you sure you want to delete all decks? This can not be undone!")
+      .then((result) => {
+        if (result) {
+          localforage.removeItem("customDecks")
+            .then(() => {
+              props.setCustomDecks({});
+            })
+            .catch((error) => {
+              console.error("Error deleting decks:", error);
+              alert("Error deleting decks. Please try again.");
+            });
+        } else {
+          console.log("User canceled the deletion.");
         }
-      );
-    }
+      });
   }
 
   return (
