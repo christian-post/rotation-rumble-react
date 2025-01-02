@@ -4,17 +4,18 @@ import StartPage from "../partials/deckbuilder/StartPage";
 import EditPage from "../partials/deckbuilder/EditPage";
 import CaptainSelectPage from "../partials/deckbuilder/CaptainSelectPage";
 import DeckOverview from "../partials/deckbuilder/DeckOverview";
-
+import ErrorPage from "./error-page";
+import LoadingPlaceholder from "./loading-placeholder";
 
 export default function Deckbuilder() {
   const { data, error } = useLoaderData();
 
   if (error) {
-    return <div>Error loading deck data: {error}</div>;
+    return <ErrorPage displayedError={error}/>;
   }
 
   if (!data) {
-    return <div>Loading...</div>;
+    return <LoadingPlaceholder />;
   }
 
   // Mode defines which children are rendered

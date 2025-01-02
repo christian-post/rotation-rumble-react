@@ -1,6 +1,7 @@
 import pkg from '@woocommerce/woocommerce-rest-api';
 const WooCommerceRestApi = pkg.default;
 import dotenv from "dotenv";
+import { sanitize } from './utils.js';
 
 dotenv.config();
 
@@ -75,9 +76,10 @@ async function publishProduct(productKey) {
 }
 
 
-export async function testOrderDeck(deckname, captain, cards) {
+export async function testOrderDeck(deckname, captain, cards, image) {
+  // convert to string
   const data = {
-    name: `Custom Deck (${deckname})`,
+    name: `Custom Deck (${sanitize(deckname)})`,
     description: `This is a custom deck created by the user.\n` +
       ` It is captained by ${captain} and contains the following ${cards.length} cards:\n ${cards.join("\n")}`,
     slug: "custom-deck",
@@ -86,11 +88,16 @@ export async function testOrderDeck(deckname, captain, cards) {
     meta_data: [
       {
         key: "card_list",
-        value: cards.join("\n")
+        value: cards.map(sanitize).join("\n")
       },
       {
         key: "captain",
-        value: captain
+        value: sanitize(captain)
+      }
+    ],
+    images: [
+      {
+        src: image
       }
     ]
   };
@@ -132,6 +139,19 @@ export async function testOrderDeck(deckname, captain, cards) {
     };
   }
 
+  // schedule a deletion of the deck after 30 minutes
+  if (response.status == 200) {
+    const productId = response.data.id;
+    const minutesDelay = 10;  // delete order after x minutes
+
+    console.log(`product scheduled for deletion in ${minutesDelay} minutes.`);
+
+    setTimeout(()=> {
+      deleteFinally(productId);
+      // TODO: remove from cart?
+    }, minutesDelay * 60 * 1000);
+  }
+
   return response;
 }
 
@@ -142,23 +162,40 @@ function modifyProduct(productId, data) {
       console.log(response.data);
     })
     .catch((error) => {
-      console.log(error.response.data);
+      console.log(error.response?.data || error);
+    });
+}
+
+
+function deleteFinally(productId) {
+  api.delete(`products/${productId}`, {
+    force: true
+  })
+    .then((response) => {
+      console.log(`Deleted product with ID ${response.data.id}`);
+    })
+    .catch((error) => {
+      console.log(error);
     });
 }
 
 
 
-modifyProduct(3679, {
-  catalog_visibility: "visible"
-});
+// let decklist = [
+//   "Alchemy Book",
+//   "Aridam",
+//   "Berta",
+//   "Bleeding",
+//   "Banshee",
+//   "Dr. Oops",
+//   "Devil´s Deal",
+//   "Eelzebub",
+//   "El Torro",
+//   "Evil Cauldron",
+// ];
 
+// testOrderDeck("Test", "Mett", decklist).then(res => {
+//   console.log("test order:", res.statusText);
+// })
 
-// getProductList();
-
-// testOrderDeck("Test", ["foo", "bar"]);
-
-// getProduct(2958)
-// getProductBySku(6000)
-// getProduct(3515)
-// publishProduct(3515);
 

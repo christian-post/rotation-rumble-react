@@ -1562,3 +1562,9 @@ section > ul {
   visibility: visible;
   opacity: 1;
 }
+
+.url-waiting-animation {
+  animation: pulseOpacity 1.5s infinite ease-in-out;
+  font-weight: 700;
+  color: var(--color-orange);
+}

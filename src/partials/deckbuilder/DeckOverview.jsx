@@ -17,7 +17,8 @@ function deckToString(deck) {
   return JSON.stringify({
     deckname: deck.name,
     captain: deck.captain.name,
-    cards: deck.decklist.map((card) => card.name)
+    cards: deck.decklist.map((card) => card.name),
+    image: deck.captain.image_url
   });
 }
 
@@ -187,7 +188,7 @@ function DeckShare({ deck }) {
     <div className="decklistString-container">
       <textarea
         id="decklistString"
-        rows="12" 
+        rows="15" 
         cols="30"
         value={deckString}
         readOnly
@@ -212,10 +213,20 @@ function DeckOrder({ deckString, deck }) {
 
   const [order, setOrder] = useState({ productID: undefined});
   const [urlBroken, setUrlBroken] = useState(false);
+  const [animCount, setAnimCount] = useState(0);
 
   useEffect(() => {
     orderDeck();
   }, [deckString]);
+
+  useEffect(() => {
+    // waiting animation
+    const interval = setInterval(() => {
+      setAnimCount((prev) => (prev + 1) % 4); 
+    }, 600);
+
+    return () => clearInterval(interval); 
+  }, []);
 
   async function orderDeck() {
     const response = await fetch("/api/test-shop/", {
@@ -255,7 +266,10 @@ function DeckOrder({ deckString, deck }) {
                   href={`https://beaverlicious.com/?add-to-cart=${order.productID}`} 
                   target="_blank">Put deck into cart
                 </a>)
-              : (<p>Generating URL...</p>)
+              : (
+              <p className="url-waiting-animation">
+                Generating URL, this may take a couple seconds{".".repeat(animCount)}
+              </p>)
             }
             {urlBroken && <p>URL generation failed. Please try again later.</p>}
           </div>

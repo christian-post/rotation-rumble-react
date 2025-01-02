@@ -9,7 +9,7 @@ import {
 } from "./search.js";
 import { testOrderDeck } from "./woocommerce.js";
 import dotenv from "dotenv";
-import { escapeRegex } from "./utils.js";
+import { escapeRegex, sanitize } from "./utils.js";
 
 dotenv.config();
 
@@ -112,7 +112,7 @@ app.post("/api/test", async (req, res) => {
 
 
 app.post("/api/test-shop", async (req, res) => {
-  const { deckname, captain, cards } = req.body;
+  const { deckname, captain, cards, image } = req.body;
 
   console.log("cachedOrders:", cachedOrders);
 
@@ -124,7 +124,7 @@ app.post("/api/test-shop", async (req, res) => {
   }
 
   console.log("Request received for deck order:", req.body);
-  const response = await testOrderDeck(deckname, captain, cards);
+  const response = await testOrderDeck(deckname, captain, cards, image);
   // const response = {
   //   code: 200,
   //   message: "Order placed successfully",
@@ -133,10 +133,10 @@ app.post("/api/test-shop", async (req, res) => {
   //     id: "12345",
   // }};
 
-  console.log("response from server", response);
+  console.log("response from server", response.status, response.statusText);
   // console.log("response from server", response.data);
 
-  if (response.data.status !== 200) {
+  if (response.status !== 200) {
     res.status(response.status).json({
       code: response.code,
       message: response.message,
@@ -145,6 +145,7 @@ app.post("/api/test-shop", async (req, res) => {
   } else {
     res.json(response.data);
     cachedOrders[deckname] = response.data;
+    console.log("sending response")
   }
 })
 
