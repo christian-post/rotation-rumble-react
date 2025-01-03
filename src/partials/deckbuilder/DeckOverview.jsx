@@ -5,12 +5,13 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-ChartJS.register(ArcElement, Tooltip, Legend);
 import { Pie } from "react-chartjs-2";
 import CustomTooltip from "../../components/Tooltip";
 import CardImage from "../../components/CardImage";
 import { download } from "../../utils/common";
 import colormaps from "../../utils/colormaps";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 function deckToString(deck) {
@@ -24,7 +25,7 @@ function deckToString(deck) {
 
 
 function DeckTable({ cards }) {
-  // Group cards by their cardtype
+  // Group cards by their cardtype and return a sectioned list of cards
   const groupedCards = cards.reduce((acc, card) => {
     acc[card.cardtype] = acc[card.cardtype] || [];
     acc[card.cardtype].push(card);
@@ -169,7 +170,7 @@ function Statistics({ deck }) {
 
 
 function DeckShare({ deck }) {
-
+  // shows the decklist as a string and allows the user to copy it to clipboard
   const [tooltip, setTooltip] = useState("Copy to Clipboard");
 
   function copyToClipboard() {
@@ -210,7 +211,7 @@ function DeckShare({ deck }) {
 
 
 function DeckOrder({ deckString, deck }) {
-
+  // provides a link to the shop with the deck in the cart
   const [order, setOrder] = useState({ productID: undefined});
   const [urlBroken, setUrlBroken] = useState(false);
   const [animCount, setAnimCount] = useState(0);
@@ -284,7 +285,7 @@ function DeckOrder({ deckString, deck }) {
 
 
 export default function DeckOverview({ props }) {
-  // shows the deck list and deck stats
+  // shows the deck list and deck stats with tabs
 
   const [activeTab, setActiveTab] = useState(0);
   const memoizedDeck = useMemo(

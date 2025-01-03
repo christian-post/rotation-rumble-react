@@ -22,8 +22,8 @@ export default function DeckList({ props }) {
           </tr>
         </thead>
         <tbody>
-          {props.deckList.length > 0 ? (
-            props.deckList.map((card) => (
+          {props.currentEditDeck.decklist.length > 0 ? (
+            props.currentEditDeck.decklist.map((card) => (
               <tr key={card.name}>
                 <td>{card.name}</td>
                 <td>{card.cardtype}</td>
@@ -42,7 +42,10 @@ export default function DeckList({ props }) {
                 <td>💬</td>
                 <td><button onClick={()=> {
                   // removes the card from the deck list
-                  props.setDeckList(props.deckList.filter((c) => c !== card));
+                  props.setCurrentEditDeck({
+                    ...props.currentEditDeck,
+                    decklist: props.currentEditDeck.decklist.filter((c) => c !== card)
+                  });
                 }}>❌</button></td>
               </tr>
             ))

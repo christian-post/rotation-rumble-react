@@ -125,16 +125,8 @@ app.post("/api/test-shop", async (req, res) => {
 
   console.log("Request received for deck order:", req.body);
   const response = await testOrderDeck(deckname, captain, cards, image);
-  // const response = {
-  //   code: 200,
-  //   message: "Order placed successfully",
-  //   data: {
-  //     status: 200,
-  //     id: "12345",
-  // }};
 
   console.log("response from server", response.status, response.statusText);
-  // console.log("response from server", response.data);
 
   if (response.status !== 200) {
     res.status(response.status).json({

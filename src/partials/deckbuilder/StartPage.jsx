@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import Tooltip from "../../components/Tooltip";
 import localforage from "localforage";
 
+
 export default function StartPage({ props }) {
   // start page of the deckbuilder
   // shows the available decks and the option to create a new deck
@@ -9,12 +10,16 @@ export default function StartPage({ props }) {
   function gotoNewDeck() {
     // show the component where one can select their Captain
     props.setMode("captainSelect");
-    props.setCurrentEditDeck(null);
+    props.setCurrentEditDeck({
+      decklist: [],
+      id: null,
+      name: "New Deck",
+      captain: null
+    });
   }
 
   function editDeck(deck) {
     props.setCurrentEditDeck(deck);
-    props.setSelectedCaptain(deck.captain);
     props.setMode("edit");
   }
 

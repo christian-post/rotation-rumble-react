@@ -2,11 +2,12 @@ import { useState, useEffect } from "react";
 import Tooltip from "../../components/Tooltip";
 import CardImage from "../../components/CardImage";
 
+
 export default function CaptainSelectPage({ props }) {
   const [allCaptains, setAllCaptains] = useState([]);
 
   useEffect(() => {
-    // load Captain images
+    // load Captain images into the allCaptains array
     fetch("/api/all-cards")
       .then((res) => res.json())
       .then((data) => setAllCaptains(
@@ -14,7 +15,7 @@ export default function CaptainSelectPage({ props }) {
   }, []);
 
   function goToDeckEdit(captain) {
-    props.setSelectedCaptain(captain);
+    props.setCurrentEditDeck({...props.currentEditDeck, captain: captain});
     props.setMode("edit");
   }
 

@@ -19,11 +19,20 @@ export default function Deckbuilder() {
   }
 
   // Mode defines which children are rendered
-  const [mode, setMode] = useState("start"); // start, edit
-  const [currentEditDeck, setCurrentEditDeck] = useState(null);
+  // start, edit, captainSelect, overview
+  const [mode, setMode] = useState("start"); 
+  // value that holds the current deck object which can be edited
+  const [currentEditDeck, setCurrentEditDeck] = useState({
+    decklist: [],
+    id: null,
+    name: "New Deck",
+    captain: null
+  });
+
+  console.log(currentEditDeck);
+
+  // all decks from localForage
   const [customDecks, setCustomDecks] = useState(data.customDecks);
-  // value that holds the selected captain object
-  const [selectedCaptain, setSelectedCaptain] = useState(null);
 
   const preconDeckNames = Object.keys(data.preconDecklists)
 
@@ -45,34 +54,38 @@ export default function Deckbuilder() {
       {{
         start: <StartPage props={
           { 
+            mode,
+            setMode,
             preconDeckNames, 
             preconDeckImages,
             customDecks,
             setCustomDecks,
-            mode,
-            setMode,
-            setCurrentEditDeck,
-            setSelectedCaptain
+            setCurrentEditDeck
           }
         } />,
         edit: <EditPage props={
           { 
-            mode, setMode, currentEditDeck, 
+            mode, 
+            setMode, 
+            currentEditDeck, 
             setCurrentEditDeck,
-            setCustomDecks, selectedCaptain,
-            setSelectedCaptain
+            setCustomDecks
           }
         } />,
         captainSelect: <CaptainSelectPage props={
           { 
-            mode, setMode, currentEditDeck, 
-            setCustomDecks, selectedCaptain,
-            setSelectedCaptain
+            mode, 
+            setMode, 
+            currentEditDeck,
+            setCurrentEditDeck,
+            setCustomDecks
           }
         } />,
         overview: <DeckOverview props={
           { 
-            mode, setMode, currentEditDeck, 
+            mode, 
+            setMode, 
+            currentEditDeck, 
             setCustomDecks
           }
         } />

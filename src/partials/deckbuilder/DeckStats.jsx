@@ -4,41 +4,27 @@ import { generateUniqueId } from "../../utils/common";
 export default function DeckStats({ props }) {
 
   function saveDeck() {
-    if (props.deckList.length === 0) {
+    if (props.currentEditDeck.decklist.length === 0) {
       alert("You cannot save an empty deck.");
       return;
-    }
+    } 
 
     // check if the last loaded deck has a UUID
     // if not, generate a new one
-    let deck;
-
-    if (!props.currentEditDeck) {
-      deck = {
-        "decklist": props.deckList,
-        "id": generateUniqueId(),
-        "name": document.getElementById("deck-title").textContent,
-        "captain": props.selectedCaptain
-      };
-      props.setCurrentEditDeck(deck);
-    } else {
-      // update the existing deck
-      props.currentEditDeck.decklist = props.deckList;
-      props.currentEditDeck.name = document.getElementById("deck-title").textContent;
-      props.currentEditDeck.captain = props.selectedCaptain;
-      deck = props.currentEditDeck;
+    if (!props.currentEditDeck.id) {
+      props.currentEditDeck.id = generateUniqueId();
     }
 
     // saves the deck to the local storage
     localforage.getItem("customDecks")
       .then((customDecks) => {
-        // Initialize customDecks if it doesn't exist
+        // Initialize the customDecks collection if it doesn't exist
         if (!customDecks) {
           customDecks = {};
         }
 
         // Add the new deck to the customDecks object
-        customDecks[`deck_${deck.id}`] = deck;
+        customDecks[`deck_${props.currentEditDeck.id}`] = props.currentEditDeck;
 
         // Update the customDecks state
         props.setCustomDecks(customDecks);
@@ -53,8 +39,7 @@ export default function DeckStats({ props }) {
         console.error("Error saving deck:", error);
         alert("Error saving deck. Please try again.");
       });
-
-      console.log("Deck saved:", deck);
+      console.log("Deck saved:", props.currentEditDeck);
   }
 
   return ( 
@@ -66,7 +51,7 @@ export default function DeckStats({ props }) {
           onClick={saveDeck}
         >💾 Save Changes
         </button>
-        {props.deckList.length > 0 && (<div 
+        {props.currentEditDeck.decklist.length > 0 && (<div 
           className="standard-button"
           onClick={()=> props.setMode("overview")}
         >
@@ -74,7 +59,7 @@ export default function DeckStats({ props }) {
         </div>)}
         <button 
           className="standard-button"
-          onClick={props.goBack}
+          onClick={()=> props.setMode("start")}
         >
           🔙 Go Back
         </button>
@@ -105,8 +90,8 @@ export default function DeckStats({ props }) {
           </table>
           <img 
             className="card-image-medium"
-            src={props.selectedCaptain.image_url} 
-            alt={props.selectedCaptain.name}
+            src={props.currentEditDeck.captain.image_url} 
+            alt={props.currentEditDeck.captain.name}
           />
         </div>
         <div id="deck-validity-check">
