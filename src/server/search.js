@@ -36,8 +36,8 @@ export function processSearch(req) {
   // Suche lesbar machen
   let searchExplain = [];
   let attrs = [
-    "name", "cardtype", "colors", "dmg", "def", "dice", "token", "type", 
-    "effectOrStep", "set"
+    "name", "cardtype", "colors", "dmg", "def", "dice", "type", 
+    "effectOrStep", "set", "decks"
   ];
 
   let aliases = {
@@ -106,8 +106,18 @@ export function processSearch(req) {
         case "set":
           if (typeof req.set === "object") {
             searchExplain.push(`the Set is "${req.set.join("\" or \"")}"`);
-            break;
+          } else {
+            searchExplain.push(`the Set is "${req.set}"`);
           }
+          break;
+
+        case "decks":
+          if (typeof req.decks === "object") {
+            searchExplain.push(`the card is in "${req.decks.join("\" and \"")}"`);
+          } else {
+            searchExplain.push(`the card is in "${req.decks}"`);
+          }
+          break;
 
         case "name":
           searchExplain.push(`the ${capitalize(attrs[i])} includes "${req[attrs[i]]}"`);
@@ -119,38 +129,64 @@ export function processSearch(req) {
     }
   }
 
+
+  // Input sanitization
+  // some values have to be treated differently
+  let sanitizedSearch = {
+    name: sanitize(req.name),
+    cardtype: sanitize(req.cardtype),
+    colors: sanitize(req.colors),
+    color_compare: sanitize(req.color_compare),
+    dmg: sanitize(req.dmg),
+    dmg_compare_method: sanitize(req.dmg_compare_method),
+    def: sanitize(req.def),
+    def_compare_method: sanitize(req.def_compare_method),
+    dice: sanitize(req.dice),
+    type: sanitize(req.type, ""),
+    effectOrStep: sanitize(req.effectOrStep, ""),
+    effectOrStep_exact: sanitize(req.effectOrStep_exact),
+    effectOrStep_matchall: sanitize(req.effectOrStep_matchall),
+    set: sanitize(req.set),
+    decks: sanitize(req.decks, " ", ["&"])
+  }
+
+  // console.log("\nSanitized Search:")
+  // console.log(inspect(sanitizedSearch, {showHidden: false, depth: null, colors: true}));
+
   // Suche nach Farben
   let colors;
-  if (req.colors.length > 0) {
-    if (req.color_compare === "exact") {
-      if (typeof req.colors === "string") {
+  if (sanitizedSearch.colors.length > 0) {
+    if (sanitizedSearch.color_compare === "exact") {
+      if (typeof sanitizedSearch.colors === "string") {
         // Single color: Enforce array size and regex match
         colors = {
           $size: 1,
-          $elemMatch: { $regex: new RegExp(`^${req.colors}$`, "i") }
+          $elemMatch: { $regex: new RegExp(`^${sanitizedSearch.colors}$`, "i") }
         };
-      } else if (Array.isArray(req.colors)) {
+      } else if (Array.isArray(sanitizedSearch.colors)) {
         // Array of colors: Match exact array
-        colors = { $eq: req.colors };
+        colors = { $eq: sanitizedSearch.colors };
       }
-    } else if (req.color_compare === "least-one") {
+    } else if (sanitizedSearch.color_compare === "least-one") {
       // At least one match (logical OR)
-      if (typeof req.colors === "string") {
+      if (typeof sanitizedSearch.colors === "string") {
         colors = {
-          $elemMatch: { $regex: new RegExp(`^${req.colors}$`, "i") }
+          $elemMatch: { $regex: new RegExp(`^${sanitizedSearch.colors}$`, "i") }
         };
-      } else if (Array.isArray(req.colors)) {
+      } else if (Array.isArray(sanitizedSearch.colors)) {
         colors = {
-          $elemMatch: { $in: req.colors.map(color => new RegExp(`^${color}$`, "i")) }
+          $elemMatch: { $in: sanitizedSearch.colors.map(
+            color => new RegExp(`^${color}$`, "i")
+          ) }
         };
       }
-    } else if (req.color_compare === "include-all") {
+    } else if (sanitizedSearch.color_compare === "include-all") {
       // All elements must match (logical AND)
-      if (typeof req.colors === "string") {
-        colors = { $all: [new RegExp(`^${req.colors}$`, "i")] };
+      if (typeof sanitizedSearch.colors === "string") {
+        colors = { $all: [new RegExp(`^${sanitizedSearch.colors}$`, "i")] };
       } else if (Array.isArray(req.color)) {
         colors = {
-          $all: req.colors.map(color => new RegExp(`^${color}$`, "i"))
+          $all: sanitizedSearch.colors.map(color => new RegExp(`^${color}$`, "i"))
         };
       }
     }
@@ -159,49 +195,49 @@ export function processSearch(req) {
   // dmg und def any value
   // TODO: don't change the contents of req; make a new variable for each
 
-  if (req.dmg === "any" || req.dmg === undefined) {
-    req.dmg = null; // Exclude from query
-    req.dmg_compare_method = null;
-  } else if (req.dmg_compare_method === "$not") {
-    req.dmg = RegExp(req.dmg, "i"); // Use RegExp for $not
+  if (sanitizedSearch.dmg === "any" || sanitizedSearch.dmg === undefined) {
+    sanitizedSearch.dmg = null; // Exclude from query
+    sanitizedSearch.dmg_compare_method = null;
+  } else if (sanitizedSearch.dmg_compare_method === "$not") {
+    sanitizedSearch.dmg = RegExp(sanitizedSearch.dmg, "i"); // Use RegExp for $not
   }
 
-  if (req.def === "any" || req.def === undefined) {
-    req.def = null; // Exclude from query
-    req.def_compare_method = null;
-  } else if (req.def_compare_method === "$not") {
-    req.def = RegExp(req.def, "i"); // Use RegExp for $not
+  if (sanitizedSearch.def === "any" || sanitizedSearch.def === undefined) {
+    sanitizedSearch.def = null; // Exclude from query
+    sanitizedSearch.def_compare_method = null;
+  } else if (sanitizedSearch.def_compare_method === "$not") {
+    sanitizedSearch.def = RegExp(sanitizedSearch.def, "i"); // Use RegExp for $not
   }
 
 
   // Würfel
-  if (req.dice === "Irrelevant") {
-    req.dice = /(?:)/i;
+  if (sanitizedSearch.dice === "Irrelevant") {
+    sanitizedSearch.dice = /(?:)/i;
   }
 
 
   // Types
-  let typeSearch = sanitize(req.type, "").trim(); 
+  let typeSearch = sanitizedSearch.type.trim(); 
   let types = typeSearch.split(/\s+/);
 
   // If there are multiple types, create a regex with "or" conditions
   if (types.length > 1) {
-    req.type = new RegExp(types.map(escapeRegex).join("|"), "i"); // Escape each type
+    sanitizedSearch.type = new RegExp(types.map(escapeRegex).join("|"), "i");
   } else if (typeSearch) {
-    req.type = new RegExp(escapeRegex(typeSearch), "i"); // Single type
+    sanitizedSearch.type = new RegExp(escapeRegex(typeSearch), "i"); // Single type
   } else {
-    req.type = null; // No valid type provided
+    sanitizedSearch.type = null; // No valid type provided
   }
 
 
   // Effects or Steps
-  let effectsSearchStr = sanitize(req.effectOrStep).trim();
+  let effectsSearchStr = sanitizedSearch.effectOrStep.trim();
   let effectSearch;
-  if (req.effectOrStep_exact) {
+  if (sanitizedSearch.effectOrStep_exact) {
     // Exact search
     // TODO: können beide checkboxen angeklickt werden?
     effectSearch = `\"${effectsSearchStr}\"`;
-  } else if (req.effectOrStep_matchall) {
+  } else if (sanitizedSearch.effectOrStep_matchall) {
     // Match all words
     effectSearch = `\"${effectsSearchStr.replaceAll(" ", "\" \"")}\"`;
   } else {
@@ -209,27 +245,24 @@ export function processSearch(req) {
   }
 
   // Decks
-  let decks;
-  if (typeof req.decks === "string") {
-    decks = (req.decks == "any") ? null : [sanitize(req.decks, " ", ["&"])];
-  } else if (Array.isArray(req.decks)) {
-    decks = (req.decks.includes("any")) ? null : req.decks.map(deck => {
-      sanitize(deck, " ", ["&"])
-    });
-  }
+  // let decks be null if the search includes "any" or an empty string
+  let decks = sanitizedSearch.decks === "any" || 
+    (Array.isArray(sanitizedSearch.decks) && sanitizedSearch.decks.includes("any"))
+    ? null 
+    : sanitizedSearch.decks;
 
 
   // Sets
   let setSearchStr;
   let sets;
-  if (typeof req.set === "string") {
-    setSearchStr = req.set;
+  if (typeof sanitizedSearch.set === "string") {
+    setSearchStr = sanitizedSearch.set;
   } else {
     // Array
-    if (req.set === undefined) {
+    if (sanitizedSearch.set === undefined) {
       setSearchStr = "";
     } else {
-      setSearchStr = `${req.set.join("|")}`;
+      setSearchStr = `${sanitizedSearch.set.join("|")}`;
     }
   }
   sets = RegExp(setSearchStr, "i");
@@ -238,28 +271,45 @@ export function processSearch(req) {
   // Regex and query formatting
   const search = {};
 
-  if (req.name) search.name = new RegExp(escapeRegex(req.name), "i");
-  if (req.cardtype) search.cardtype = new RegExp(escapeRegex(req.cardtype), "i");
-  if (colors) search.color = colors;
-  if (req.dmg && req.dmg_compare_method) search.dmg = { [req.dmg_compare_method]: req.dmg };
-  if (req.def && req.def_compare_method) search.def = { [req.def_compare_method]: req.def };
-  if (req.dice) search.dice = req.dice;
-  if (sets && sets.length > 0) search.set = sets;
-
-  if (decks) search.deck = { $eq: decks };
+  if (sanitizedSearch.name) {
+    search.name = new RegExp(escapeRegex(sanitizedSearch.name), "i");
+  } 
+  if (sanitizedSearch.cardtype) {
+    search.cardtype = new RegExp(escapeRegex(req.cardtype), "i");
+  }
+  if (colors) {
+    search.color = colors;
+  }
+  if (sanitizedSearch.dmg && sanitizedSearch.dmg_compare_method) {
+    search.dmg = { [sanitizedSearch.dmg_compare_method]: sanitizedSearch.dmg };
+  }
+  if (sanitizedSearch.def && sanitizedSearch.def_compare_method) {
+    search.def = { [sanitizedSearch.def_compare_method]: sanitizedSearch.def };
+  }
+  if (sanitizedSearch.dice) {
+    search.dice = sanitizedSearch.dice;
+  }
+  if (sets && sets.length > 0) {
+    search.set = sets;
+  }
+  if (decks) {
+    search.deck = { $eq: decks };
+  }
 
   // Add $and conditions if present
   if (req.type) {
-    search.$and = [{ $or: [{ type1: req.type }, { type2: req.type }] }];
+    search.$and = [{ $or: [{ type1: sanitizedSearch.type }, { type2: sanitizedSearch.type }] }];
   }
 
   // Add $text if effectSearch is present
-  if (effectSearch) search.$text = { $search: effectSearch };
+  if (effectSearch) {
+    search.$text = { $search: effectSearch };
+  }
     
-    console.log("\nDatabase Query:")
-    console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
+  console.log("\nDatabase Query:")
+  console.log(inspect(search, {showHidden: false, depth: null, colors: true}));
 
-    return { search, searchExplain };
+  return { search, searchExplain };
 }
 
 

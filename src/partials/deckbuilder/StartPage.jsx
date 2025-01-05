@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Tooltip from "../../components/Tooltip";
 import localforage from "localforage";
 
@@ -41,24 +41,49 @@ export default function StartPage({ props }) {
       });
   }
 
-  return (
-    <div className="grid-container">
-      <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-        <div className="container-left">
-          <h2>Create a new deck from scratch</h2>
-        </div>
-        <div className="container-left">
-          <button onClick={gotoNewDeck}>➕ New Deck</button>
-          <button onClick={deleteAllDecks}>⚠ Delete All Decks</button>
-        </div>
-      </div>
+  function filterDecks(event) {
+    // filters the preconstructed decks
+    const {value} = event.currentTarget;
 
-      <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-        <div className="container-between">
-          <h2>Your Decks:</h2>
+    document.querySelectorAll(".precon-deck").forEach(
+      elem => {
+        if (elem.id.toLowerCase().includes(value.toLowerCase().trim())) {
+          elem.style.display = "";
+        } else {
+          elem.style.display = "none";
+        }
+      }
+    );
+  }
+
+  return (
+    <div className="page-container ">
+      <section className="top-section">
+        <p>Create a new deck from scratch:</p>
+      </section>
+      <section>
+        <div className="create-deck-button-container">
+          <button 
+            className="deckbuilder-button add-deck-button" 
+            onClick={gotoNewDeck}
+          >
+            <span>➕</span>
+            <span>ADD NEW DECK</span>
+          </button>
+          <button 
+            className="deckbuilder-button delete-decks-button"
+            onClick={deleteAllDecks}
+          >
+            <span>🚮</span>
+            <span>DELETE ALL DECKS</span>
+          </button>
         </div>
-        <div className="decklist-container">
-          {/* load decks from local forage */}
+      </section>
+      <section className="section-bg-white">
+        <p className="your-decks-h">Your decks:</p>
+      </section>
+      <section className="section-bg-white">
+        <div className="custom-decks-container">
           {Object.keys(props.customDecks).map((deck) => (
             <div key={deck}>
               <img
@@ -67,40 +92,48 @@ export default function StartPage({ props }) {
                 alt={props.customDecks[deck].name}
                 onClick={()=> editDeck(props.customDecks[deck])}
               />
-              <h3>{props.customDecks[deck].name}</h3>
+              <p className="deck-title-p">
+                {props.customDecks[deck].name}
+              </p>
             </div>
           ))}
         </div>
-      </div>
-
-      <div className="grid-item" style={{ gridColumn: "1 / span 2" }}>
-        <div className="container-between">
-          <h2>Explore and customize the preconstructed decks</h2>
-          <label htmlFor="deckSearch">
-            Filter Decks: 
-            <input
-              id="deckSearch"
-              type="text"
-              placeholder="Deck Name"
-              />
-          </label>
-        </div>
-        <div className="decklist-container">
+      </section>
+      <section>
+          <div className="subsection-header ">
+            <p className="choose-decks-h">
+              Explore and customize the preconstructed decks:
+            </p>
+            <div className="container-right">
+              <label htmlFor="deckSearch">
+                Filter Decks:
+              </label>
+              <input
+                id="deckSearch"
+                type="text"
+                placeholder="Deck Name"
+                onChange={filterDecks}
+                />
+            </div>
+          </div>
+      </section>
+      <section>
+        <div className="custom-decks-container">
           {props.preconDeckNames.map((name) => (
             props.preconDeckImages[name] && (
-              <div key={name}>
-                <Tooltip content={name}>
-                  <img
-                    className="deck-image-small"
-                    src={props.preconDeckImages[name]}
-                    alt={name}
-                  />
-                </Tooltip>
-              </div>
-            )
-          ))}
+              <div className="precon-deck" key={name} id={name}>
+                <img
+                  className="deck-image-small"
+                  src={props.preconDeckImages[name]}
+                  alt={name}
+                />
+                <p className="deck-title-p">
+                  {name}
+                </p>
+              </div>)
+            ))}
         </div>
-      </div>
+      </section>
     </div>
   )
 }

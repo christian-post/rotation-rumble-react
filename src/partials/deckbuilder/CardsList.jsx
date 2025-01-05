@@ -1,4 +1,7 @@
 import { useEffect } from "react";
+import { createRoot } from "react-dom/client";
+import Tooltip from "../../components/Tooltip";
+import CardWindow from "../../components/CardWindow";
 
 export default function CardsList({ props }) {
   // left side of the Edit Page that shows the available cards
@@ -24,6 +27,47 @@ export default function CardsList({ props }) {
     }
   }
 
+  function openCardWindow(card) {
+    // window.open(
+    //   `/card-window/${card.id}`,
+    //   "_blank",
+    //   "width=600,height=400,toolbar=no,menubar=no,scrollbars=yes,resizable=yes"
+    // )
+
+    const newWindow = window.open(
+      "",
+      "_blank",
+      "width=600,height=400,toolbar=no,menubar=no,scrollbars=yes,resizable=yes"
+    );
+  
+    if (newWindow) {
+      // Create a container div for the React app in the new window
+      const container = newWindow.document.createElement("div");
+      container.className = "card-window-parent";
+      newWindow.document.body.appendChild(container);
+
+      // Clone and append all <style> elements with the "data-vite-dev-id" attribute
+      const styles = document.querySelectorAll('style[data-vite-dev-id]');
+      styles.forEach((style) => {
+        const clonedStyle = style.cloneNode(true);
+        newWindow.document.head.appendChild(clonedStyle);
+      });
+  
+      // Create a React root
+      const root = createRoot(container);
+  
+      // Render the React component into the new window
+      root.render(<CardWindow props={{card: card}} />);
+  
+      // Clean up when the new window is closed
+      newWindow.onbeforeunload = () => {
+        root.unmount();
+      };
+    } else {
+      console.error("Failed to open new window.");
+    }
+  };
+
   return (
     <>
       <div className="all-cards-title">
@@ -38,6 +82,12 @@ export default function CardsList({ props }) {
           placeholder="Name or Cardtype"
           onChange={filterTable}
         />
+        {/* <Tooltip 
+          content="Filter the cards by name or card type" 
+          position="right"
+        >
+          <p style={{ cursor: "help" }}>❔</p>
+        </Tooltip> */}
       </div>
       {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
         <thead>
@@ -75,7 +125,12 @@ export default function CardsList({ props }) {
                   </span>
                 ))}
               </td>
-              <td>💬</td>
+              <td>
+                <p 
+                  onClick={()=> openCardWindow(card)}
+                  style={{ cursor: "pointer" }}
+                >💬</p>
+              </td>
               <td>
                 {!props.currentEditDeck.decklist.some(
                   (deckCard) => deckCard.name === card.name

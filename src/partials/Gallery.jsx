@@ -54,7 +54,7 @@ export default function Gallery(props) {
                   i++;
                   return (
                     <Tooltip key={card.id} content={card.name}>
-                      <a href={`/card/${card.id}`}>
+                      <a href={`/card/${card.id}`} target="_blank">
                         <CardImage data={{ card: card, sizing: "medium" }} />
                       </a>
                     </Tooltip>

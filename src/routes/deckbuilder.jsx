@@ -29,8 +29,6 @@ export default function Deckbuilder() {
     captain: null
   });
 
-  console.log(currentEditDeck);
-
   // all decks from localForage
   const [customDecks, setCustomDecks] = useState(data.customDecks);
 

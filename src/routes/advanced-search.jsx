@@ -77,7 +77,12 @@ function TypeField() {
   return (
     <div className="advanced-search-item">
       <label htmlFor="type" className="span-bold">Type</label>
-      <input id="type" name="type" type="text" placeholder='Type 1 or 2, e.g., "Beast"'/>
+      <input 
+        id="type" 
+        name="type" 
+        type="text" 
+        placeholder="Fighter Type, e.g. &quot;Beast&quot;"
+      />
     </div>
   );
 }
@@ -173,7 +178,13 @@ function DiceField() {
         <label htmlFor="inlineRadio2">No</label>
       </div>
       <div>
-        <input type="radio" name="dice" id="inlineRadio3" value="Irrelevant"/>
+        <input 
+          type="radio" 
+          name="dice" 
+          id="inlineRadio3" 
+          value="Irrelevant" 
+          defaultChecked 
+        />
         <label htmlFor="inlineRadio3">Irrelevant</label>
       </div>
     </div>

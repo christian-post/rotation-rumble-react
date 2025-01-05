@@ -24,13 +24,12 @@ function Selection({ items, name, onSelectionChange }) {
   };
 
   return (
-    <div className="selection">
-      <h3>{name}</h3>
-      <ul className="selection-list">
-        {items.map(({ id, label }, index) => (
-          <li key={id}>
-            <div className="selection-list-item">
+    <>
+      <p className="span-bold">{name}</p>
+      {items.map(({ id, label }, index) => (
+        <div className="selection-list-item">
               <input
+                className="checkbox"
                 type="checkbox"
                 id={`${name}-checkbox-${id}`}
                 name={name}
@@ -40,10 +39,8 @@ function Selection({ items, name, onSelectionChange }) {
               />
               <label htmlFor={`${name}-checkbox-${id}`}>{label}</label>
             </div>
-          </li>
         ))}
-      </ul>
-    </div>
+    </>
   );
 }
 

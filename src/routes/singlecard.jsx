@@ -5,8 +5,8 @@ import { replacePlaceholdersWithImages } from "./results";
 import CardImage from "../components/CardImage";
 
 
-function CardBody() {
-  const { card, error } = useLoaderData();
+export function CardBody({props}) {
+  const card = props.card;
 
   // TODO error handling
 
@@ -44,8 +44,8 @@ function CardBody() {
 }                    
 
 
-export function CardInfo() {
-  const { card, error } = useLoaderData();
+export function CardInfo({props}) {
+  const card = props.card;
 
   // TODO error handling
 
@@ -63,12 +63,12 @@ export function CardInfo() {
       <div>
         <span className="card-type-text" data-cardtype={card.cardtype}>
           {card.cardtype}
-          <span> &#8212; </span>
-          <span id="card-color">{card.color.map(capitalize).join(", ")}</span>
+          {card.type1 && <span> &#8212; {card.type1}</span>}
+          <span id="card-color"> ({card.color.map(capitalize).join(", ")})</span>
         </span>
       </div>
       <div>
-        <CardBody card={card} />
+        <CardBody props={{ card: card }} />
       </div>
       <div>
         {Array.from({ length: 4 }, (_, i) => {
@@ -115,7 +115,7 @@ export default function SingleCard() {
               <CardImage data={{ card: card, sizing: "large" }}/>
             </div>
             <div className="grid-item">
-              <CardInfo card={card}/>
+              <CardInfo props={{ card: card }}/>
             </div>
             </> : 
             <div className="grid-item">

@@ -1,11 +1,27 @@
 
+// export function sanitize(text, replacement = " ", exceptions = []) {
+//   if (text === undefined) return "";
+//   // Build a regex that excludes the characters in the exceptions list
+//   const exceptionsRegex = exceptions.length
+//     ? `[^\\w${exceptions.map((char) => `\\${char}`).join("")}]`
+//     : "\\W_";
+//   const regex = new RegExp(exceptionsRegex, "g");
+//   return text.replace(regex, replacement);
+// }
+
 export function sanitize(text, replacement = " ", exceptions = []) {
   if (text === undefined) return "";
+
   // Build a regex that excludes the characters in the exceptions list
   const exceptionsRegex = exceptions.length
     ? `[^\\w${exceptions.map((char) => `\\${char}`).join("")}]`
     : "\\W_";
   const regex = new RegExp(exceptionsRegex, "g");
+
+  if (Array.isArray(text)) {
+    return text.map((str) => str.replace(regex, replacement));
+  }
+
   return text.replace(regex, replacement);
 }
 
@@ -39,9 +55,4 @@ export function allCombinations(items) {
     }
   }
   return results;
-}
-
-
-function generateUniqueId() {
-  return `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 }

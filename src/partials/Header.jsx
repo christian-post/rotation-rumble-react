@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 
+const isDevelopment = import.meta.env.MODE === "development"; // For Vite
 
 export default function Header() {
   return (
@@ -21,9 +22,9 @@ export default function Header() {
           <li className="header-item">
             <Link to={"deckbuilder"}>Deck Builder</Link>
           </li>
-          <li className="header-item">
+          {isDevelopment && <li className="header-item">
             <Link to={"test"}>Test</Link>
-          </li>
+          </li>}
         </ul>
       </nav>
 
