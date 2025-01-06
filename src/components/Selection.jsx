@@ -27,18 +27,18 @@ function Selection({ items, name, onSelectionChange }) {
     <>
       <p className="span-bold">{name}</p>
       {items.map(({ id, label }, index) => (
-        <div className="selection-list-item">
-              <input
-                className="checkbox"
-                type="checkbox"
-                id={`${name}-checkbox-${id}`}
-                name={name}
-                value={items[index].value}
-                checked={checkedState[index]}
-                onChange={() => handleOnChange(index)}
-              />
-              <label htmlFor={`${name}-checkbox-${id}`}>{label}</label>
-            </div>
+        <div className="selection-list-item" key={id}>
+          <input
+            className="checkbox"
+            type="checkbox"
+            id={`${name}-checkbox-${id}`}
+            name={name}
+            value={items[index].value}
+            checked={checkedState[index]}
+            onChange={() => handleOnChange(index)}
+          />
+          <label htmlFor={`${name}-checkbox-${id}`}>{label}</label>
+        </div>
         ))}
     </>
   );

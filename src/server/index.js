@@ -5,7 +5,7 @@ import {
   processSearch, 
   sendAdvancedSearch,
   sendSimpleSearch,
-  getDecklists 
+  getDecklists
 } from "./search.js";
 import { testOrderDeck } from "./woocommerce.js";
 import dotenv from "dotenv";

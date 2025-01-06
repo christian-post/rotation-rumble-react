@@ -1,14 +1,3 @@
-
-// export function sanitize(text, replacement = " ", exceptions = []) {
-//   if (text === undefined) return "";
-//   // Build a regex that excludes the characters in the exceptions list
-//   const exceptionsRegex = exceptions.length
-//     ? `[^\\w${exceptions.map((char) => `\\${char}`).join("")}]`
-//     : "\\W_";
-//   const regex = new RegExp(exceptionsRegex, "g");
-//   return text.replace(regex, replacement);
-// }
-
 export function sanitize(text, replacement = " ", exceptions = []) {
   if (text === undefined) return "";
 
@@ -55,4 +44,37 @@ export function allCombinations(items) {
     }
   }
   return results;
+}
+
+
+export function levensDist(s, t) {
+  // Lehvensthein Distance between two strings
+  const m = s.length;
+  const n = t.length;
+
+  let d = [];
+  for (let i = 0; i < m + 1; i++) {
+    d.push(Array(n + 1).fill(0));
+  }
+
+  for (let i = 1; i < m + 1; i++) {
+    d[i][0] = i;
+  }
+
+  for (let j = 1; j < n + 1; j++) {
+    d[0][j] = j;
+  }
+
+  for (let j = 1; j < n + 1; j++) {
+    for (let i = 1; i < m + 1; i++) {
+      let cost = (s[i - 1] === t[j - 1]) ? 0 : 1;
+      d[i][j] = Math.min(
+        d[i - 1][j] + 1,
+        d[i][j - 1] + 1,
+        d[i - 1][j - 1] + cost
+      );
+    }
+  }
+
+  return d[m][n]
 }

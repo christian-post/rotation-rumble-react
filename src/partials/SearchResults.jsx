@@ -1,7 +1,10 @@
+import { useNavigate } from "react-router-dom";
 import Gallery from "./Gallery";
 
 
 export default function SearchResults({ results }) {
+  const navigate = useNavigate();
+
   if (!results) {
     return <span>ERROR in rendering SearchResults</span>;
   }
@@ -11,6 +14,31 @@ export default function SearchResults({ results }) {
   const correctionType = results.correctionType;
   const cards = results.cards || [];
 
+  async function sendCorrectedSearch() {
+
+    let data = {};
+    data[correctionType] = correction;
+
+    // search effects instead
+    const response = await fetch("/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+      console.error("Failed to fetch search results");
+      return;
+    }
+
+    const resultData = await response.json();
+
+    // Navigate to results page with the fetched data
+    navigate("/results", { state: { results: resultData } });
+  }
+
   return (
     <>
       <div className="gallery-header grid-item" id="display-as">
@@ -19,11 +47,11 @@ export default function SearchResults({ results }) {
           <h3>
             Did you mean <span
               className="fake-link"
-              // onClick={ ()=> { 
-              //   // TODO: Link to corrected search
-              // } }
+              onClick={()=> { 
+                sendCorrectedSearch();
+              }}
               >
-              { correction }"</span>?
+              &quot;{ correction }&quot;?</span>
           </h3>
         ) : null }
       </div>

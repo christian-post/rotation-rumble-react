@@ -23,3 +23,4 @@ export async function connectToDb(callback) {
 export function getDb() {
   return dbConnection;
 }
+

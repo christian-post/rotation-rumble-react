@@ -1,8 +1,58 @@
-import { capitalize, escapeRegex, sanitize } from "./utils.js";
+import { capitalize, escapeRegex, sanitize, levensDist } from "./utils.js";
 import dotenv from "dotenv";
 import { inspect } from "util";
+import { commonWords as findCommonWords } from "./cachedInfo.js";
+import fs from "fs";
 
 dotenv.config();
+
+
+// load the list of common words for spell checking
+// TODO: make this a json file with fields for "name" and "effectOrStep"
+let commonWords;
+
+
+if (!fs.existsSync("data/common_words.json")) {
+  await findCommonWords();
+}
+
+fs.readFile("data/common_words.json", "utf-8", function (err, data) {
+  if (err) {
+    console.error("Error reading the file:", err);
+    return;
+  }
+  try {
+    const parsedData = JSON.parse(data);
+    commonWords = parsedData; // `commonWords` now holds the JSON object
+    // console.log("Common words loaded:", commonWords);
+  } catch (parseErr) {
+    console.error("Error parsing the JSON:", parseErr);
+  }
+});
+
+
+export function spellCheck(testWord, field) {
+  let corrections = [];
+    
+  if (
+    (!typeof testWord === "string") ||
+    (!Object.keys(commonWords).includes(field))
+  ) {
+    return null;
+  } 
+
+  for (let word of commonWords[field]) {
+    let dist = levensDist(testWord, word);
+    corrections.push([word, dist]);
+    if (dist === 0) break;
+  }
+
+  if (corrections.length === 0) return null;
+  
+  // sort by distance in ascending order
+  corrections.sort((a, b) => a[1] - b[1]);
+  return corrections[0][0];
+}
 
 
 export async function getDecklists(db) {
@@ -193,7 +243,6 @@ export function processSearch(req) {
   }
 
   // dmg und def any value
-  // TODO: don't change the contents of req; make a new variable for each
 
   if (sanitizedSearch.dmg === "any" || sanitizedSearch.dmg === undefined) {
     sanitizedSearch.dmg = null; // Exclude from query
@@ -358,12 +407,35 @@ export async function sendAdvancedSearch(
   } else {
     header = "No cards matched your search";
 
-    if (effectSearch) {
-      correction = spellCheck(effectSearch, "effects");
-      correctionType = "effectOrStep";
-    } else if (typeof search.name === "string" && search.name.trim() !== "") {
-      correction = spellCheck(utils.sanitize(search.name), "names");
-      correctionType = "name";
+    // find similar words if no results were found
+    for (const [fieldName, value] of Object.entries(search)) {
+      if (value) {
+        let check = spellCheck(value.toString(), fieldName);
+        if (check) {
+          correction = check;
+          correctionType = fieldName;
+          break; // Exit the loop early
+        }
+      }
+    }
+
+    // handle the type and efect search differently
+    // TODO: seems convoluted
+    if (search.$and && search.$and[0]?.$or) {
+      let check = spellCheck(
+        search.$and[0].$or[0].type1.source, "type1");
+      if (check) {
+        correction = check;
+        correctionType = "type1";
+      }
+    }
+
+    if (search.$text?.$search) {
+      let check = spellCheck(search.$text.$search, "effect1");
+      if (check) {
+        correction = check;
+        correctionType = "effectOrStep";
+      }
     }
   }
 

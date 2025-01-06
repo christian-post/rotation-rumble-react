@@ -1,6 +1,20 @@
 // Loader for Singlecard.jsx
-import { getSingleCard } from  "../server/getcard.js";
 
+async function getSingleCard(cardId) {
+  const card = await fetch(`/api/card/${cardId}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  if (!card.ok) {
+    console.error(`Failed to fetch card with ID ${cardId}`);
+    return;
+  }
+
+  return await card.json();
+}
 
 export default async function cardLoader({ params }) {
   // on page load, gets the data for this card ID

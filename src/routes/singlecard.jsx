@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { capitalize } from "../server/utils";
-import { replacePlaceholdersWithImages } from "./results";
+import ReplacePlaceholders from "../components/ReplacePlaceholders";
 import CardImage from "../components/CardImage";
 
 
@@ -87,7 +87,7 @@ export function CardInfo({props}) {
                   </span>
                 </p>
                 <p className="single-card-effect">
-                  {replacePlaceholdersWithImages(card[key])}
+                  {ReplacePlaceholders(card[key])}
                 </p>
               </div>
             )
