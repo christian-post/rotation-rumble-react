@@ -11,28 +11,35 @@ dotenv.config();
 // TODO: make this a json file with fields for "name" and "effectOrStep"
 let commonWords;
 
-
-if (!fs.existsSync("data/common_words.json")) {
-  await findCommonWords();
+try {
+  if (!fs.existsSync("data/common_words.json")) {
+    await findCommonWords();
+  }
+  
+  fs.readFile("data/common_words.json", "utf-8", function (err, data) {
+    if (err) {
+      console.error("Error reading the file:", err);
+      return;
+    }
+    try {
+      const parsedData = JSON.parse(data);
+      commonWords = parsedData; // `commonWords` now holds the JSON object
+    } catch (parseErr) {
+      console.error("Error parsing the JSON:", parseErr);
+    }
+  });
+} catch (error) {
+  console.error(error);
 }
-
-fs.readFile("data/common_words.json", "utf-8", function (err, data) {
-  if (err) {
-    console.error("Error reading the file:", err);
-    return;
-  }
-  try {
-    const parsedData = JSON.parse(data);
-    commonWords = parsedData; // `commonWords` now holds the JSON object
-    // console.log("Common words loaded:", commonWords);
-  } catch (parseErr) {
-    console.error("Error parsing the JSON:", parseErr);
-  }
-});
 
 
 export function spellCheck(testWord, field) {
   let corrections = [];
+
+  if (commonWords === undefined) {
+    console.log("common Words list is undefined")
+    return null;
+  }
     
   if (
     (!typeof testWord === "string") ||
