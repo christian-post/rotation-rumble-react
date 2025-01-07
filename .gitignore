@@ -31,6 +31,6 @@ dist-ssr
 /public/images/cards/
 *.backup
 
-/data/*
+/data/*.json
 
 *.mjs
