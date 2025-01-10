@@ -10,9 +10,6 @@ export default function Header() {
       </span>
       <nav className="header-nav">
         <ul>
-          {/* <li className="header-item">
-            <Link to={"/"}>Home</Link>
-          </li> */}
           <li className="header-item">
             <Link to={"advanced-search"}>Search</Link>
           </li>

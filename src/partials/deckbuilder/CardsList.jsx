@@ -28,11 +28,7 @@ export default function CardsList({ props }) {
   }
 
   function openCardWindow(card) {
-    // window.open(
-    //   `/card-window/${card.id}`,
-    //   "_blank",
-    //   "width=600,height=400,toolbar=no,menubar=no,scrollbars=yes,resizable=yes"
-    // )
+    // TODO: make tooltip instead
 
     const newWindow = window.open(
       "",
@@ -82,12 +78,12 @@ export default function CardsList({ props }) {
           placeholder="Name or Cardtype"
           onChange={filterTable}
         />
-        {/* <Tooltip 
+        <Tooltip 
           content="Filter the cards by name or card type" 
           position="right"
         >
-          <p style={{ cursor: "help" }}>❔</p>
-        </Tooltip> */}
+          <i className="fa fa-question-circle" />
+        </Tooltip>
       </div>
       {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
         <thead>
@@ -136,6 +132,7 @@ export default function CardsList({ props }) {
                   (deckCard) => deckCard.name === card.name
                 ) && (
                   <button
+                    className="deckbuilder-table-button"
                     onClick={() => {
                       // Add the card to the deck list
                       props.setCurrentEditDeck({
@@ -144,7 +141,10 @@ export default function CardsList({ props }) {
                       });
                     }}
                   >
-                    ➕
+                    <i 
+                      className="fa fa-plus"
+                      style={{ color: "grey", fontSize: "24px" }} 
+                    />
                   </button>
                 )}
               </td>

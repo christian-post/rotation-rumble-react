@@ -195,6 +195,23 @@ select {
   opacity: 0.9;
 }
 
+.dialog-modal form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .5rem;
+}
+
+.dialog-modal label {
+  display: flex;
+  gap: .5rem;
+}
+
+.dialog-modal::backdrop {
+  background: linear-gradient(0, var(--color-orange), white);
+  opacity: .4;
+}
+
 
 /* .blurred-img::before {
   content: "";
@@ -1253,6 +1270,14 @@ footer {
   text-transform: uppercase;
 }
 
+
+.deckbuilder-table-button { 
+  display: flex;
+  place-items: center;
+  border-radius: 50%;
+  border: none;
+  padding: .25rem;
+}
 
 
 .expanding-element {

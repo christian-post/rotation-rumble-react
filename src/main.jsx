@@ -1,23 +1,23 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import React from "react"
+import ReactDOM from "react-dom/client"
 import {
     createBrowserRouter,
     RouterProvider,
   } from "react-router-dom";
-import './index.css'
+import "./assets/index.css"
+import "./assets/font-awesome-4.7.0/css/font-awesome.css"
 
 import Root from "./routes/root";
-import Index from './routes/index';
-import AdvancedSearch from './routes/advanced-search';
+import Index from "./routes/index";
+import AdvancedSearch from "./routes/advanced-search";
 import ErrorPage from "./routes/error-page";
 import Results from "./routes/results";
-// import Deckbuilder from './routes/deckbuilder';
-import Deckbuilder from './routes/deckbuilder';
-import deckbuilderLoader from	'./utils/DeckbuilderLoader';
-import SingleCard from './routes/singlecard';
-import cardLoader from './utils/CardLoader';
-import Test from './routes/test';
-import CardGallery, { loader as galleryLoader } from './routes/card-gallery';
+import Deckbuilder from "./routes/deckbuilder";
+import deckbuilderLoader from	"./utils/DeckbuilderLoader";
+import SingleCard from "./routes/singlecard";
+import cardLoader from "./utils/CardLoader";
+import Test from "./routes/test";
+import CardGallery, { loader as galleryLoader } from "./routes/card-gallery";
 
 
 const isDevelopment = import.meta.env.MODE === "development"; // For Vite
@@ -80,7 +80,7 @@ const router = createBrowserRouter([
 ]);
 
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
   </React.StrictMode>

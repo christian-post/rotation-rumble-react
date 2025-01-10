@@ -40,13 +40,21 @@ export default function DeckList({ props }) {
                   ))}
                 </td>
                 <td>💬</td>
-                <td><button onClick={()=> {
-                  // removes the card from the deck list
-                  props.setCurrentEditDeck({
-                    ...props.currentEditDeck,
-                    decklist: props.currentEditDeck.decklist.filter((c) => c !== card)
-                  });
-                }}>❌</button></td>
+                <td>
+                  <button
+                    className="deckbuilder-table-button"
+                    onClick={()=> {
+                      // removes the card from the deck list
+                      props.setCurrentEditDeck({
+                        ...props.currentEditDeck,
+                        decklist: props.currentEditDeck.decklist.filter((c) => c !== card)
+                      });
+                    }}>
+                    <i 
+                      className="fa fa-times" 
+                      style={{ color: "red", fontSize: "24px" }} 
+                    />
+                  </button></td>
               </tr>
             ))
           ) : (

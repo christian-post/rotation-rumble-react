@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import CardsList from "./CardsList";
 import DeckStats from "./DeckStats";
 import DeckList from "./DeckList";
@@ -14,6 +14,9 @@ export default function EditPage({ props }) {
     averageCost: 0,
     captain: null
   });
+
+  // Modal that prompts the deck name
+  const modalRef = useRef(null);
 
   useEffect(() => {
     // calculate deck stats based on the current decklist
@@ -64,12 +67,62 @@ export default function EditPage({ props }) {
       );
   }, [props.currentEditDeck.captain]);
 
-  function changeDeckName() {
-    const newName = prompt("Enter a new name for your deck:");
-    if (newName) {
-      props.setCurrentEditDeck({...props.currentEditDeck, name: newName});
-    }
+
+  const openDecknameModal = () => {
+    modalRef.current?.showModal();
+    document.body.style.overflow = "hidden";  // disable scrolling
+  };
+
+  const closeDecknameModal = () => {
+    modalRef.current?.close();
+    document.body.style.overflow = "";
+  };
+
+  function DecknameModal() {
+    const [localDeckName, setLocalDeckName] = useState(props.currentEditDeck.name);
+
+    const handleChange = (event) => {
+      setLocalDeckName(event.target.value);
+    };
+
+    const handleSubmit = (event) => {
+      event.preventDefault(); // Prevent the form from closing the modal
+      console.log("Form Data Submitted:", localDeckName);
+  
+      props.setCurrentEditDeck({ ...props.currentEditDeck, name: localDeckName });
+  
+      closeDecknameModal(); // Close the modal after submission
+    };
+
+    return (
+      <dialog className="dialog-modal" ref={modalRef}>
+        <h2>Enter a new name for your deck:</h2>
+        <form onSubmit={handleSubmit}>
+          <label htmlFor="deckname-input">
+            New Deck Name
+            <input
+              id="deckname-input"
+              type="text"
+              name="deckname"
+              value={localDeckName}
+              onChange={handleChange}
+            />
+          </label>
+          <button className="standard-button" type="submit">
+            submit
+          </button>
+        </form>
+      </dialog>
+    )
   }
+
+
+  // function changeDeckName() {
+  //   const newName = prompt("Enter a new name for your deck:");
+  //   if (newName) {
+  //     props.setCurrentEditDeck({...props.currentEditDeck, name: newName});
+  //   }
+  // }
 
   return (
     <div className="grid-container" id="deck-builder">
@@ -87,8 +140,13 @@ export default function EditPage({ props }) {
           <h2 id="deck-title">{props.currentEditDeck.name}</h2>
           <button 
             className="standard-button" 
-            onClick={changeDeckName}
+            onClick={openDecknameModal}
           >🖊</button>
+          {/* <button 
+            className="standard-button" 
+            onClick={changeDeckName}
+          >🖊</button> */}
+          <DecknameModal />
         </div>
         <DeckStats props={{ 
             deckStats, 

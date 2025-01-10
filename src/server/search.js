@@ -8,7 +8,6 @@ dotenv.config();
 
 
 // load the list of common words for spell checking
-// TODO: make this a json file with fields for "name" and "effectOrStep"
 let commonWords;
 
 try {

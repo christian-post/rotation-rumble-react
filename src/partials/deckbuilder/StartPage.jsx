@@ -67,14 +67,14 @@ export default function StartPage({ props }) {
             className="deckbuilder-button add-deck-button" 
             onClick={gotoNewDeck}
           >
-            <span>➕</span>
+            <i className="fa fa-plus-circle" style={{ fontSize: "20px"}}/>
             <span>ADD NEW DECK</span>
           </button>
           <button 
             className="deckbuilder-button delete-decks-button"
             onClick={deleteAllDecks}
           >
-            <span>🚮</span>
+            <i className="fa fa-trash" style={{ fontSize: "20px"}}/>
             <span>DELETE ALL DECKS</span>
           </button>
         </div>
