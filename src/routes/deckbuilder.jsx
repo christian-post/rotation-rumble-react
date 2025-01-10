@@ -32,8 +32,6 @@ export default function Deckbuilder() {
   // all decks from localForage
   const [customDecks, setCustomDecks] = useState(data.customDecks);
 
-  const preconDeckNames = Object.keys(data.preconDecklists)
-
   // TODO: put in own file
   // maps the deck names to the corresponding images
   const preconDeckImages = {
@@ -54,7 +52,7 @@ export default function Deckbuilder() {
           { 
             mode,
             setMode,
-            preconDeckNames, 
+            preconDecks: data.preconDecklists,
             preconDeckImages,
             customDecks,
             setCustomDecks,

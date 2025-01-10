@@ -77,16 +77,59 @@ export async function getDecklists(db) {
   allCards.forEach((card) => {
     card.deck.forEach((d) => {
       if (!decklists[d]) {
-        decklists[d] = [];
+        // create a new precon list if this decklists isn't in the data yet
+        // it contains two empty deck objects and a list with cards, and the
+        // two featured captains
+        decklists[d] = {
+          decks: [],
+          cards: [],
+          captains: []
+        }
       }
-      decklists[d].push(card);
+      if (card.cardtype === "Captain") {
+        decklists[d].captains.push(card);
+        // decklists[d].captain = card;
+      } else {
+        decklists[d].cards.push(card);
+      }
     });
   });
 
+  console.log("test")
+
+  // sort the cards in each deck by color and create the "deck" objects
+  for (const name in decklists) {
+    if (decklists[name].captains.length === 0) {
+      console.log(`${name} has no captains`);
+      continue
+    }
+
+    const captain1Colors = decklists[name].captains[0].color;
+    const captain2Colors = decklists[name].captains[1].color;
+
+    const cards1 = decklists[name].cards.filter((card) => 
+      card.color.every((color) => captain1Colors.includes(color))
+    );
+    const cards2 = decklists[name].cards.filter((card) => 
+      card.color.every((color) => captain2Colors.includes(color))
+    );
+
+    decklists[name].decks.push({
+      decklist: cards1,
+      id: `precon-${decklists[name].captains[0].id}`,
+      name: `${name} - ${decklists[name].captains[0].name}`,
+      captain: decklists[name].captains[0]
+    });
+    decklists[name].decks.push({
+      decklist: cards2,
+      id: `precon-${decklists[name].captains[1].id}`,
+      name: `${name} - ${decklists[name].captains[1].name}`,
+      captain: decklists[name].captains[1]
+    });
+  }
+
   return decklists;
 }
-
-
 
 export function processSearch(req) {
   // Suche lesbar machen

@@ -199,6 +199,7 @@ select {
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: .5rem;
 }
 
@@ -1750,3 +1751,25 @@ section > ul {
   text-align: center;
   font-size: 24px;
 }
+
+.precon-dialog h2{
+  text-align: center;
+}
+
+.precon-selection {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.precon-selection-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .precon-selection-card img:hover {
+  transform: rotate(10deg);
+} */

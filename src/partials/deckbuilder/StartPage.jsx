@@ -1,6 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Tooltip from "../../components/Tooltip";
+import CardImage from "../../components/CardImage";
 import localforage from "localforage";
+
+
 
 
 export default function StartPage({ props }) {
@@ -53,6 +56,74 @@ export default function StartPage({ props }) {
           elem.style.display = "none";
         }
       }
+    );
+  }
+
+  const preconModalRef = useRef(null);
+  const [selectedPrecon, setSelectedPrecon] = useState(null);
+  useEffect(() => {
+    if (selectedPrecon) {
+      openPreconModal();
+    }
+  }, [selectedPrecon]);
+
+  const openPreconModal = () => {
+    preconModalRef.current?.showModal();
+    document.body.style.overflow = "hidden";  // disable scrolling
+  };
+
+  const handleClose = () => {
+    preconModalRef.current?.close();
+    document.body.style.overflow = "";
+  };
+
+  // Dialogue that shows a choice between two precon decks
+  function PreconSelectModal() {
+    const [selectedDeck, setSelectedDeck] = useState(null);
+
+    useEffect(()=> {
+      if (selectedDeck) {
+        handleClose();
+        console.log(`you selected ${selectedDeck.name}`);
+        editDeck(selectedDeck);
+      }
+    }, [selectedDeck]);
+
+    if (!selectedPrecon) {
+      return null;
+    }
+
+    return (
+      <dialog 
+        className="dialog-modal precon-dialog" 
+        ref={preconModalRef}
+        onCancel={(event) => {
+          event.preventDefault();
+          handleClose();
+        }}  
+      >
+        <h2>Select one of the two decks in {selectedPrecon.name}:</h2>
+        <div className="precon-selection">
+          <div className="precon-selection-card">
+            <CardImage data={{card: selectedPrecon.captains[0], sizing: "large"}}/>
+            <button 
+              className="standard-button"
+              onClick={() => setSelectedDeck(selectedPrecon.decks[0])}
+            >
+              SELECT {selectedPrecon.captains[0].name.toUpperCase()}
+            </button>
+          </div>
+          <div className="precon-selection-card">
+          <CardImage data={{card: selectedPrecon.captains[1], sizing: "large"}}/>
+            <button 
+              className="standard-button"
+              onClick={() => setSelectedDeck(selectedPrecon.decks[1])}
+            >
+              SELECT {selectedPrecon.captains[1].name.toUpperCase()}
+            </button>
+          </div>
+        </div>
+      </dialog>
     );
   }
 
@@ -118,14 +189,16 @@ export default function StartPage({ props }) {
           </div>
       </section>
       <section>
+        <PreconSelectModal />
         <div className="custom-decks-container">
-          {props.preconDeckNames.map((name) => (
+          {Object.keys(props.preconDecks).map((name) => (
             props.preconDeckImages[name] && (
               <div className="precon-deck" key={name} id={name}>
                 <img
                   className="deck-image-small"
                   src={props.preconDeckImages[name]}
                   alt={name}
+                  onClick={()=> setSelectedPrecon(props.preconDecks[name])}
                 />
                 <p className="deck-title-p">
                   {name}
