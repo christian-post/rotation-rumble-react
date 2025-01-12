@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import CardsList from "./CardsList";
 import DeckStats from "./DeckStats";
 import DeckList from "./DeckList";
+import CardWindow from "../../components/CardWindow";
 
 
 export default function EditPage({ props }) {
@@ -17,6 +18,58 @@ export default function EditPage({ props }) {
 
   // Modal that prompts the deck name
   const modalRef = useRef(null);
+  // Modal that shows the card info
+  const cardModalRef = useRef(null);
+  const [selectedCard, setSelectedCard] = useState(null);
+  useEffect(() => {
+    if (selectedCard) {
+      openCardModal();
+    }
+  }, [selectedCard]);
+
+  const openCardModal = () => {
+    cardModalRef.current?.showModal();
+    document.body.style.overflow = "hidden";  // disable scrolling
+  };
+
+  const closeCardModal = () => {
+    cardModalRef.current?.close();
+    document.body.style.overflow = "";
+  };
+
+  function CardModal() {
+    const handleOutsideClick = (event) => {
+      if (cardModalRef.current && event.target === cardModalRef.current) {
+        // If the click is on the dialog itself (not its children), close the modal
+        closeCardModal();
+      }
+    };
+  
+    useEffect(() => {
+      document.addEventListener("mousedown", handleOutsideClick);
+  
+      return () => {
+        document.removeEventListener("mousedown", handleOutsideClick);
+      };
+    }, []);
+
+    if (!selectedCard) {
+      return null;
+    }
+
+    return (
+      <dialog 
+        className="dialog-modal" 
+        ref={cardModalRef}
+        onCancel={(event) => {
+          event.preventDefault();
+          closeCardModal();
+        }}  
+      >
+        <CardWindow props={{card: selectedCard}} />
+      </dialog>
+    );
+  }
 
   useEffect(() => {
     // calculate deck stats based on the current decklist
@@ -116,14 +169,6 @@ export default function EditPage({ props }) {
     )
   }
 
-
-  // function changeDeckName() {
-  //   const newName = prompt("Enter a new name for your deck:");
-  //   if (newName) {
-  //     props.setCurrentEditDeck({...props.currentEditDeck, name: newName});
-  //   }
-  // }
-
   return (
     <div className="grid-container" id="deck-builder">
       <div className="grid-item">
@@ -132,6 +177,9 @@ export default function EditPage({ props }) {
             allCards,
             currentEditDeck: props.currentEditDeck, 
             setCurrentEditDeck: props.setCurrentEditDeck,
+            cardModalRef: cardModalRef,
+            CardModal: CardModal,
+            setSelectedCard: setSelectedCard
           }} />
       </div>
       <div className="grid-item">
@@ -142,10 +190,6 @@ export default function EditPage({ props }) {
             className="standard-button" 
             onClick={openDecknameModal}
           >🖊</button>
-          {/* <button 
-            className="standard-button" 
-            onClick={changeDeckName}
-          >🖊</button> */}
           <DecknameModal />
         </div>
         <DeckStats props={{ 
@@ -153,11 +197,14 @@ export default function EditPage({ props }) {
             setCustomDecks: props.setCustomDecks,
             setMode: props.setMode,
             currentEditDeck: props.currentEditDeck,
-            setCurrentEditDeck: props.setCurrentEditDeck
+            setCurrentEditDeck: props.setCurrentEditDeck,
           }} /> 
         <DeckList props={{ 
           currentEditDeck: props.currentEditDeck, 
           setCurrentEditDeck: props.setCurrentEditDeck,
+          cardModal: cardModalRef,
+          CardModal: CardModal,
+          setSelectedCard: setSelectedCard
          }} />
       </div>
     </div>

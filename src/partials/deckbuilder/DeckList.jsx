@@ -111,7 +111,8 @@ export default function DeckList({ props }) {
                   ))}
                 </td>
                 <td>
-                  <p onClick={() => openCardWindow(card)} style={{ cursor: "pointer" }}>
+                  <props.CardModal />
+                  <p onClick={() => props.setSelectedCard(card)} style={{ cursor: "pointer" }}>
                     💬
                   </p>
                 </td>

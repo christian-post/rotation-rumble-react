@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
-import { createRoot } from "react-dom/client";
+import { useState, useEffect, useRef } from "react";
 import Tooltip from "../../components/Tooltip";
-import CardWindow from "../../components/CardWindow";
+
 
 export default function CardsList({ props }) {
   // left side of the Edit Page that shows the available cards
@@ -10,6 +9,7 @@ export default function CardsList({ props }) {
   const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
   const [sortedCards, setSortedCards] = useState([]);
 
+  // SORTING
   useEffect(() => {
     // Compute sorted data whenever props.allCards or sortConfig changes
     const sortData = () => {
@@ -58,43 +58,6 @@ export default function CardsList({ props }) {
     }
   }
 
-
-  function openCardWindow(card) {
-    // TODO: make it a tooltip or modal instead
-
-    const newWindow = window.open(
-      "",
-      "_blank",
-      "width=600,height=400,toolbar=no,menubar=no,scrollbars=yes,resizable=yes"
-    );
-  
-    if (newWindow) {
-      // Create a container div for the React app in the new window
-      const container = newWindow.document.createElement("div");
-      container.className = "card-window-parent";
-      newWindow.document.body.appendChild(container);
-
-      // Clone and append all <style> elements with the "data-vite-dev-id" attribute
-      const styles = document.querySelectorAll('style[data-vite-dev-id]');
-      styles.forEach((style) => {
-        const clonedStyle = style.cloneNode(true);
-        newWindow.document.head.appendChild(clonedStyle);
-      });
-  
-      // Create a React root
-      const root = createRoot(container);
-  
-      // Render the React component into the new window
-      root.render(<CardWindow props={{card: card}} />);
-  
-      // Clean up when the new window is closed
-      newWindow.onbeforeunload = () => {
-        root.unmount();
-      };
-    } else {
-      console.error("Failed to open new window.");
-    }
-  };
 
   return (
     <>
@@ -191,7 +154,8 @@ export default function CardsList({ props }) {
                 ))}
               </td>
               <td>
-                <p onClick={() => openCardWindow(card)} style={{ cursor: "pointer" }}>
+                <props.CardModal />
+                <p onClick={() => props.setSelectedCard(card)} style={{ cursor: "pointer" }}>
                   💬
                 </p>
               </td>

@@ -7,9 +7,7 @@ export default function CardWindow({ props }) {
       <div id="singlecard-image">
         <CardImage data={{ card: props.card, sizing: "large" }} />
       </div>
-      <div>
-        <CardInfo props={{card: props.card }} />
-      </div>
+      <CardInfo props={{card: props.card }} />
     </div>
   );
 }
