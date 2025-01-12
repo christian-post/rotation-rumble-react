@@ -213,6 +213,27 @@ select {
   opacity: .4;
 }
 
+.sortable-table-col-head .fa-sort {
+  margin-left: 6px; 
+  position: relative; 
+}
+
+.sortable-table-col-head .fa-sort-desc{
+    margin-left: 6px; 
+    position: relative; 
+    bottom: 4px;
+}
+
+.sortable-table-col-head .fa-sort-asc{
+    margin-left: 6px; 
+    position: relative; 
+    bottom: -4px;
+}
+
+.span-no-wrap {
+  white-space: nowrap;
+}
+
 
 /* .blurred-img::before {
   content: "";
@@ -964,6 +985,17 @@ footer {
 .sortby {
   color: var(--color-accent-blue);
   cursor: pointer;
+}
+
+.sortable-table-col-head div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.sortable-table-col-head span {
+  white-space:nowrap;
 }
 
 .sortable-table-col-head,

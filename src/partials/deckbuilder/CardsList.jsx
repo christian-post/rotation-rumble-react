@@ -1,10 +1,41 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import Tooltip from "../../components/Tooltip";
 import CardWindow from "../../components/CardWindow";
 
 export default function CardsList({ props }) {
   // left side of the Edit Page that shows the available cards
+
+  // sorting order of the columns
+  const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+  const [sortedCards, setSortedCards] = useState([]);
+
+  useEffect(() => {
+    // Compute sorted data whenever props.allCards or sortConfig changes
+    const sortData = () => {
+      const sorted = [...props.allCards].sort((a, b) => {
+        if (sortConfig.key) {
+          const aVal = a[sortConfig.key];
+          const bVal = b[sortConfig.key];
+
+          if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
+          if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+        }
+        return 0;
+      });
+      setSortedCards(sorted);
+    };
+
+    sortData();
+  }, [props.allCards, sortConfig]);
+
+  const requestSort = (key) => {
+    let direction = "asc";
+    if (sortConfig.key === key && sortConfig.direction === "asc") {
+      direction = "desc";
+    }
+    setSortConfig({ key, direction });
+  };
 
   function filterTable(event) {
     // filters the cards table based on the input value
@@ -27,8 +58,9 @@ export default function CardsList({ props }) {
     }
   }
 
+
   function openCardWindow(card) {
-    // TODO: make tooltip instead
+    // TODO: make it a tooltip or modal instead
 
     const newWindow = window.open(
       "",
@@ -85,27 +117,64 @@ export default function CardsList({ props }) {
           <i className="fa fa-question-circle" />
         </Tooltip>
       </div>
-      {props.allCards.length > 0 ? (<table className="card-gallery-table" id="card-gallery-table">
+      {props.allCards.length > 0 ? (
+      <table className="card-gallery-table" id="card-gallery-table">
         <thead>
           <tr>
-            <th className="sortable-table-col-head">
-              <span>Name</span>
-              <span>&#x25BC;</span>
+            <th 
+              className="sortable-table-col-head"
+              onClick={() => requestSort("name")}
+            >
+              <div>
+                <span>Name</span>
+                <i
+                    className={`sort-button fa ${
+                      sortConfig.key === "name"
+                        ? `fa-sort-${sortConfig.direction}`
+                        : "fa-sort"
+                    }`}
+                    style={{ fontSize: "24px" }}
+                  />
+              </div>
             </th>
-            <th className="sortable-table-col-head">
-              <span>Card Type</span>
-              <span>&#x25BC;</span>
+            <th
+              className="sortable-table-col-head"
+              onClick={() => requestSort("cardtype")}
+            >
+              <div>
+                <span>Card Type</span>
+                <i
+                    className={`sort-button fa ${
+                      sortConfig.key === "cardtype"
+                        ? `fa-sort-${sortConfig.direction}`
+                        : "fa-sort"
+                    }`}
+                    style={{ fontSize: "24px" }}
+                  />
+              </div>
             </th>
-            <th className="sortable-table-col-head">
-              <span>Colors</span>
-              <span>&#x25BC;</span>
+            <th
+              className="sortable-table-col-head"
+              onClick={() => requestSort("color")}
+            >
+              <div>
+                <span>Colors</span>
+                <i
+                    className={`sort-button fa ${
+                      sortConfig.key === "color"
+                        ? `fa-sort-${sortConfig.direction}`
+                        : "fa-sort"
+                    }`}
+                    style={{ fontSize: "24px" }}
+                  />
+              </div>
             </th>
             <th>Info</th>
-            <th>Add to Deck</th>
+            <th><span className="span-no-wrap">Add to Deck</span></th>
           </tr>
         </thead>
         <tbody>
-          {props.allCards.map((card) => (
+          {sortedCards.map((card) => (
             <tr key={card.name}>
               <td>{card.name}</td>
               <td>{card.cardtype}</td>
@@ -122,10 +191,9 @@ export default function CardsList({ props }) {
                 ))}
               </td>
               <td>
-                <p 
-                  onClick={()=> openCardWindow(card)}
-                  style={{ cursor: "pointer" }}
-                >💬</p>
+                <p onClick={() => openCardWindow(card)} style={{ cursor: "pointer" }}>
+                  💬
+                </p>
               </td>
               <td>
                 {!props.currentEditDeck.decklist.some(
@@ -134,16 +202,15 @@ export default function CardsList({ props }) {
                   <button
                     className="deckbuilder-table-button"
                     onClick={() => {
-                      // Add the card to the deck list
                       props.setCurrentEditDeck({
                         ...props.currentEditDeck,
                         decklist: [...props.currentEditDeck.decklist, card],
                       });
                     }}
                   >
-                    <i 
+                    <i
                       className="fa fa-plus"
-                      style={{ color: "grey", fontSize: "24px" }} 
+                      style={{ color: "grey", fontSize: "24px" }}
                     />
                   </button>
                 )}

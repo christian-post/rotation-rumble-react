@@ -77,7 +77,7 @@ async function publishProduct(productKey) {
 
 
 export async function testOrderDeck(deckname, captain, cards, image) {
-  // convert to string
+  // sanitize req data
   const data = {
     name: `Custom Deck (${sanitize(deckname)})`,
     description: `This is a custom deck created by the user.\n` +
