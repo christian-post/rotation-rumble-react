@@ -95,8 +95,6 @@ export async function getDecklists(db) {
     });
   });
 
-  console.log("test")
-
   // sort the cards in each deck by color and create the "deck" objects
   for (const name in decklists) {
     if (decklists[name].captains.length === 0) {

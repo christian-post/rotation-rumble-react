@@ -1056,7 +1056,8 @@ footer {
 
 .card-gallery-divider {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
+  padding: 0 3rem;
   align-items: center;
   font-size: var(--font-size-medium);
   margin-top: 1rem;
@@ -1077,6 +1078,25 @@ footer {
   /* TODO: das Bild soll exakt den restlichen verfügbaren Platz ausfüllen,
   ohne eine Scrollbar zu triggern */
   height: 60dvh;  
+}
+
+.card-gallery-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  align-items: center;
+  width: 80%;
+  gap: 1rem;
+  font-size: x-large;
+}
+
+.card-gallery-controls select {
+  border: none;
+  box-shadow: 0 4px 6px rgba(50, 50, 50, .3);
+  border-radius: 4px;
+  background-color: white;
+  padding: 2px 12px;
+  cursor: pointer
 }
 
 
