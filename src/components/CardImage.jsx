@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import Tooltip from "./Tooltip";
 
 
 export default function CardImage( { data }) {
@@ -29,10 +29,8 @@ export default function CardImage( { data }) {
       />
       )}
       <img
-        className={`card-image-${sizing}`}
-        // src={card.image_url}
+        className={`card-image-${sizing} wiggle-image`}
         src={`https://beaverlicious.com/images/${card.id}.jpg`}
-        // src={`/images/cards/${card.id}.jpg`}
         alt={card.name}
         loading="lazy"
         onLoad={handleImageLoad}

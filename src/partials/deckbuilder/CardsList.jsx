@@ -174,7 +174,7 @@ export default function CardsList({ props }) {
                   >
                     <i
                       className="fa fa-plus"
-                      style={{ color: "grey", fontSize: "24px" }}
+                      style={{ color: "grey", fontSize: "24px", cursor: "pointer" }}
                     />
                   </button>
                 )}

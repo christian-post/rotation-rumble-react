@@ -1805,11 +1805,38 @@ section > ul {
 .deck-image-small {
   width: 240px;
   cursor: pointer;
-  transition: transform .4s;
 }
 
-.deck-image-small:hover {
-  transform: rotate(7deg);
+@keyframes wiggle-once {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(0deg); }
+  40% { transform: rotate(-5deg); }
+  60% { transform: rotate(0deg); }
+  80% { transform: rotate(5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes steady-wiggle {
+   0% { transform: rotate(0deg); }
+  10% { transform: rotate(0deg); }
+  15% { transform: rotate(-5deg); }
+  20% { transform: rotate(0deg); }
+  25% { transform: rotate(5deg); }
+  30% { transform: rotate(0deg); }
+  35% { transform: rotate(-5deg); }
+  40% { transform: rotate(0deg); }
+ 100% { transform: rotate(0deg); }
+}
+
+.wiggle-image {
+  /* transition: transform .4s; */
+  animation: none
+}
+
+.wiggle-image:hover {
+  /* transform: rotate(7deg); */
+  /* animation: wiggle-once 0.2s; */
+  animation: steady-wiggle 1s infinite;
 }
 
 .deck-title-p {

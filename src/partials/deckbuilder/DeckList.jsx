@@ -130,7 +130,7 @@ export default function DeckList({ props }) {
                   >
                     <i
                       className="fa fa-times"
-                      style={{ color: "red", fontSize: "24px" }}
+                      style={{ color: "red", fontSize: "24px", cursor: "pointer" }}
                     />
                   </button>
                 </td>

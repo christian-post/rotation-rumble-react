@@ -158,7 +158,7 @@ export default function StartPage({ props }) {
           {Object.keys(props.customDecks).map((deck) => (
             <div key={deck}>
               <img
-                className="deck-image-small"
+                className="deck-image-small wiggle-image"
                 src={props.customDecks[deck].captain.image_url}
                 alt={props.customDecks[deck].name}
                 onClick={()=> editDeck(props.customDecks[deck])}
@@ -195,7 +195,7 @@ export default function StartPage({ props }) {
             props.preconDeckImages[name] && (
               <div className="precon-deck" key={name} id={name}>
                 <img
-                  className="deck-image-small"
+                  className="deck-image-small wiggle-image"
                   src={props.preconDeckImages[name]}
                   alt={name}
                   onClick={()=> setSelectedPrecon(props.preconDecks[name])}
