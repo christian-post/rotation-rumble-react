@@ -25,7 +25,7 @@ function GallerySection({ header, cards }) {
         <div className="card-gallery">
           {cards.map((card) => (
             <a key={card.id} href={`/card/${card.id}`} target="_blank">
-              <CardImage data={{ card: card, sizing: "medium" }} />
+              <CardImage props={{ card: card, sizing: "medium" }} />
             </a>
           ))}
         </div>
@@ -113,7 +113,7 @@ export default function Gallery(props) {
       ) : (
         cards.map((card) => (
           <a key={card.id} href={`/card/${card.id}`}>
-            <CardImage data={{ card: card, sizing: "medium" }} />
+            <CardImage props={{ card: card, sizing: "medium" }} />
           </a>
         ))
       )}

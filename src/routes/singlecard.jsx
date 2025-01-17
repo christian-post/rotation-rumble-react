@@ -112,7 +112,7 @@ export default function SingleCard() {
             (card != undefined) ? 
             <>
             <div className="grid-item" id="singlecard-image">
-              <CardImage data={{ card: card, sizing: "large" }}/>
+              <CardImage props={{ card: card, sizing: "large" }}/>
             </div>
             <div className="grid-item">
               <CardInfo props={{ card: card }}/>

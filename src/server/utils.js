@@ -1,9 +1,13 @@
 export function sanitize(text, replacement = " ", exceptions = []) {
   if (text === undefined) return "";
 
-  // Build a regex that excludes the characters in the exceptions list
+  // Escaping all special characters properly
+  const escapeRegexChar = (char) =>
+    char.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+
+  // Build the regex pattern
   const exceptionsRegex = exceptions.length
-    ? `[^\\w${exceptions.map((char) => `\\${char}`).join("")}]`
+    ? `[^\\w${exceptions.map(escapeRegexChar).join("")}]`
     : "\\W_";
   const regex = new RegExp(exceptionsRegex, "g");
 

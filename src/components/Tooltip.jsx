@@ -72,7 +72,6 @@ export default function Tooltip ({
             position: "absolute",
             bottom: pBottom, // Position above the target element
             left: pLeft,
-            // transform: "translateX(-50%)",
             backgroundColor: "black",
             color: "white",
             padding: "5px",

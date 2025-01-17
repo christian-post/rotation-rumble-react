@@ -32,7 +32,7 @@ export default function CaptainSelectPage({ props }) {
               onClick={()=> goToDeckEdit(captain)} 
               style={{ cursor: "pointer" }}
             >
-              <CardImage data={{ card: captain, sizing: "medium" }} />
+              <CardImage props={{ card: captain, sizing: "medium" }} />
             </div>
           ))}
         </div>

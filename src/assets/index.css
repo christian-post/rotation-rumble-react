@@ -1489,6 +1489,7 @@ footer {
 
 .visual-deckstats-body {
   width: 80%;
+  flex: 1;
   background-color: var(--bg-color-bright);
 }
 
@@ -1837,6 +1838,7 @@ section > ul {
   /* transform: rotate(7deg); */
   /* animation: wiggle-once 0.2s; */
   animation: steady-wiggle 1s infinite;
+  animation-timing-function: ease-in-out;
 }
 
 .deck-title-p {
@@ -1862,6 +1864,6 @@ section > ul {
   align-items: center;
 }
 
-/* .precon-selection-card img:hover {
-  transform: rotate(10deg);
-} */
+.precon-selection-card img {
+  padding: .5rem 0;
+}

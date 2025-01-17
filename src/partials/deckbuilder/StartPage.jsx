@@ -105,7 +105,7 @@ export default function StartPage({ props }) {
         <h2>Select one of the two decks in {selectedPrecon.name}:</h2>
         <div className="precon-selection">
           <div className="precon-selection-card">
-            <CardImage data={{card: selectedPrecon.captains[0], sizing: "large"}}/>
+            <CardImage props={{card: selectedPrecon.captains[0], sizing: "large"}}/>
             <button 
               className="standard-button"
               onClick={() => setSelectedDeck(selectedPrecon.decks[0])}
@@ -114,7 +114,7 @@ export default function StartPage({ props }) {
             </button>
           </div>
           <div className="precon-selection-card">
-          <CardImage data={{card: selectedPrecon.captains[1], sizing: "large"}}/>
+          <CardImage props={{card: selectedPrecon.captains[1], sizing: "large"}}/>
             <button 
               className="standard-button"
               onClick={() => setSelectedDeck(selectedPrecon.decks[1])}
@@ -156,13 +156,20 @@ export default function StartPage({ props }) {
       <section className="section-bg-white">
         <div className="custom-decks-container">
           {Object.keys(props.customDecks).map((deck) => (
+            // TODO: loading placeholder for the image
             <div key={deck}>
-              <img
+              {/* <img
                 className="deck-image-small wiggle-image"
                 src={props.customDecks[deck].captain.image_url}
                 alt={props.customDecks[deck].name}
                 onClick={()=> editDeck(props.customDecks[deck])}
-              />
+              /> */}
+              <CardImage props={{
+                card: props.customDecks[deck].captain, 
+                sizing: "medium",
+                onClick: ()=> editDeck(props.customDecks[deck]),
+                customStyle: {cursor: "pointer"}
+              }}/>
               <p className="deck-title-p">
                 {props.customDecks[deck].name}
               </p>

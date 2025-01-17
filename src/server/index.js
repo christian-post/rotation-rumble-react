@@ -114,32 +114,52 @@ app.post("/api/test", async (req, res) => {
 app.post("/api/test-shop", async (req, res) => {
   const { deckname, captain, cards, image } = req.body;
 
-  console.log("cachedOrders:", cachedOrders);
+  const stringifiedDeck = JSON.stringify(req.body);
 
-  if (Object.keys(cachedOrders).includes(deckname)) {
-    console.log("Order already placed for this deck.");
-    return res.json(cachedOrders[deckname]);
-  } else {
-    cachedOrders[deckname] = { id: undefined };
-  }
+  try {
+    console.log("cachedOrders:", cachedOrders);
 
-  console.log("Request received for deck order:", req.body);
-  const response = await testOrderDeck(deckname, captain, cards, image);
+    if (
+      Object.keys(cachedOrders).includes(deckname) &&
+      cachedOrders[deckname].deckString === stringifiedDeck
+    ) {
+      console.log("Order already placed for this deck.");
+      return res.json(cachedOrders[deckname].order);
+    } else {
+      cachedOrders[deckname] = null;
+    }
 
-  console.log("response from server", response.status, response.statusText);
+    console.log("Request received for deck order:", req.body);
 
-  if (response.status !== 200) {
-    res.status(response.status).json({
-      code: response.code,
-      message: response.message,
-      data: response.data,
+    const response = await testOrderDeck(deckname, captain, cards, image);
+
+    console.log("response from server", response.status, response.statusText);
+
+    if (response.status !== 200) {
+      return res.status(response.status).json({
+        code: response.code || "UNKNOWN_ERROR",
+        message: response.message || "An error occurred.",
+        data: response.data || null, // Ensure `data` exists
+      });
+    }
+
+    cachedOrders[deckname] = {
+      order: response.data,
+      deckString: stringifiedDeck
+    };
+    console.log("Sending response for deck order.");
+    return res.json(response.data);
+  } catch (error) {
+    console.error("Error processing deck order:", error);
+    return res.status(500).json({
+      code: "SERVER_ERROR",
+      message: "An unexpected error occurred.",
+      data: null, // Always provide `data`
     });
-  } else {
-    res.json(response.data);
-    cachedOrders[deckname] = response.data;
-    console.log("sending response")
   }
-})
+});
+
+
 
 
 app.post("/api/simple-search", async (req, res) => {

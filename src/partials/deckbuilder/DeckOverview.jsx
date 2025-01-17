@@ -58,10 +58,9 @@ function CardView({ cards }) {
         return (
           <CustomTooltip key={card.id} content={card.name}>
             <a href={`/card/${card.id}`} target="_blank" rel="noreferrer">
-              <CardImage data={{ card: card, sizing: "medium" }} />
+              <CardImage props={{ card: card, sizing: "medium" }} />
             </a>
           </CustomTooltip>
-          
         );
       })}
     </div>
@@ -211,73 +210,113 @@ function DeckShare({ deck }) {
 
 
 function DeckOrder({ deckString, deck }) {
-  // provides a link to the shop with the deck in the cart
-  const [order, setOrder] = useState({ productID: undefined});
+  const [order, setOrder] = useState({ productID: undefined });
   const [urlBroken, setUrlBroken] = useState(false);
   const [animCount, setAnimCount] = useState(0);
+  const [status, setStatus] = useState("idle"); // idle, loading, success
 
   useEffect(() => {
-    orderDeck();
-  }, [deckString]);
+    if (status === "loading") {
+      // Waiting animation
+      const interval = setInterval(() => {
+        setAnimCount((prev) => (prev + 1) % 4);
+      }, 600);
 
-  useEffect(() => {
-    // waiting animation
-    const interval = setInterval(() => {
-      setAnimCount((prev) => (prev + 1) % 4); 
-    }, 600);
-
-    return () => clearInterval(interval); 
-  }, []);
+      return () => clearInterval(interval);
+    }
+  }, [status]);
 
   async function orderDeck() {
-    const response = await fetch("/api/test-shop/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: deckString,
-    });
+    try {
+      const response = await fetch("/api/test-shop/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: deckString,
+      });
   
-    const res = await response.json()
+      let res;
+      try {
+        // Parse JSON if response is expected to be JSON
+        res = response.ok && response.headers.get("Content-Type")?.includes("application/json")
+          ? await response.json()
+          : {};
+      } catch (parseError) {
+        console.error("Failed to parse JSON response:", parseError);
+        res = {};
+      }
   
-    if (!response.ok) {
-      console.error(response.status, response.statusText);
-      alert(`Error: ${res.data.message} (${res.data.code})`);
+      if (!response.ok) {
+        console.error(response.status, response.statusText);
+        alert(
+          `Error: ${res?.message || "Unknown error"} (${
+            res?.code || response.status
+          })`
+        );
+        setUrlBroken(true);
+        setStatus("idle");
+        return;
+      }
+  
+      if (!res?.id) {
+        console.error("Invalid response: Missing `id`");
+        alert("The server returned an invalid response. Please try again.");
+        setUrlBroken(true);
+        setStatus("idle");
+        return;
+      }
+  
+      setOrder({
+        productID: res.id,
+      });
+      setStatus("success");
+    } catch (error) {
+      console.error("An error occurred:", error);
+      alert("An unexpected error occurred. Please try again later.");
       setUrlBroken(true);
-      return;
+      setStatus("idle");
     }
-
-    setOrder({
-      productID: res.id
-    });
   }
+  
+
+  const handleGenerateOrder = () => {
+    setStatus("loading");
+    setUrlBroken(false);
+    orderDeck();
+  };
 
   return (
     <div>
       <h2>Deck Order</h2>
-      {
-        deck ? (
-          <div>
-            <p>Deck Name: {deck.name}</p>
-            <p>Deck Captain: {deck.captain?.name}</p>
-            <br/>
-            {
-              (order.productID != undefined)
-              ? (<a 
-                  href={`https://beaverlicious.com/?add-to-cart=${order.productID}`} 
-                  target="_blank">Put deck into cart
-                </a>)
-              : (
-              <p className="url-waiting-animation">
-                Generating URL, this may take a couple seconds{".".repeat(animCount)}
-              </p>)
-            }
-            {urlBroken && <p>URL generation failed. Please try again later.</p>}
-          </div>
-        ) : (
-          <p>No deck selected.</p>
-        )
-      }
+      {deck ? (
+        <div>
+          <p>Deck Name: {deck.name}</p>
+          <p>Deck Captain: {deck.captain?.name}</p>
+          <br />
+          {status === "idle" && (
+            <button onClick={handleGenerateOrder}>Generate Order</button>
+          )}
+          {status === "loading" && (
+            <p className="url-waiting-animation">
+              Generating URL, this may take a couple seconds
+              {".".repeat(animCount)}
+            </p>
+          )}
+          {status === "success" && order.productID !== undefined && (
+            <a
+              href={`https://beaverlicious.com/?add-to-cart=${order.productID}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Put deck into cart
+            </a>
+          )}
+          {urlBroken && <p>URL generation failed. Please try again later.</p>}
+        </div>
+      ) : (
+        <p>No deck selected.</p>
+      )}
     </div>
   );
 }
@@ -323,16 +362,18 @@ export default function DeckOverview({ props }) {
     (
       <div className="tabcontent">
         <div className="visual-tab-leader-container">
-          <img
-            className="card-image-medium"
-            id="leader-image"
-            src={props.currentEditDeck?.captain.image_url}
-            alt={props.currentEditDeck?.captain.name}
-          />
-          <div className="leader-ribbon-image">
+          <div className="wiggle-image">
             <img
-              src="/images/\sxtEOEYA.png"
+              className="card-image-medium"
+              id="leader-image"
+              src={props.currentEditDeck?.captain.image_url}
+              alt={props.currentEditDeck?.captain.name}
             />
+            <div className="leader-ribbon-image">
+              <img
+                src="/images/\sxtEOEYA.png"
+              />
+            </div>
           </div>
         </div>
         <div className="visual-tab-card-container">

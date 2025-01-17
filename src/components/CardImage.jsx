@@ -1,9 +1,13 @@
 import React, { useState } from "react";
-import Tooltip from "./Tooltip";
 
 
-export default function CardImage( { data }) {
-  const { card, sizing } = data;
+export default function CardImage( { props }) {
+
+  const handleClick = (e) => {
+    if (props.onClick) {
+      props.onClick(e);
+    }
+  };
 
   const [imageLoaded, setImageLoaded] = useState(false);
     
@@ -23,19 +27,25 @@ export default function CardImage( { data }) {
     <>
     {!imageLoaded && (
       <img
-        className={`card-image-${sizing} pulsating-placeholder`}
+        className={`card-image-${props.sizing} pulsating-placeholder`}
         src={placeholderImage}
         alt="Loading..."
+        style={props.customStyle}
       />
       )}
       <img
-        className={`card-image-${sizing} wiggle-image`}
-        src={`https://beaverlicious.com/images/${card.id}.jpg`}
-        alt={card.name}
+        className={`card-image-${props.sizing} wiggle-image`}
+        src={`https://beaverlicious.com/images/${props.card.id}.jpg`}
+        alt={props.card.name}
         loading="lazy"
+        onClick={handleClick}
         onLoad={handleImageLoad}
         onError={imageErrorHandler}
-        style={{ opacity: imageLoaded ? 1 : 0, transition: "opacity 0.3s" }}
+        style={{ 
+          ...props.customStyle, 
+          opacity: imageLoaded ? 1 : 0, 
+          transition: "opacity 0.3s" 
+        }}
       />
     </>
   )
