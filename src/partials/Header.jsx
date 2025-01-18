@@ -5,11 +5,11 @@ const isDevelopment = import.meta.env.MODE === "development"; // For Vite
 export default function Header() {
   return (
     <header>
-      <span className="header-logo">
-        <Link to={"/"}>Rotation Rumble</Link>
-      </span>
       <nav className="header-nav">
         <ul>
+          <li className="header-item">
+            <Link to={"/"}>Rotation Rumble</Link>
+          </li>
           <li className="header-item">
             <Link to={"advanced-search"}>Search</Link>
           </li>

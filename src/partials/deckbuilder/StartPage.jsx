@@ -150,9 +150,9 @@ export default function StartPage({ props }) {
           </button>
         </div>
       </section>
-      <section className="section-bg-white">
+      {Object.keys(props.customDecks).length > 0 && (<section className="section-bg-white">
         <p className="your-decks-h">Your decks:</p>
-      </section>
+      </section>)}
       <section className="section-bg-white">
         <div className="custom-decks-container">
           {Object.keys(props.customDecks).map((deck) => (

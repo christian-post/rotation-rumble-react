@@ -344,65 +344,34 @@ dialog {
 
 header {
   background-color: var(--bg-color-bright);
-  text-align: center;
-  width: 100%;
   z-index: 999;
   /* display navbar as columns */
-  display: grid;
-  grid-template-columns: 25% 60% 15%;
-  padding: 1rem;
-}
-
-.header-logo {
-  font-size: 20px;
-  grid-column: 1;
-  margin-left: 3rem;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
+  margin-left: 15vw;
+  padding: .75rem;
 }
 
-.header-logo a,
+.header-nav {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 .header-nav a {
   color: var(--text-color-dark);
   text-decoration: none;
 }
 
-.nav-toggle {
-  display: none;
-}
-
-.nav-toggle-label {
-  /* turn off hamburger */
-  display: none;
-}
-
-.header-nav {
-  grid-column: 2;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-left: 3rem;
-}
-
 .header-nav ul {
+  display: flex;
+  flex-direction: row;
+  gap: min(2.5rem, 5vw);
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  gap: 3rem;
-  font-size: 20px;
+  font-size: 24px;
 }
-
-.header-nav li {
-  /* margin-left: 2em; */
-  margin-top: 0;
-}
-
-.header-nav a {
-  opacity: 1;
-  position: relative;
-}
-
 
 /*  floating logos */
 
@@ -420,102 +389,22 @@ header {
 }
 
 /* hamburger menu stuff */
+/* TODO */
 
-
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   header {
-    grid-template-columns: 20% 60% 20%;
+    margin-left: 0;
     background-color: var(--color-orange);
-    position: fixed;
   }
 
   .header-logo {
     grid-column: 2;
   }
 
-  .nav-toggle-label {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin-left: 1em;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  
-  .nav-toggle-label span,
-  .nav-toggle-label span::before,
-  .nav-toggle-label span::after {
-    /*  hamburger nav bar icon */
-    display: block;
-    background-color: var(--text-color-dark);
-    height: 3px;
-    width: 2em;
-    border-radius: 2px;
-    position: relative;
-  }
-  
-  .nav-toggle-label span::before,
-  .nav-toggle-label span::after {
-    content: '';
-    position: absolute;
-  }
-  
-  .nav-toggle-label span::before {
-    bottom: 8px;
-  }
-  
-  .nav-toggle-label span::after {
-    top: 8px;
-  }
-  
-  .header-nav {
-    all: unset;
-    background-color: var(--color-orange);
-    position: absolute;
-    text-align: left;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    /* nav bar is squished completely on the y axis by default */
-    transform: scale(1, 0);
-    transform-origin: top;
-    transition: transform 400ms ease-in-out;
-  }
-  
   .header-nav ul {
-    margin: 0;
-    padding: 0;
-    list-style: none;
     flex-direction: column;
-    gap: 0;
-  }
-  
-  .header-nav li {
-    margin-bottom: 1em;
-    margin-left: 1em;
-  }
-
-  .header-nav a {
-    opacity: 0;
-    /* fade-out animation when hamburger is clicked while the navbar is out */
-    transition: opacity 150ms ease-in-out;
-  }
-
-  /* .header-nav a:hover {
-    color: var(--text-white-hover);
-  } */
-  
-  .nav-toggle:checked ~ nav {
-    display: block;
-    /* return nav bar to its original Y scale */
-    transform: scale(1, 1);
-  }
-  
-  .nav-toggle:checked ~ nav a {
-    opacity: 1;
-    /* fade-in animation when hamburger is clicked */
-    transition: opacity 250ms ease-in-out 250ms;
+    gap: .5rem;
+    font-size: 20px;
   }
 }
 
