@@ -59,6 +59,18 @@ select {
   }
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* ------------------------------------------------------------------------------------------------------------------ */
 /* ----------------------------------------- MY STUFF --------------------------------------------------------------- */
 /* ------------------------------------------------------------------------------------------------------------------ */
@@ -391,7 +403,12 @@ header {
 /* hamburger menu stuff */
 /* TODO */
 
-@media screen and (max-width: 30em) {
+.nav-toggle {
+  display: none;
+}
+
+
+@media screen and (max-width: 35em) {
   header {
     margin-left: 0;
     background-color: var(--color-orange);
@@ -401,10 +418,35 @@ header {
     grid-column: 2;
   }
 
+  .header-nav {
+    margin-top: 2.5em;
+  }
+
   .header-nav ul {
     flex-direction: column;
     gap: .5rem;
     font-size: 20px;
+    /* transition: height 2s; */
+  }
+
+  .ul-expanded {
+    overflow: auto;
+    height: auto;
+  }
+
+  .ul-collapsed {
+    height: 0;
+    overflow: hidden;
+  }
+
+  .nav-toggle {
+    display: block;
+    background-color: transparent;
+    border: none;
+    font-size: 24px;
+    position: absolute;
+    aspect-ratio: 1;
+    top: .5rem;
   }
 }
 

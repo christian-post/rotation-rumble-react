@@ -158,12 +158,6 @@ export default function StartPage({ props }) {
           {Object.keys(props.customDecks).map((deck) => (
             // TODO: loading placeholder for the image
             <div key={deck}>
-              {/* <img
-                className="deck-image-small wiggle-image"
-                src={props.customDecks[deck].captain.image_url}
-                alt={props.customDecks[deck].name}
-                onClick={()=> editDeck(props.customDecks[deck])}
-              /> */}
               <CardImage props={{
                 card: props.customDecks[deck].captain, 
                 sizing: "medium",

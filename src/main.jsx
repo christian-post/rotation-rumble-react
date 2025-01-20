@@ -61,14 +61,10 @@ const router = createBrowserRouter([
               element: <Deckbuilder />,
               loader: deckbuilderLoader
             },
-            ...(isDevelopment
-              ? [
-                  {
-                    path: "test", // Only include in development
-                    element: <Test />
-                  }
-                ]
-              : []),
+            {
+              path: "test",
+              element: <Test />
+            },
             {
               path: "*", // Catch-all route for non-existent paths
               element: <ErrorPage />,

@@ -1,12 +1,31 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom"
 
 const isDevelopment = import.meta.env.MODE === "development"; // For Vite
 
 export default function Header() {
+
+  const [navExpanded, setNavExpanded] = useState(false);
+
+
+  function NavToggle() {
+    return (
+      <button
+        className="nav-toggle"
+        onClick={()=> setNavExpanded(!navExpanded)}
+      >
+        <i className={`fa fa-${navExpanded ? "close" : "bars"}`} />
+        <span className="sr-only">Menu</span>
+      </button>
+    );
+  }
+
+
   return (
     <header>
       <nav className="header-nav">
-        <ul>
+        <NavToggle />
+        <ul className={`ul-${navExpanded ? "expanded" : "collapsed"}`}>
           <li className="header-item">
             <Link to={"/"}>Rotation Rumble</Link>
           </li>
