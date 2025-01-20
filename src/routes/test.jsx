@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from "react";
+import { useLoaderData } from "react-router-dom";
 import CardImage from "../components/CardImage";
 
 
 export default function Test() {
+  const { cards, aggregated, groupBy, error } = useLoaderData();
 
-  const card = {
-      "_id": {
-        "$oid": "676d80a1fe83b24400f3886a"
-      },
-      "name": "Mace",
-      "set": "Core Set",
-      "deck": [
-        "Bows & Blades",
-        "Clubs & Critters"
-      ],
-      "cardtype": "Item",
-      "color": [
-        "black"
-      ],
-      "dice": "No",
-      "costs": 0,
-      "effect1": "Equipped fighter gains +1 ATK.",
-      "image_url": "http://rotation-rumble.com/images/mace.jpg",
-      "id": "mace"
-  };
+  // turn the array into an object with key "id"
+  const cardsObject = cards.reduce((acc, obj) => {
+      acc[obj.id] = obj;
+      return acc;
+  }, {});
+
+  const card = cardsObject["mett"]
 
   return (
     <main>
