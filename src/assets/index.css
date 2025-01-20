@@ -1761,16 +1761,46 @@ section > ul {
 }
 
 .wiggle-image {
-  /* transition: transform .4s; */
-  animation: none
+  animation: none;
 }
 
 .wiggle-image:hover {
-  /* transform: rotate(7deg); */
-  /* animation: wiggle-once 0.2s; */
   animation: steady-wiggle 1s infinite;
   animation-timing-function: ease-in-out;
 }
+
+/* TODO: testing */
+@keyframes steady-wiggle-2 {
+  0% { transform: rotate(0deg); }
+ 10% { transform: rotate(0deg); }
+ 15% { transform: rotate(-2deg); }
+ 20% { transform: rotate(0deg); }
+ 25% { transform: rotate(2deg); }
+ 30% { transform: rotate(0deg); }
+ 35% { transform: rotate(-2deg); }
+ 40% { transform: rotate(0deg); }
+100% { transform: rotate(0deg); }
+}
+
+.wiggle-test1 {
+  animation: none;
+}
+
+.wiggle-test1:hover {
+  animation: wiggle-once .5s;
+  animation-timing-function: ease-in-out;
+}
+
+.wiggle-test2 {
+  animation: none;
+}
+
+.wiggle-test2:hover {
+  animation: steady-wiggle-2 1s infinite;
+  animation-timing-function: ease-in-out;
+}
+
+/* ---- */
 
 .deck-title-p {
   text-align: center;

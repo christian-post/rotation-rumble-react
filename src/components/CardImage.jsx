@@ -34,7 +34,7 @@ export default function CardImage( { props }) {
       />
       )}
       <img
-        className={`card-image-${props.sizing} wiggle-image`}
+        className={props.className || `card-image-${props.sizing} wiggle-image`}
         src={`https://beaverlicious.com/images/${props.card.id}.jpg`}
         alt={props.card.name}
         loading="lazy"
