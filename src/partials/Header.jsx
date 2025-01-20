@@ -1,11 +1,16 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { useLocation, Link } from "react-router-dom"
 
 const isDevelopment = import.meta.env.MODE === "development"; // For Vite
 
 export default function Header() {
-
   const [navExpanded, setNavExpanded] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    // collapse when user navigates
+    setNavExpanded(false);
+  }, [location]);
 
 
   function NavToggle() {
