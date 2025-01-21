@@ -163,20 +163,22 @@ export default function CardsList({ props }) {
                 {!props.currentEditDeck.decklist.some(
                   (deckCard) => deckCard.name === card.name
                 ) && (
-                  <button
-                    className="deckbuilder-table-button"
-                    onClick={() => {
-                      props.setCurrentEditDeck({
-                        ...props.currentEditDeck,
-                        decklist: [...props.currentEditDeck.decklist, card],
-                      });
-                    }}
-                  >
-                    <i
-                      className="fa fa-plus"
-                      style={{ color: "grey", fontSize: "24px", cursor: "pointer" }}
-                    />
-                  </button>
+                  <div className="add-to-deck-td">
+                    <button
+                      className="deckbuilder-table-button"
+                      onClick={() => {
+                        props.setCurrentEditDeck({
+                          ...props.currentEditDeck,
+                          decklist: [...props.currentEditDeck.decklist, card],
+                        });
+                      }}
+                    >
+                      <i
+                        className="fa fa-plus"
+                        style={{ color: "grey", cursor: "pointer" }}
+                      />
+                    </button>
+                  </div>
                 )}
               </td>
             </tr>

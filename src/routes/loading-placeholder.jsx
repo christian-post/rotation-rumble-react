@@ -1,7 +1,5 @@
-// TODO unused
 
 export default function LoadingPlaceholder() {
-
   return (
     <main>
       <div

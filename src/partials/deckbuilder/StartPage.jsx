@@ -196,7 +196,7 @@ export default function StartPage({ props }) {
             props.preconDeckImages[name] && (
               <div className="precon-deck" key={name} id={name}>
                 <img
-                  className="deck-image-small wiggle-image"
+                  className="deck-image-small wiggle-test2"
                   src={props.preconDeckImages[name]}
                   alt={name}
                   onClick={()=> setSelectedPrecon(props.preconDecks[name])}

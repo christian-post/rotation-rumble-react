@@ -32,10 +32,10 @@ export default function Index() {
     <main>
       <div className="grid-container landing-page-grid">
         <div className="grid-item" id="landing-search-call">
-          <h1>Search for a<br/>Card Name</h1>
+          <h1>Search for a Card Name</h1>
         </div>
 
-        <div className="grid-item span-3-v" id="hero-image">
+        <div className="grid-item" id="hero-image">
           <img 
             src="/images/BaseBlue_2_-_Ol_Fyndor300.png" 
             alt="Fyndor, the Blue Magician"

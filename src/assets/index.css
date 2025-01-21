@@ -408,7 +408,7 @@ header {
 }
 
 
-@media screen and (max-width: 35em) {
+@media screen and (max-width: 30em) {
   header {
     margin-left: 0;
     background-color: var(--color-orange);
@@ -491,6 +491,7 @@ main {
   display: flex;
   flex-direction: row;
   justify-content: left;
+  align-items: center;
   gap: 1rem;
 }
 
@@ -558,13 +559,13 @@ footer {
 
 /* --------------- GENERAL MOBILE VIEW -------------------------------------- */
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   /* remove background when on mobile */
   main {
     background: none;
     /* TODO: lazy fix; 
     when the header is fixed, the main content should start at its bottom */
-    margin-top: 62px;
+    margin-top: .5rem;
   }
 
   .grid-container {
@@ -637,6 +638,7 @@ footer {
 
 .landing-page-grid {
   grid-template-columns: 50% 50%;
+  margin-bottom: 2rem;
 }
 
 #hero-image {
@@ -646,16 +648,20 @@ footer {
 
 /* --------------- INDEX PAGE MOBILE VIEW ----------------------------------- */
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   .landing-page-grid {
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 40% 20% 40%;
+    grid-template-columns: 40% 60%;
+    grid-template-rows: 40% 10% 50%;
     /* background-color: pink;   */
   }
 
   #hero-image {
     grid-column: 2;
-    grid-row: 1 / span 1;
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
   }
 
   #landing-searchbar {
@@ -672,8 +678,13 @@ footer {
     align-self: end;
   }
 
+  #landing-search-call h1 {
+    font-size: x-large;
+  }
+
   .info-paragraph {
     font-size: var(--font-size-default);
+    margin-top: 1rem;
   }
 }
 
@@ -721,7 +732,7 @@ footer {
   min-width: 300px;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   #cardname, 
   #effectOrStep,
   #type {
@@ -851,7 +862,7 @@ footer {
 
 /* ------------------------ SINGLE CARD MOBILE VIEW ------------------------- */
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   .singlecard-grid {
     grid-template-columns: 100%;
   }
@@ -1034,7 +1045,7 @@ footer {
 
 /* ------------------------ CARD GALLERY MOBILE VIEW ------------------------ */
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 30em) {
   .card-gallery {
     /* TODO only table aligns left */
     justify-content: left;
@@ -1244,12 +1255,12 @@ footer {
 }
 
 #deck-stats {
+  display: flex;
+  gap: 2rem;
   margin: 10px;
   padding: 1rem;
   border: 1px solid var(--color-orange);
   border-radius: 10px;
-  display: flex;
-  gap: 4rem;
 }
 
 #deck-validity-check {
@@ -1277,6 +1288,10 @@ footer {
   border-radius: 50%;
   border: none;
   padding: .25rem;
+}
+
+.deckbuilder-table-button i {
+  font-size: 24px;
 }
 
 
@@ -1396,10 +1411,10 @@ footer {
 
 /* ------------------------ DECK BUILDER MOBILE VIEW ------------------------ */
 
-@media screen and (max-width: 500px) {
-  #deck-builder {
+@media screen and (max-width: 30em) {
+  /* #deck-builder {
     display: none;
-  }
+  } */
 
   #deck-builder-hidden {
     display: flex;
@@ -1669,6 +1684,7 @@ section > ul {
   justify-content: center;
   gap: 1.5rem;
   margin-bottom: 50px;
+  align-items: flex-start;
 }
 
 .deckbuilder-button {
@@ -1827,4 +1843,127 @@ section > ul {
 
 .precon-selection-card img {
   padding: .5rem 0;
+}
+
+
+@media screen and (max-width: 30em) {
+  .top-section p{
+    font-size: larger;
+  }
+
+  .create-deck-button-container {
+    margin-bottom: 20px;
+  }
+
+  .create-deck-button-container span {
+    font-size: var(--font-size-default);
+  }
+
+  .deckbuilder-button {
+    gap: 4px;
+    padding: 4px 6px;
+  }
+
+  .subsection-header {
+    flex-direction: column;
+    gap: .5rem;
+  }
+
+  .choose-decks-h {
+    font-size: x-large;
+  }
+
+  .dialog-modal h2 {
+    font-size: large;
+  }
+
+  .precon-selection {
+    flex-direction: column;
+  }
+
+  
+  #deck-builder {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-gallery-table
+  {
+    font-size: 14px;
+    width: 100vw;
+  }
+
+  .card-gallery-table th, td {
+    padding: 2px;
+  }
+
+  .card-gallery-table .span-no-wrap {
+    white-space: wrap;
+  }
+
+  .add-to-deck-td {
+    display: flex; 
+    justify-content: center;
+    padding: 2px 0px;
+  }
+
+  .deckbuilder-table-button i {
+    font-size: 16px;
+  }
+
+  .deck-title-container {
+    margin-top: 1rem;
+    justify-content: center;
+  }
+
+  .toggle-header {
+    gap: .5rem;
+  }
+
+  #deck-stats {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .deck-container {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+
+  .deck-container .fixed-top {
+    position: auto;
+  }
+
+  .tab {
+    display: flex;
+    padding-left: 0;
+  }
+
+  .decklist {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  #decklist-body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #decklist-body h2 {
+    font-size: large;
+  }
+
+  .stats-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .stats-element {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 }

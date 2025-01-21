@@ -16,8 +16,9 @@ import Deckbuilder from "./routes/deckbuilder";
 import deckbuilderLoader from	"./utils/DeckbuilderLoader";
 import SingleCard from "./routes/singlecard";
 import cardLoader from "./utils/CardLoader";
+import galleryLoader from "./utils/GalleryLoader";
 import Test from "./routes/test";
-import CardGallery, { loader as galleryLoader } from "./routes/card-gallery";
+import CardGallery from "./routes/card-gallery";
 
 
 const isDevelopment = import.meta.env.MODE === "development"; // For Vite

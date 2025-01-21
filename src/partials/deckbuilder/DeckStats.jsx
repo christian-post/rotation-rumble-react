@@ -49,7 +49,8 @@ export default function DeckStats({ props }) {
         <button 
           className="standard-button" 
           onClick={saveDeck}
-        >💾 Save Changes
+        >
+          💾 Save Changes
         </button>
         {props.currentEditDeck.decklist.length > 0 && (<div 
           className="standard-button"

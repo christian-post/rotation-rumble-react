@@ -22,7 +22,11 @@ export default function Test() {
           flexDirection: "row",
           alignItems: "center"
         }}>
-         <CardImage props={{ card: card, sizing: "medium" }} />
+         <CardImage props={
+          { card: card, 
+            sizing: "medium", 
+            className: "card-image-medium wiggle-image" }
+          } />
          <CardImage props={
           { card: card, 
             sizing: "medium", 
