@@ -207,7 +207,7 @@ select {
   opacity: 0.9;
 }
 
-dialog {
+.dialog-modal {
   position: fixed;
   top: 5%; /* Start near the top */
   left: 50%;
@@ -260,6 +260,20 @@ dialog {
 
 .span-no-wrap {
   white-space: nowrap;
+}
+
+
+@media screen and (max-width: 30em) {
+  .dialog-modal {
+    left: 30%;
+    transform: translateX(-20%);
+    padding: 14px;
+  }
+
+  .dialog-modal .card-window {
+    transform: scale(75%);
+    transform-origin: center;
+  }
 }
 
 

@@ -92,7 +92,7 @@ export default function StartPage({ props }) {
     if (!selectedPrecon) {
       return null;
     }
-
+    
     return (
       <dialog 
         className="dialog-modal precon-dialog" 

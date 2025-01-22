@@ -83,12 +83,12 @@ export async function getDecklists(db) {
         decklists[d] = {
           decks: [],
           cards: [],
-          captains: []
+          captains: [],
+          name: d
         }
       }
       if (card.cardtype === "Captain") {
         decklists[d].captains.push(card);
-        // decklists[d].captain = card;
       } else {
         decklists[d].cards.push(card);
       }
