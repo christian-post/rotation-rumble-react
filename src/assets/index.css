@@ -271,8 +271,10 @@ select {
   }
 
   .dialog-modal .card-window {
-    transform: scale(75%);
+    /* transform: scale(75%); */
     transform-origin: center;
+    flex-direction: column;
+    gap: 0;
   }
 }
 
@@ -1013,15 +1015,16 @@ footer {
 .card-gallery-divider {
   display: flex;
   justify-content: space-between;
-  padding: 0 3rem;
+  padding: 0 2rem;
   align-items: center;
   font-size: var(--font-size-medium);
   margin-top: 1rem;
   box-shadow: 0 8px 6px rgba(50, 50, 50, .3);
 
   /* TODO: just a hack, remove default padding from grid items? */
-  width: calc(100% + 4rem);
-  position: relative;
+  /* width: calc(100% + 4rem); */
+  width: 90%;
+  /* position: relative; */
   left: -2rem;
 }
 
@@ -1084,6 +1087,27 @@ footer {
   .gallery-header label {
     margin-left: .5rem;
   }
+
+  .card-gallery-controls {
+    font-size: large;
+    width: 100%;
+    justify-content: space-around
+  }
+
+  .card-gallery-divider {
+    width: 100%;
+    padding: 0 1rem;
+  }
+
+  .card-gallery-divider:last-of-type {
+    /* box-shadow isn't visible otherwise (?)*/
+    margin-bottom: 2rem;
+  }
+
+  .card-gallery-divider h1 {
+    font-size: x-large;
+  }
+
 }
 
 
@@ -1895,7 +1919,6 @@ section > ul {
     flex-direction: column;
   }
 
-  
   #deck-builder {
     display: flex;
     flex-direction: column;
