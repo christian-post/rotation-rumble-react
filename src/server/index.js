@@ -64,66 +64,69 @@ app.get("/api/card/:cardId", async (req, res) => {
 app.get("/api/all-cards", async (req, res) => {
   const groupBy = req.query.groupBy;
 
-  if (!groupBy) {
-    return res.status(400).json({ error: "Missing groupBy parameter" });
-  }
+  try {
+    if (!groupBy) {
+      // If groupBy is not provided, return all cards sorted by name
+      const cards = await db.collection(process.env.COLLECTION)
+        .find()
+        .sort({ name: 1 })
+        .toArray();
 
-  const pipeline = [
-    // Step 1: Ensure the groupBy field is always an array
-    {
-      $addFields: {
-        groupByArray: {
-          $cond: {
-            if: { $isArray: `$${groupBy}` },
-            then: `$${groupBy}`,
-            else: [`$${groupBy}`] // Wrap single values in an array
+      return res.json({ cards, aggregated: [] }); // No aggregation in this case
+    }
+
+    const pipeline = [
+      {
+        $addFields: {
+          groupByArray: {
+            $cond: {
+              if: { $isArray: `$${groupBy}` },
+              then: `$${groupBy}`,
+              else: [`$${groupBy}`]
+            }
           }
         }
-      }
-    },
-    // Step 2: Sort the array (for fields like color that might contain multiple values)
-    {
-      $addFields: {
-        sortedGroupBy: { $sortArray: { input: "$groupByArray", sortBy: 1 } }
-      }
-    },
-    // Step 3: Concatenate the sorted values into a string
-    {
-      $addFields: {
-        groupByString: {
-          $reduce: {
-            input: "$sortedGroupBy",
-            initialValue: "",
-            in: {
-              $cond: {
-                if: { $eq: ["$$value", ""] }, // First element
-                then: "$$this",
-                else: { $concat: ["$$value", ",", "$$this"] }
+      },
+      {
+        $addFields: {
+          sortedGroupBy: {
+            $sortArray: { input: "$groupByArray", sortBy: 1 }
+          }
+        }
+      },
+      {
+        $addFields: {
+          groupByString: {
+            $reduce: {
+              input: "$sortedGroupBy",
+              initialValue: "",
+              in: {
+                $cond: {
+                  if: { $eq: ["$$value", ""] },
+                  then: "$$this",
+                  else: { $concat: ["$$value", ",", "$$this"] }
+                }
               }
             }
           }
         }
+      },
+      {
+        $group: {
+          _id: "$groupByString",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { _id: 1 }
       }
-    },
-    // Step 4: Group by the concatenated string
-    {
-      $group: {
-        _id: "$groupByString",
-        count: { $sum: 1 }
-      }
-    },
-    // Step 5: Sort by the groupBy field
-    { $sort: { _id: 1 } }
-  ];
+    ];
 
-  try {
     const aggCursor = db.collection(process.env.COLLECTION).aggregate(pipeline);
     const aggregated = await aggCursor.toArray();
 
-    // Dynamically sort the cards based on the same logic
     const cards = await db.collection(process.env.COLLECTION)
       .aggregate([
-        // Apply the same steps to sort the cards dynamically
         {
           $addFields: {
             groupByArray: {
@@ -135,7 +138,13 @@ app.get("/api/all-cards", async (req, res) => {
             }
           }
         },
-        { $addFields: { sortedGroupBy: { $sortArray: { input: "$groupByArray", sortBy: 1 } } } },
+        {
+          $addFields: {
+            sortedGroupBy: {
+              $sortArray: { input: "$groupByArray", sortBy: 1 }
+            }
+          }
+        },
         {
           $addFields: {
             groupByString: {
@@ -153,7 +162,12 @@ app.get("/api/all-cards", async (req, res) => {
             }
           }
         },
-        { $sort: { groupByString: 1, name: 1 } } // Sort by groupBy field and name
+        {
+          $sort: {
+            groupByString: 1,
+            name: 1
+          }
+        }
       ])
       .toArray();
 
@@ -163,6 +177,7 @@ app.get("/api/all-cards", async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
+
 
 
 app.get("/api/decklists", async (req, res) => {
