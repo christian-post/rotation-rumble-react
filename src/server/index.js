@@ -61,28 +61,100 @@ app.get("/api/card/:cardId", async (req, res) => {
 });
 
 
-
 app.get("/api/all-cards", async (req, res) => {
-  // get all cards, grouped by a given parameter or null
-  const groupBy = req.query.groupBy || null;
+  const groupBy = req.query.groupBy;
+
+  if (!groupBy) {
+    return res.status(400).json({ error: "Missing groupBy parameter" });
+  }
 
   const pipeline = [
-    { $group: { _id: `\$${groupBy}`, count: { $sum: 1 }}},
-    {$sort: { _id: 1 }} 
+    // Step 1: Ensure the groupBy field is always an array
+    {
+      $addFields: {
+        groupByArray: {
+          $cond: {
+            if: { $isArray: `$${groupBy}` },
+            then: `$${groupBy}`,
+            else: [`$${groupBy}`] // Wrap single values in an array
+          }
+        }
+      }
+    },
+    // Step 2: Sort the array (for fields like color that might contain multiple values)
+    {
+      $addFields: {
+        sortedGroupBy: { $sortArray: { input: "$groupByArray", sortBy: 1 } }
+      }
+    },
+    // Step 3: Concatenate the sorted values into a string
+    {
+      $addFields: {
+        groupByString: {
+          $reduce: {
+            input: "$sortedGroupBy",
+            initialValue: "",
+            in: {
+              $cond: {
+                if: { $eq: ["$$value", ""] }, // First element
+                then: "$$this",
+                else: { $concat: ["$$value", ",", "$$this"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    // Step 4: Group by the concatenated string
+    {
+      $group: {
+        _id: "$groupByString",
+        count: { $sum: 1 }
+      }
+    },
+    // Step 5: Sort by the groupBy field
+    { $sort: { _id: 1 } }
   ];
-  const aggCursor = db.collection(process.env.COLLECTION)
-      .aggregate(pipeline);
 
   try {
+    const aggCursor = db.collection(process.env.COLLECTION).aggregate(pipeline);
     const aggregated = await aggCursor.toArray();
 
-    let sort = {};
-    sort[groupBy] = 1;
-    sort["name"] = 1;
-
+    // Dynamically sort the cards based on the same logic
     const cards = await db.collection(process.env.COLLECTION)
-      .find()
-      .sort(sort)
+      .aggregate([
+        // Apply the same steps to sort the cards dynamically
+        {
+          $addFields: {
+            groupByArray: {
+              $cond: {
+                if: { $isArray: `$${groupBy}` },
+                then: `$${groupBy}`,
+                else: [`$${groupBy}`]
+              }
+            }
+          }
+        },
+        { $addFields: { sortedGroupBy: { $sortArray: { input: "$groupByArray", sortBy: 1 } } } },
+        {
+          $addFields: {
+            groupByString: {
+              $reduce: {
+                input: "$sortedGroupBy",
+                initialValue: "",
+                in: {
+                  $cond: {
+                    if: { $eq: ["$$value", ""] },
+                    then: "$$this",
+                    else: { $concat: ["$$value", ",", "$$this"] }
+                  }
+                }
+              }
+            }
+          }
+        },
+        { $sort: { groupByString: 1, name: 1 } } // Sort by groupBy field and name
+      ])
       .toArray();
 
     res.json({ cards, aggregated });
@@ -90,7 +162,7 @@ app.get("/api/all-cards", async (req, res) => {
     console.error("Error fetching cards:", error);
     res.status(500).json({ error: "Internal server error" });
   }
-}); 
+});
 
 
 app.get("/api/decklists", async (req, res) => {

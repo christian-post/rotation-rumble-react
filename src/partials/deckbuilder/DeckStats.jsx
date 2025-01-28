@@ -95,9 +95,9 @@ export default function DeckStats({ props }) {
             alt={props.currentEditDeck.captain.name}
           />
         </div>
-        <div id="deck-validity-check">
+        {/* <div id="deck-validity-check">
           Checking the validity of the deck...
-        </div>
+        </div> */}
       </div>
     </>
   )

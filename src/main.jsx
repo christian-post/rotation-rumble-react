@@ -65,7 +65,7 @@ const router = createBrowserRouter([
             {
               path: "test",
               element: <Test />,
-              loader: galleryLoader
+              loader: deckbuilderLoader
             },
             {
               path: "*", // Catch-all route for non-existent paths

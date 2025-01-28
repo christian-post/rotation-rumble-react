@@ -1968,8 +1968,8 @@ section > ul {
     border: none;
   }
 
-  .deck-container .fixed-top {
-    position: auto;
+  .fixed-top {
+    
   }
 
   .tab {

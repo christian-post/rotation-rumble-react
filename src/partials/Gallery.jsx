@@ -52,6 +52,7 @@ export default function Gallery(props) {
 
   const formatAggHeader = (aggId) => {
     if (!aggId) return `No ${capitalize(groupBy)}`;
+    if (aggId.includes(",")) return aggId.split(",").map(capitalize).join(", ");
     return capitalize(aggId);
   };
 
@@ -62,7 +63,7 @@ export default function Gallery(props) {
     aggregated = [...otherItems, nullItem];
   }
 
-  let startIndex = 0; // Initialize startIndex for slicing
+  let startIndex = (nullItem) ? nullItem.count : 0; // Initialize startIndex for slicing
 
   const groupedCards = aggregated.map((agg) => {
     const endIndex = startIndex + agg.count; // Calculate the endIndex for the current group
