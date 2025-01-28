@@ -279,7 +279,6 @@ function DeckOrder({ deckString, deck }) {
     }
   }
   
-
   const handleGenerateOrder = () => {
     setStatus("loading");
     setUrlBroken(false);
@@ -294,25 +293,30 @@ function DeckOrder({ deckString, deck }) {
           <p>Deck Name: {deck.name}</p>
           <p>Deck Captain: {deck.captain?.name}</p>
           <br />
-          {status === "idle" && (
-            <button onClick={handleGenerateOrder}>Generate Order</button>
-          )}
-          {status === "loading" && (
-            <p className="url-waiting-animation">
-              Generating URL, this may take a couple seconds
-              {".".repeat(animCount)}
-            </p>
-          )}
-          {status === "success" && order.productID !== undefined && (
-            <a
-              href={`https://beaverlicious.com/?add-to-cart=${order.productID}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Put deck into cart
-            </a>
-          )}
-          {urlBroken && <p>URL generation failed. Please try again later.</p>}
+            {(deck.decklist.length === 10) ? (<>
+              {status === "idle" && (
+                <button onClick={handleGenerateOrder}>Generate Order</button>
+              )}
+              {status === "loading" && (
+                <p className="url-waiting-animation">
+                  Generating URL, this may take a couple seconds
+                  {".".repeat(animCount)}
+                </p>
+              )}
+              {status === "success" && order.productID !== undefined && (
+                <a
+                  href={`https://beaverlicious.com/?add-to-cart=${order.productID}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Put deck into cart
+                </a>
+              )}
+            </>) : (
+              <p style={{ color: "red" }}>Warning: Your deck must contain exactly 10 cards to order (not including your Captain)!</p>
+            )}
+            
+            {urlBroken && <p>URL generation failed. Please try again later.</p>}
         </div>
       ) : (
         <p>No deck selected.</p>
