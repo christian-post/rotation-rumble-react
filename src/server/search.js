@@ -294,14 +294,24 @@ export function processSearch(req) {
   if (sanitizedSearch.dmg === "any" || sanitizedSearch.dmg === undefined) {
     sanitizedSearch.dmg = null; // Exclude from query
     sanitizedSearch.dmg_compare_method = null;
-  } else if (sanitizedSearch.dmg_compare_method === "$not") {
+  } else {
+    // convert to integer
+    sanitizedSearch.dmg = parseInt(sanitizedSearch.dmg);
+  }
+  
+  if (sanitizedSearch.dmg_compare_method === "$not") {
     sanitizedSearch.dmg = RegExp(sanitizedSearch.dmg, "i"); // Use RegExp for $not
   }
 
   if (sanitizedSearch.def === "any" || sanitizedSearch.def === undefined) {
     sanitizedSearch.def = null; // Exclude from query
     sanitizedSearch.def_compare_method = null;
-  } else if (sanitizedSearch.def_compare_method === "$not") {
+  } else {
+    // convert to integer
+    sanitizedSearch.def = parseInt(sanitizedSearch.def);
+  }
+  
+  if (sanitizedSearch.def_compare_method === "$not") {
     sanitizedSearch.def = RegExp(sanitizedSearch.def, "i"); // Use RegExp for $not
   }
 
@@ -377,10 +387,16 @@ export function processSearch(req) {
     search.color = colors;
   }
   if (sanitizedSearch.dmg && sanitizedSearch.dmg_compare_method) {
-    search.dmg = { [sanitizedSearch.dmg_compare_method]: sanitizedSearch.dmg };
+    search.dmg = {
+      [sanitizedSearch.dmg_compare_method]: sanitizedSearch.dmg, 
+      "$exists": true
+    };
   }
   if (sanitizedSearch.def && sanitizedSearch.def_compare_method) {
-    search.def = { [sanitizedSearch.def_compare_method]: sanitizedSearch.def };
+    search.def = { 
+      [sanitizedSearch.def_compare_method]: sanitizedSearch.def,
+      "$exists": true
+    };
   }
   if (sanitizedSearch.dice) {
     search.dice = sanitizedSearch.dice;
