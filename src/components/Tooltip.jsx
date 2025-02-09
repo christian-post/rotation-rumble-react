@@ -61,7 +61,7 @@ export default function Tooltip ({
 
   return (
     <div
-      style={{ display: "inline-block", position: "relative" }}
+      style={{ display: "inline-block", position: "relative", alignContent: "center" }}
       onMouseEnter={showTooltip}
       onMouseLeave={hideTooltip}
     >

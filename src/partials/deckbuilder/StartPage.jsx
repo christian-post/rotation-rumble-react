@@ -17,7 +17,8 @@ export default function StartPage({ props }) {
       decklist: [],
       id: null,
       name: "New Deck",
-      captain: null
+      captain: null,
+      star: false
     });
   }
 
@@ -127,6 +128,19 @@ export default function StartPage({ props }) {
     );
   }
 
+  const handleStarToggle = (deck) => {
+    const updatedDecks = {
+      ...props.customDecks, 
+      [deck]: {
+        ...props.customDecks[deck], 
+        star: !props.customDecks[deck].star
+      }
+    };
+  
+    props.setCustomDecks(updatedDecks); // Assuming you have this function
+    localforage.setItem("customDecks", updatedDecks);
+  };
+
   return (
     <div className="page-container ">
       <section className="top-section">
@@ -164,9 +178,22 @@ export default function StartPage({ props }) {
                 onClick: ()=> editDeck(props.customDecks[deck]),
                 customStyle: {cursor: "pointer"}
               }}/>
-              <p className="deck-title-p">
-                {props.customDecks[deck].name}
-              </p>
+              <div className="container-between">
+                <p className="deck-title-p">
+                  {props.customDecks[deck].name}
+                </p>
+                <Tooltip content="Set as favorite" position="right">
+                  <i
+                    className={`fa fa-star${props.customDecks[deck].star? "" : "-o"}`}
+                    style={{
+                      alignContent: "center",
+                      fontSize: "24px",
+                      cursor: "pointer"
+                    }}
+                    onClick={()=> handleStarToggle(deck)}
+                  />
+                </Tooltip>
+              </div>
             </div>
           ))}
         </div>

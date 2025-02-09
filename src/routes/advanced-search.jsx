@@ -100,7 +100,7 @@ function DamageField() {
 
   const values = [
     { value: "any", label: "any" },
-    { value: "", label: "" },
+    { value: "none", label: "none" },
     ...Array.from({ length: 10 }, (_, i) => ({ value: i.toString(), label: i.toString() })),
     { value: "C", label: "C" },
   ];

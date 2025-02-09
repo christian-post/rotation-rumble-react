@@ -294,7 +294,7 @@ export function processSearch(req) {
   if (sanitizedSearch.dmg === "any" || sanitizedSearch.dmg === undefined) {
     sanitizedSearch.dmg = null; // Exclude from query
     sanitizedSearch.dmg_compare_method = null;
-  } else {
+  } else if (sanitizedSearch.dmg !== "none" && sanitizedSearch.dmg != "C") {
     // convert to integer
     sanitizedSearch.dmg = parseInt(sanitizedSearch.dmg);
   }
@@ -386,11 +386,16 @@ export function processSearch(req) {
   if (colors) {
     search.color = colors;
   }
+
   if (sanitizedSearch.dmg && sanitizedSearch.dmg_compare_method) {
-    search.dmg = {
-      [sanitizedSearch.dmg_compare_method]: sanitizedSearch.dmg, 
-      "$exists": true
-    };
+    if (sanitizedSearch.dmg === "none") {
+      search.dmg = { $exists: false };
+    } else {
+      search.dmg = {
+        [sanitizedSearch.dmg_compare_method]: sanitizedSearch.dmg, 
+        "$exists": true
+      };
+    }
   }
   if (sanitizedSearch.def && sanitizedSearch.def_compare_method) {
     search.def = { 

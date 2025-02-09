@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import CardImage from "../components/CardImage";
 import Tooltip from "../components/Tooltip";
 import { capitalize } from "../server/utils";
@@ -38,6 +38,7 @@ function GallerySection({ header, cards }) {
 export default function Gallery(props) {
   let { cards, aggregated, groupBy } = props;
   const navigate = useNavigate();
+  const location = useLocation();
   const params = useParams();
 
   if (!cards) {
@@ -77,8 +78,16 @@ export default function Gallery(props) {
   });
 
   const handleGroupChange = (e) => {
+    // TODO: if in the "results" route, don't navigate, instead sort props.cards
     const selectedGroup = e.target.value;
-    navigate(`/card-gallery/${selectedGroup}`);
+    const isResultsPage = location.pathname.startsWith("/results");
+    const isCardGalleryPage = location.pathname.startsWith("/card-gallery");
+
+    if (isResultsPage) {
+      // TODO
+    } else if (isCardGalleryPage) {
+      navigate(`/card-gallery/${selectedGroup}`);
+    }
   };
 
   return (
